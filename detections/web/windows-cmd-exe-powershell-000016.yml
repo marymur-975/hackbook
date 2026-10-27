@@ -1,0 +1,45 @@
+# Извлечено из карточки: payloads/web/cmdi/windows-specific.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Инъекция команд в Windows-контексте — маркеры cmd.exe и PowerShell
+id: e5f6a7b8-0016-4e5f-9a7b-000000000016
+status: experimental
+description: В query-строке видны Windows-команды и разделители (& whoami, cmd /c, powershell -enc, type
+  c:\windows\win.ini, net user) — инъекция команд в приложение на Windows-сервере.
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://attack.mitre.org/techniques/T1059/001/
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой
+detection:
+  selection:
+    cs-uri-query|contains:
+    - '& whoami'
+    - '&whoami'
+    - cmd /c
+    - cmd.exe /c
+    - powershell -c
+    - powershell -enc
+    - 'powershell -e '
+    - type c:\windows
+    - net user
+    - netstat -an
+    - dir c:\
+    - whoami /priv
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- административные панели, передающие команды легально (ограничивайте их по IP)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- attack.t1059.001
+- cwe.78
+author: hackbook
+related:
+- 'payloads-card: payloads/web/cmdi/windows-specific.md'

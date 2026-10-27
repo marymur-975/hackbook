@@ -1,0 +1,20 @@
+title: "Сетевая безопасность: разведка, сервисы, сегментация"
+chapter: 2
+difficulty: intermediate
+category: network
+tags: [network, recon, smb, ldap, snmp, dns, redis, segmentation]
+prerequisites: ["Основы TCP/IP", "Модель OSI", "Базовый Linux"]
+lab: "labs/network-labs"
+estimated_minutes: 75
+status: published
+graph:
+  - target: network
+    type: category_of
+  - target: enumeration
+    type: covered_in
+  - target: default-credentials
+    type: covered_in
+  - target: active-directory
+    type: related_to
+  - target: cloud
+    type: related_to

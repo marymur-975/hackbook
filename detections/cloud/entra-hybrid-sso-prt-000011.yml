@@ -1,0 +1,37 @@
+# Извлечено из карточки: payloads/network/ad/entra-hybrid-prt-sso.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Entra hybrid SSO — использование PRT с неуправляемого устройства
+id: a7b8c9d0-0011-4a7b-9c8d-000000000011
+status: experimental
+description: Sign-in с PRT-based SSO, где устройство не помечено как compliant/managed (украденный Primary
+  Refresh Token используется на чужой машине) или источник вне корпоративной сети.
+references:
+- https://attack.mitre.org/techniques/T1550/
+- https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-ins
+logsource:
+  product: azure
+  service: signinlogs
+  definition: Entra ID Sign-in logs (категория SignInLogs) с device detail
+detection:
+  selection:
+    operationName: Sign-in
+    prt_sso: true
+    device_compliant: false
+  condition: selection
+fields:
+- userPrincipalName
+- appDisplayName
+- source_ip
+- status
+falsepositives:
+- BYOD-устройства, легитимно зарегистрированные в Entra (device_compliant=false, но device registered)
+  — уточняйте по deviceDetail.trustType и политике
+level: high
+tags:
+- attack.lateral_movement
+- attack.t1550
+- cwe.287
+author: hackbook
+related:
+- 'payloads-card: payloads/network/ad/entra-hybrid-prt-sso.md'

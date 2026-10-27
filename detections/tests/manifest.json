@@ -1,0 +1,2001 @@
+{
+  "_comment": [
+    "Манифест тестов детект-правил hackbook.",
+    "Для каждого правила указано, сколько совпадений ожидается на каждой фикстуре.",
+    "Фикстуры синтетические: detections/tests/generate_fixtures.py (не настоящие логи).",
+    "Прогон: python tools/rules-tester.py --verbose",
+    "",
+    "Поля:",
+    "  id            — значение поля id из Sigma-правила",
+    "  fixtures      — список {file, expect_matches}",
+    "  untestable    — true, если правило не проверяется событийными фикстурами",
+    "  note          — пояснение для отчёта (почему правило не тестируется)"
+  ],
+  "version": 1,
+  "rules": [
+    {
+      "id": "a1b2c3d4-0001-4a1b-9c1d-000000000001",
+      "title": "Возможный Kerberoasting — аномальные TGS-запросы",
+      "fixtures": [
+        {
+          "file": "windows-security.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "a1b2c3d4-0002-4a1b-9c1d-000000000002",
+      "title": "AS-REP roasting — запрос билета без пред-аутентификации",
+      "fixtures": [
+        {
+          "file": "windows-security.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "a1b2c3d4-0003-4a1b-9c1d-000000000003",
+      "title": "Массовые неудачные pre-auth (перебор имён/паролей)",
+      "fixtures": [
+        {
+          "file": "windows-security.jsonl",
+          "expect_matches": 12
+        }
+      ]
+    },
+    {
+      "id": "a1b2c3d4-0004-4a1b-9c1d-000000000004",
+      "title": "Включено unconstrained delegation у объекта AD",
+      "fixtures": [
+        {
+          "file": "windows-security.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "a1b2c3d4-0005-4a1b-9c1d-000000000005",
+      "title": "Добавление участника в привилегированную группу AD",
+      "fixtures": [
+        {
+          "file": "windows-security.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "a1b2c3d4-0006-4a1b-9c1d-000000000006",
+      "title": "Выпуск сертификата AD CS с чужим субъектом (ESC1-признак)",
+      "fixtures": [
+        {
+          "file": "windows-security.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "a1b2c3d4-0007-4a1b-9c1d-000000000007",
+      "title": "DCSync — доступ к атрибутам репликации не-DC учёткой",
+      "fixtures": [
+        {
+          "file": "windows-security.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "a1b2c3d4-0010-4a1b-9c1d-000000000010",
+      "title": "AWS — изменение IAM-политик как признак эскалации",
+      "fixtures": [
+        {
+          "file": "cloudtrail.jsonl",
+          "expect_matches": 10
+        }
+      ]
+    },
+    {
+      "id": "a1b2c3d4-0011-4a1b-9c1d-000000000011",
+      "title": "GitHub Actions — выполнение кода PR с доступом к секретам",
+      "untestable": true,
+      "note": "конфигурационное правило: анализируются workflow-файлы, а не события логов"
+    },
+    {
+      "id": "3f2b8c1a-9d4e-4a2b-8f7c-1e5d6a7b8c90",
+      "title": "Исполнение скрипта из каталога загрузок",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "b2c3d4e5-0001-4b2c-8d3e-000000000101",
+      "title": "SQL-инъекция в query-строке с подтверждением по статусу ответа",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "b2c3d4e5-0002-4b2c-8d3e-000000000102",
+      "title": "Path traversal / LFI в параметрах запроса",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 11
+        }
+      ]
+    },
+    {
+      "id": "b2c3d4e5-0003-4b2c-8d3e-000000000103",
+      "title": "SSRF — обращение к метаданным или внутренним адресам через параметр URL",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 11
+        }
+      ]
+    },
+    {
+      "id": "b2c3d4e5-0006-4b2c-8d3e-000000000106",
+      "title": "HTML/JS-маркеры в пользовательских данных или логах (stored/blind XSS)",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 11
+        }
+      ]
+    },
+    {
+      "id": "b2c3d4e5-0004-4b2c-8d3e-000000000104",
+      "title": "Аномалии валидации JWT (подделка токена или подбор секрета)",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 15
+        }
+      ]
+    },
+    {
+      "id": "b2c3d4e5-0005-4b2c-8d3e-000000000105",
+      "title": "Входящий XML с DOCTYPE или внешней сущностью (XXE-попытка)",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 6
+        }
+      ]
+    },
+    {
+      "id": "b2c3d4e5-0007-4b2c-8d3e-000000000107",
+      "title": "Признак CSV/formula injection в сохраняемых пользовательских данных",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "b2c3d4e5-0008-4b2c-8d3e-000000000108",
+      "title": "'Злоупотребление GraphQL: introspection, батчинг или аномально тяжёлый запрос'",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "c3d4e5f6-0001-4c3d-9e4f-000000000201",
+      "title": "Запуск SUID-бинарника, не входящего в эталонный набор ОС",
+      "fixtures": [
+        {
+          "file": "linux-auditd.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "c3d4e5f6-0002-4c3d-9e4f-000000000202",
+      "title": "sudo-вызов интерактивной программы (потенциальная эскалация через GTFOBins)",
+      "fixtures": [
+        {
+          "file": "linux-auditd.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "c3d4e5f6-0003-4c3d-9e4f-000000000203",
+      "title": "Исполняемый файл задачи root находится в пользовательском каталоге",
+      "fixtures": [
+        {
+          "file": "linux-auditd.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "c3d4e5f6-0004-4c3d-9e4f-000000000204",
+      "title": "Использование file capabilities или запись в файлы учёток для эскалации",
+      "fixtures": [
+        {
+          "file": "linux-auditd.jsonl",
+          "expect_matches": 4
+        }
+      ]
+    },
+    {
+      "id": "c3d4e5f6-0005-4c3d-9e4f-000000000205",
+      "title": "Признак эксплуатации локальной уязвимости (pkexec/sudo/kernel)",
+      "fixtures": [
+        {
+          "file": "linux-auditd.jsonl",
+          "expect_matches": 6
+        }
+      ]
+    },
+    {
+      "id": "c3d4e5f6-0006-4c3d-9e4f-000000000206",
+      "title": "Массовое перечисление системы пользователем (recon перед эскалацией)",
+      "fixtures": [
+        {
+          "file": "linux-auditd.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "c3d4e5f6-0007-4c3d-9e4f-000000000207",
+      "title": "Подмена binPath службы или запуск службы из нестандартного каталога",
+      "fixtures": [
+        {
+          "file": "windows-sysmon.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "c3d4e5f6-0008-4c3d-9e4f-000000000208",
+      "title": "Назначение или использование опасных привилегий токена",
+      "fixtures": [
+        {
+          "file": "windows-sysmon.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "c3d4e5f6-0009-4c3d-9e4f-000000000209",
+      "title": "Доступ к LSASS или извлечение SAM/SYSTEM/NTDS",
+      "fixtures": [
+        {
+          "file": "windows-sysmon.jsonl",
+          "expect_matches": 5
+        }
+      ]
+    },
+    {
+      "id": "c3d4e5f6-0010-4c3d-9e4f-000000000210",
+      "title": "Загрузка DLL из пользовательского каталога процессом из Program Files",
+      "fixtures": [
+        {
+          "file": "windows-sysmon.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "c3d4e5f6-0011-4c3d-9e4f-000000000211",
+      "title": "Изменение механизмов автозапуска Windows (Run-ключи, IFEO, Winlogon)",
+      "fixtures": [
+        {
+          "file": "windows-sysmon.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "c3d4e5f6-0012-4c3d-9e4f-000000000212",
+      "title": "Последовательность команд перечисления Windows (post-exploitation recon)",
+      "fixtures": [
+        {
+          "file": "windows-sysmon.jsonl",
+          "expect_matches": 10
+        }
+      ]
+    },
+    {
+      "id": "d4e5f6a7-0001-4d4e-8f5a-000000000301",
+      "title": "'SMTP relay-злоупотребление: неаутентифицированная пересылка внешним получателям'",
+      "fixtures": [
+        {
+          "file": "mail-smtp.jsonl",
+          "expect_matches": 14
+        }
+      ]
+    },
+    {
+      "id": "d4e5f6a7-0002-4d4e-8f5a-000000000302",
+      "title": "'Аномальная SSH-активность: перебор, вход root по паролю, туннелирование'",
+      "fixtures": [
+        {
+          "file": "linux-auth-ssh.jsonl",
+          "expect_matches": 26
+        }
+      ]
+    },
+    {
+      "id": "d4e5f6a7-0003-4d4e-8f5a-000000000303",
+      "title": "'Аномальная RDP-активность: перебор, shadowing и входы в нерабочее время'",
+      "fixtures": [
+        {
+          "file": "windows-rdp.jsonl",
+          "expect_matches": 15
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0001-4e5f-9a7b-000000000001",
+      "title": "XXE — чтение локальных файлов через внешнюю сущность",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0002-4e5f-9a7b-000000000002",
+      "title": "Blind XXE — параметрическая сущность с внешней DTD (OOB-канал)",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0003-4e5f-9a7b-000000000003",
+      "title": "Error-based XXE — содержимое файла уходит в сообщении об ошибке",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0004-4e5f-9a7b-000000000004",
+      "title": "XML-бомба (billion laughs) — аномальный парсинг с раскрытием сущностей",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0005-4e5f-9a7b-000000000005",
+      "title": "XXE через загруженный SVG — DOCTYPE и сущности в «изображении»",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0006-4e5f-9a7b-000000000006",
+      "title": "XInclude — подключение локального файла из XML-фрагмента",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0007-4e5f-9a7b-000000000007",
+      "title": "SSTI-пробы — шаблонные выражения в параметрах и ошибки движков",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 4
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0008-4e5f-9a7b-000000000008",
+      "title": "Freemarker SSTI — Execute/ProcessBuilder через reflection",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0009-4e5f-9a7b-000000000009",
+      "title": "Twig/Smarty SSTI — вызов системных функций из шаблона",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0010-4e5f-9a7b-000000000010",
+      "title": "SSTI — цепочки __class__/__mro__/__subclasses__ к интерпретатору",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0011-4e5f-9a7b-000000000011",
+      "title": "Инъекция команд — цепочки и подстановки в query-строке",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 5
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0012-4e5f-9a7b-000000000012",
+      "title": "Веб-сервер порождает оболочку или интерпретатор (RCE)",
+      "fixtures": [
+        {
+          "file": "linux-auditd.jsonl",
+          "expect_matches": 5
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0013-4e5f-9a7b-000000000013",
+      "title": "Слепая инъекция команд — задержка ответа совпадает с sleep/timeout",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0014-4e5f-9a7b-000000000014",
+      "title": "Инъекция команд с обходом фильтров — IFS, склейка кавычек, base64-pipe",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0015-4e5f-9a7b-000000000015",
+      "title": "Инъекция аргументов в серверные утилиты (curl, tar, find, ssh)",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0016-4e5f-9a7b-000000000016",
+      "title": "Инъекция команд в Windows-контексте — маркеры cmd.exe и PowerShell",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0017-4e5f-9a7b-000000000017",
+      "title": "SQL-маркеры — комментарий-терминатор после кавычки в параметре",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 7
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0018-4e5f-9a7b-000000000018",
+      "title": "SQL-проба HAVING/GROUP BY — ошибка группировки раскрывает схему",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0019-4e5f-9a7b-000000000019",
+      "title": "SQL-инъекция с OOB-каналом — xp_dirtree/UTL_HTTP и DNS-callback",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "dns-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0020-4e5f-9a7b-000000000020",
+      "title": "MSSQL error-based — CONVERT(int, ...) выводит данные в тексте ошибки",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0021-4e5f-9a7b-000000000021",
+      "title": "MSSQL — снятие версии и контекста (@@version, DB_NAME, SUSER_SNAME)",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        },
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0022-4e5f-9a7b-000000000022",
+      "title": "MSSQL xp_cmdshell — попытка выполнения команд на сервере БД",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        },
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "windows-sysmon.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0023-4e5f-9a7b-000000000023",
+      "title": "MySQL boolean-based blind — посимвольные условия SUBSTRING/ASCII",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0024-4e5f-9a7b-000000000024",
+      "title": "MySQL error-based — EXTRACTVALUE/UPDATEXML/floor-rand в параметрах и ошибках",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0025-4e5f-9a7b-000000000025",
+      "title": "MySQL LOAD_FILE/INTO OUTFILE — чтение файлов и запись webshell",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        },
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0026-4e5f-9a7b-000000000026",
+      "title": "MySQL — обход фильтров versioned-комментариями /*! и /**/",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0027-4e5f-9a7b-000000000027",
+      "title": "LIKE-wildcard инъекция — % и _ в параметрах перечисления",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0028-4e5f-9a7b-000000000028",
+      "title": "Подбор числа колонок через ORDER BY N и ошибка «Unknown column»",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        },
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0029-4e5f-9a7b-000000000029",
+      "title": "Second-order SQLi — сохранённое значение срабатывает в другом запросе",
+      "fixtures": [
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0030-4e5f-9a7b-000000000030",
+      "title": "Stacked queries — второй запрос через точку с запятой",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 4
+        },
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0031-4e5f-9a7b-000000000031",
+      "title": "Тавтология в форме входа — успешная аутентификация без пароля",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0032-4e5f-9a7b-000000000032",
+      "title": "MySQL time-based blind — SLEEP/BENCHMARK с подтверждённой задержкой",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0033-4e5f-9a7b-000000000033",
+      "title": "UNION-перечисление схемы — information_schema/table_schema в параметрах",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        },
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0034-4e5f-9a7b-000000000034",
+      "title": "Oracle error-based — CTXSYS/DBMS_UTILITY/UTL_INADDR и v$version",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0035-4e5f-9a7b-000000000035",
+      "title": "HQL/JPQL-инъекция — ошибки Hibernate QuerySyntaxException",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0036-4e5f-9a7b-000000000036",
+      "title": "PostgreSQL time-based — pg_sleep/generate_series в параметрах и журнале БД",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0037-4e5f-9a7b-000000000037",
+      "title": "PostgreSQL COPY TO/FROM PROGRAM — выполнение команд сервером БД",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "linux-auditd.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0038-4e5f-9a7b-000000000038",
+      "title": "PostgreSQL error-based — CAST((SELECT version()) AS INT) в параметрах и ошибках",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0039-4e5f-9a7b-000000000039",
+      "title": "PostgreSQL — снятие контекста через current_user/version()/current_database()",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0040-4e5f-9a7b-000000000040",
+      "title": "First-order маркеры — SQL-синтаксис сохраняется в пользовательских данных",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0041-4e5f-9a7b-000000000041",
+      "title": "SQLite — перечисление схемы через sqlite_master и json_extract",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        },
+        {
+          "file": "database-error.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0042-4e5f-9a7b-000000000042",
+      "title": "Reflected XSS — script-тег в параметре запроса",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 6
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0043-4e5f-9a7b-000000000043",
+      "title": "XSS без script-тега — обработчики событий img (onerror/onload)",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 4
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0044-4e5f-9a7b-000000000044",
+      "title": "Выход из HTML-атрибута — кавычка и autofocus/onfocus/onmouseover",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0045-4e5f-9a7b-000000000045",
+      "title": "javascript:-схема в ссылках и сохраняемых полях",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0046-4e5f-9a7b-000000000046",
+      "title": "XSS с HTML-entity/двойным кодированием обработчиков событий",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0047-4e5f-9a7b-000000000047",
+      "title": "DOM XSS — payload в location.hash (клиентская телеметрия)",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0048-4e5f-9a7b-000000000048",
+      "title": "XSS через SVG — onload/onbegin и animate-элементы",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0049-4e5f-9a7b-000000000049",
+      "title": "Mutation XSS — «безопасный» экранированный тег в контейнере-мутаторе",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0050-4e5f-9a7b-000000000050",
+      "title": "Обход CSP через JSONP-эндпоинты доверенных доменов",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0051-4e5f-9a7b-000000000051",
+      "title": "XSS в HTML->PDF/SVG конвейере — JS с эксфильтрацией DOM и cookie",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0052-4e5f-9a7b-000000000052",
+      "title": "Stored XSS в профиле/комментариях — обработчики событий в сохраняемых данных",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0053-4e5f-9a7b-000000000053",
+      "title": "XSS во фреймворках — template-инъекции Angular/React/Vue в пользовательских данных",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0054-4e5f-9a7b-000000000054",
+      "title": "Обход Trusted Types — CSP-отчёты require-trusted-types-for",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0055-4e5f-9a7b-000000000055",
+      "title": "Загрузка файла с traversal в имени — запись вне каталога загрузок",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0056-4e5f-9a7b-000000000056",
+      "title": "Загрузка .htaccess/.user.ini — переопределение обработчика расширений",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "linux-auditd.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0057-4e5f-9a7b-000000000057",
+      "title": "Файл-полиглот — исполняемый код после магических байтов изображения",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0058-4e5f-9a7b-000000000058",
+      "title": "Подмена Content-Type — скриптовое расширение с типом изображения",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0059-4e5f-9a7b-000000000059",
+      "title": "Двойное расширение и гонка загрузки — shell.php.jpg исполняется как PHP",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0060-4e5f-9a7b-000000000060",
+      "title": "Stored XSS через загруженный SVG — onload/script внутри «картинки»",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0061-4e5f-9a7b-000000000061",
+      "title": "Zip Slip — запись файлов вне каталога при распаковке архива",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "linux-auditd.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0062-4e5f-9a7b-000000000062",
+      "title": "LFI с двойным/смешанным URL-кодированием traversal-последовательностей",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0063-4e5f-9a7b-000000000063",
+      "title": "Log poisoning — PHP-код в User-Agent и include файлов журналов",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0064-4e5f-9a7b-000000000064",
+      "title": "php://filter — чтение исходников через base64-конвертер",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0065-4e5f-9a7b-000000000065",
+      "title": "php://input и data:// — выполнение кода из тела запроса",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0066-4e5f-9a7b-000000000066",
+      "title": "LFI через /proc/self — environ, cmdline и файловые дескрипторы",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0067-4e5f-9a7b-000000000067",
+      "title": "Чтение системных файлов через веб — /etc/passwd, win.ini и веб-процесс с cat",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 6
+        },
+        {
+          "file": "linux-auditd.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0068-4e5f-9a7b-000000000068",
+      "title": "Blind SSRF — outbound-обращения к OOB-платформам атакующего",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "dns-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0069-4e5f-9a7b-000000000069",
+      "title": "SSRF на cloud-метаданные — 169.254.169.254 и аналоги",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0070-4e5f-9a7b-000000000070",
+      "title": "DNS rebinding — внешнее имя резолвится во внутренний адрес",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "dns-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0071-4e5f-9a7b-000000000071",
+      "title": "SSRF с обфускацией localhost — десятичные, hex, восьмеричные и IPv6-формы",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0072-4e5f-9a7b-000000000072",
+      "title": "SSRF с нестандартными схемами — gopher/dict/ldap/file к внутренним сервисам",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 4
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0073-4e5f-9a7b-000000000073",
+      "title": "SSRF через цепочку редиректов — белый домен ведёт на внутренний адрес",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0074-4e5f-9a7b-000000000074",
+      "title": "NoSQL-инъекция — операторы MongoDB в пользовательских данных",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 6
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0075-4e5f-9a7b-000000000075",
+      "title": "Слепой NoSQL-перебор — $regex с префиксами в форме входа",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0076-4e5f-9a7b-000000000076",
+      "title": "NoSQL — JavaScript-инъекция через $where (time-based и логические бомбы)",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0077-4e5f-9a7b-000000000077",
+      "title": "Elasticsearch — DSL-инъекция и открытые служебные эндпоинты",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0078-4e5f-9a7b-000000000078",
+      "title": "CouchDB/Firebase — дампы через _all_docs, _find и открытые .json-эндпоинты",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 3
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0079-4e5f-9a7b-000000000079",
+      "title": "GraphQL-злоупотребление — глубина, алиасы и батчинг запросов",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0080-4e5f-9a7b-000000000080",
+      "title": "Манипуляция ценой/количеством в заказе — отрицательные и нулевые значения",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0081-4e5f-9a7b-000000000081",
+      "title": "Пропуск шага workflow — подтверждение неоплаченного заказа",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0082-4e5f-9a7b-000000000082",
+      "title": "Log forging — CRLF внутри лог-записи приложения",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0083-4e5f-9a7b-000000000083",
+      "title": "CSRF — межсайтовый POST без токена и проваленная CSRF-проверка",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0084-4e5f-9a7b-000000000084",
+      "title": "HTTP/2 desync — CL и TE одновременно или два Content-Length",
+      "fixtures": [
+        {
+          "file": "gateway-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0085-4e5f-9a7b-000000000085",
+      "title": "Сброс пароля на сторонний хост из заголовка Host/X-Forwarded-Host",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0086-4e5f-9a7b-000000000086",
+      "title": "HTTP parameter pollution — дубли параметров в одном запросе",
+      "fixtures": [
+        {
+          "file": "gateway-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0087-4e5f-9a7b-000000000087",
+      "title": "JWT RS2HS — HMAC-подпись токена проверяется публичным RSA-ключом",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0088-4e5f-9a7b-000000000088",
+      "title": "JWT kid-инъекция — traversal/SQL/команды в идентификаторе ключа",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0089-4e5f-9a7b-000000000089",
+      "title": "OAuth — обход валидации redirect_uri (traversal, поддомены, open redirect)",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0090-4e5f-9a7b-000000000090",
+      "title": "Open redirect — внешний адрес в параметре перенаправления",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0091-4e5f-9a7b-000000000091",
+      "title": "Race condition — шквал одинаковых запросов от одного клиента",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 12
+        },
+        {
+          "file": "gateway-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0092-4e5f-9a7b-000000000092",
+      "title": "Request smuggling CL.TE — конфликт Content-Length и Transfer-Encoding",
+      "fixtures": [
+        {
+          "file": "gateway-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0093-4e5f-9a7b-000000000093",
+      "title": "Request smuggling TE.CL и аномалии chunked-тела с 4xx/5xx",
+      "fixtures": [
+        {
+          "file": "gateway-log.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0094-4e5f-9a7b-000000000094",
+      "title": "Request smuggling TE.TE — обфускация Transfer-Encoding",
+      "fixtures": [
+        {
+          "file": "gateway-log.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0095-4e5f-9a7b-000000000095",
+      "title": "Web cache deception — аутентифицированный динамический ответ закэширован как статика",
+      "fixtures": [
+        {
+          "file": "gateway-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0096-4e5f-9a7b-000000000096",
+      "title": "Web cache poisoning — unkeyed-заголовки в закэшированном ответе",
+      "fixtures": [
+        {
+          "file": "gateway-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0097-4e5f-9a7b-000000000097",
+      "title": "CORS — отражение стороннего Origin с Access-Control-Allow-Credentials",
+      "fixtures": [
+        {
+          "file": "gateway-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0098-4e5f-9a7b-000000000098",
+      "title": "CRLF-инъекция в заголовки — %0d%0a с Set-Cookie/Location в параметрах",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0099-4e5f-9a7b-000000000099",
+      "title": "Host-заголовок стороннего домена в закэшированном ответе",
+      "fixtures": [
+        {
+          "file": "gateway-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0100-4e5f-9a7b-000000000100",
+      "title": "Инъекция в User-Agent — canary-маркеры и подделка формата лог-строки",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0101-4e5f-9a7b-000000000101",
+      "title": "X-Forwarded-For спуфинг — внутренний адрес от внешнего клиента",
+      "fixtures": [
+        {
+          "file": "gateway-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0102-4e5f-9a7b-000000000102",
+      "title": "Обход 2FA — доступ к ресурсу при неподтверждённом челлендже",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0103-4e5f-9a7b-000000000103",
+      "title": "Вход с дефолтными учётными данными (admin:admin и типовые пары)",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        },
+        {
+          "file": "gateway-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0104-4e5f-9a7b-000000000104",
+      "title": "IDOR — успешный доступ к чужим объектам по последовательным id",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0105-4e5f-9a7b-000000000105",
+      "title": "JWT alg=none — токен без подписи принимается сервисом",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0106-4e5f-9a7b-000000000106",
+      "title": "Подбор HMAC-секрета JWT — шквал invalid signature от одного источника",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 12
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0107-4e5f-9a7b-000000000107",
+      "title": "Обход аутентификации нормализацией пути — ..;, /.;/, ..%3b",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 2
+        },
+        {
+          "file": "gateway-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0108-4e5f-9a7b-000000000108",
+      "title": "Подделка состояния в подписанном cookie — role escalation и сбой подписи",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0109-4e5f-9a7b-000000000109",
+      "title": "ASP.NET ViewState — подделка состояния при отключённой MAC-валидации",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0110-4e5f-9a7b-000000000110",
+      "title": "Fastjson/Jackson autoType — JNDI-гаджеты в JSON-теле запроса",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0111-4e5f-9a7b-000000000111",
+      "title": "Java-десериализация — нативный поток (rO0AB/aced0005) во входящих данных",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0112-4e5f-9a7b-000000000112",
+      "title": "Prototype pollution — __proto__/constructor.prototype в JSON и query",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0113-4e5f-9a7b-000000000113",
+      "title": "PHP-десериализация — сериализованные объекты (O:N:) во входящих данных",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0114-4e5f-9a7b-000000000114",
+      "title": "Python pickle во входящих данных — опкоды и ошибки восстановления классов",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        },
+        {
+          "file": "linux-auditd.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0115-4e5f-9a7b-000000000115",
+      "title": "JNDI/RMI-инъекция — lookup на внешний LDAP/RMI и ${jndi:} в параметрах",
+      "fixtures": [
+        {
+          "file": "webserver-access.jsonl",
+          "expect_matches": 1
+        },
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        },
+        {
+          "file": "linux-auditd.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0116-4e5f-9a7b-000000000116",
+      "title": "XStream-гаджеты — dynamic-proxy и опасные классы в входящем XML",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-0117-4e5f-9a7b-000000000117",
+      "title": "YAML unsafe load — python-теги (!!python/object) во входящем YAML",
+      "fixtures": [
+        {
+          "file": "application-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0001-4f6a-8b9c-000000000001",
+      "title": "Kubernetes API — успешные анонимные запросы",
+      "fixtures": [
+        {
+          "file": "k8s-audit.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0002-4f6a-8b9c-000000000002",
+      "title": "Kubernetes API — анонимная разведка, включая отклонённые запросы",
+      "fixtures": [
+        {
+          "file": "k8s-audit.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0003-4f6a-8b9c-000000000003",
+      "title": "Доступ к секретам кластера — API list/get secrets и прямое чтение etcd",
+      "fixtures": [
+        {
+          "file": "k8s-audit.jsonl",
+          "expect_matches": 3
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0004-4f6a-8b9c-000000000004",
+      "title": "Privileged-под с hostPath / — захват узла через монтирование корня",
+      "fixtures": [
+        {
+          "file": "k8s-audit.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0005-4f6a-8b9c-000000000005",
+      "title": "Злоупотребление SA-токеном пода — exec, секреты и чужие ресурсы",
+      "fixtures": [
+        {
+          "file": "k8s-audit.jsonl",
+          "expect_matches": 4
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0006-4f6a-8b9c-000000000006",
+      "title": "Опасные RBAC-binding'и — cluster-admin и wildcard-права",
+      "fixtures": [
+        {
+          "file": "k8s-audit.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0007-4f6a-8b9c-000000000007",
+      "title": "Анонимное перечисление S3-бакетов",
+      "fixtures": [
+        {
+          "file": "cloudtrail.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0008-4f6a-8b9c-000000000008",
+      "title": "S3 — публикация бакета/объектов и анонимное скачивание",
+      "fixtures": [
+        {
+          "file": "cloudtrail.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0009-4f6a-8b9c-000000000009",
+      "title": "Чтение terraform.tfstate из S3 — файл с секретами в открытом виде",
+      "fixtures": [
+        {
+          "file": "cloudtrail.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0010-4f6a-8b9c-000000000010",
+      "title": "Изменение OIDC-доверия — AssumeRolePolicy и новые OIDC-провайдеры",
+      "fixtures": [
+        {
+          "file": "cloudtrail.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0011-4f6a-8b9c-000000000011",
+      "title": "Lambda confused deputy — смена конфигурации функции и чужой AssumeRole",
+      "fixtures": [
+        {
+          "file": "cloudtrail.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0012-4f6a-8b9c-000000000012",
+      "title": "GCP — запрос токена сервисного аккаунта из metadata-сервиса",
+      "fixtures": [
+        {
+          "file": "egress-proxy.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0013-4f6a-8b9c-000000000013",
+      "title": "AWS IMDSv1 — учётные данные роли без сессионного PUT-токена",
+      "fixtures": [
+        {
+          "file": "egress-proxy.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0014-4f6a-8b9c-000000000014",
+      "title": "Azure IMDS — запрос токена managed identity изнутри ВМ",
+      "fixtures": [
+        {
+          "file": "egress-proxy.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0015-4f6a-8b9c-000000000015",
+      "title": "GCP — создание ключей сервисных аккаунтов и раздача roles/editor",
+      "fixtures": [
+        {
+          "file": "gcp-audit.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0016-4f6a-8b9c-000000000016",
+      "title": "Azure — запрос ключей storage и секретов App Service через ARM",
+      "fixtures": [
+        {
+          "file": "azure-audit.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0017-4f6a-8b9c-000000000017",
+      "title": "GitLab — регистрация чужого раннера и разведка API job-токеном",
+      "fixtures": [
+        {
+          "file": "cicd-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0018-4f6a-8b9c-000000000018",
+      "title": "Supply chain образов — неподписанные push/pull и mutable-теги",
+      "fixtures": [
+        {
+          "file": "cicd-log.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-0019-4f6a-8b9c-000000000019",
+      "title": "Docker socket escape — docker run --privileged -v / из контейнера",
+      "fixtures": [
+        {
+          "file": "linux-auditd.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "a7b8c9d0-0001-4a7b-9c8d-000000000001",
+      "title": "Передача зоны DNS (AXFR/IXFR) посторонним клиентом",
+      "fixtures": [
+        {
+          "file": "network-services.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "a7b8c9d0-0002-4a7b-9c8d-000000000002",
+      "title": "Анонимный вход на FTP-сервер",
+      "fixtures": [
+        {
+          "file": "network-services.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "a7b8c9d0-0003-4a7b-9c8d-000000000003",
+      "title": "LDAP anonymous bind и перечисление каталога без аутентификации",
+      "fixtures": [
+        {
+          "file": "network-services.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "a7b8c9d0-0004-4a7b-9c8d-000000000004",
+      "title": "Redis без аутентификации — команды от внешнего клиента и CONFIG SET",
+      "fixtures": [
+        {
+          "file": "network-services.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "a7b8c9d0-0005-4a7b-9c8d-000000000005",
+      "title": "SMB null-сессия — анонимный сетевой вход и доступ к IPC$",
+      "fixtures": [
+        {
+          "file": "network-services.jsonl",
+          "expect_matches": 2
+        },
+        {
+          "file": "windows-security.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    },
+    {
+      "id": "a7b8c9d0-0006-4a7b-9c8d-000000000006",
+      "title": "NTLM-relay — сетевой вход машинной учётки с чужого IP",
+      "fixtures": [
+        {
+          "file": "windows-security.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "a7b8c9d0-0007-4a7b-9c8d-000000000007",
+      "title": "SNMP-перебор community-строк и запросы с public/private",
+      "fixtures": [
+        {
+          "file": "network-services.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "a7b8c9d0-0008-4a7b-9c8d-000000000008",
+      "title": "RBCD/constrained delegation — правка msDS-AllowedTo* атрибутов",
+      "fixtures": [
+        {
+          "file": "windows-security.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "a7b8c9d0-0009-4a7b-9c8d-000000000009",
+      "title": "Чтение GPP-файлов из SYSVOL — поиск cpassword",
+      "fixtures": [
+        {
+          "file": "windows-security.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "a7b8c9d0-0010-4a7b-9c8d-000000000010",
+      "title": "Чтение LAPS-пароля (ms-Mcs-AdmPwd) не привилегированной учёткой",
+      "fixtures": [
+        {
+          "file": "windows-security.jsonl",
+          "expect_matches": 2
+        }
+      ]
+    },
+    {
+      "id": "a7b8c9d0-0011-4a7b-9c8d-000000000011",
+      "title": "Entra hybrid SSO — использование PRT с неуправляемого устройства",
+      "fixtures": [
+        {
+          "file": "azure-audit.jsonl",
+          "expect_matches": 1
+        }
+      ]
+    }
+  ]
+}

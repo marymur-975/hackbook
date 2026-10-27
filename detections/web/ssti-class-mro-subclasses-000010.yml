@@ -1,0 +1,44 @@
+# Извлечено из карточки: payloads/web/ssti/python-class-chain.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: SSTI — цепочки __class__/__mro__/__subclasses__ к интерпретатору
+id: e5f6a7b8-0010-4e5f-9a7b-000000000010
+status: experimental
+description: В параметрах или теле запроса видны dunder-цепочки Python, используемые для выхода из песочницы
+  шаблона к произвольным классам и os.popen.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: webserver
+  definition: access-лог с полной (декодированной) query-строкой
+detection:
+  selection:
+    cs-uri-query|contains:
+    - __class__
+    - __mro__
+    - __subclasses__
+    - __globals__
+    - __builtins__
+    - __init__
+  body_selection:
+    request_body|contains:
+    - __class__
+    - __mro__
+    - __subclasses__
+    - __globals__
+    - __builtins__
+  condition: selection or body_selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- отладочные запросы разработчиков к своим API (исключайте внутренние IP)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.1336
+author: hackbook
+related:
+- 'payloads-card: payloads/web/ssti/python-class-chain.md'

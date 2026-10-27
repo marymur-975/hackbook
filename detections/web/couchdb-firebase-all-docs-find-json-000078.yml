@@ -1,0 +1,47 @@
+# Извлечено из карточки: payloads/web/nosql/couchdb-firebase-misc.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: CouchDB/Firebase — дампы через _all_docs, _find и открытые .json-эндпоинты
+id: e5f6a7b8-0078-4e5f-9a7b-000000000078
+status: experimental
+description: 'Запросы к служебным эндпоинтам документных БД: CouchDB _all_docs/_find/ _utils, Firebase
+  RTDB /.json (shallow, orderBy) без правил доступа. В теле — Mango-selector''ы, выгружающие чувствительные
+  поля.'
+references:
+- https://attack.mitre.org/techniques/T1213/
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: webserver
+  definition: access-лог + логи приложения с телом запроса
+detection:
+  selection_endpoint:
+    cs-uri-stem|contains:
+    - /_all_docs
+    - _find
+    - /.json
+    - /_utils
+    - /_design/
+    - /_config
+  selection_body:
+    request_body|contains:
+    - '"selector"'
+    - '"_all_docs"'
+    - '"fields": ["_id", "password"'
+    - '"limit": 1000'
+  condition: selection_endpoint or selection_body
+fields:
+- c-ip
+- cs-uri-stem
+- sc-status
+- request_body
+falsepositives:
+- синхронизация PouchDB/CouchDB легитимно использует _find — исключайте известные клиентские IP/токены
+level: high
+tags:
+- attack.collection
+- attack.t1190
+- attack.t1213
+- cwe.943
+author: hackbook
+related:
+- 'payloads-card: payloads/web/nosql/couchdb-firebase-misc.md'

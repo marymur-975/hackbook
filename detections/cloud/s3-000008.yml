@@ -1,0 +1,43 @@
+# Извлечено из карточки: payloads/cloud/aws-s3-object-acl-leak.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: S3 — публикация бакета/объектов и анонимное скачивание
+id: f6a7b8c9-0008-4f6a-8b9c-000000000008
+status: experimental
+description: PutBucketAcl/PutBucketPolicy/PutObjectAcl с публичными грантами либо анонимный GetObject
+  — данные стали (или уже стали) доступны интернету.
+references:
+- https://attack.mitre.org/techniques/T1530/
+- https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html
+logsource:
+  product: aws
+  service: cloudtrail
+  definition: CloudTrail data events для S3
+detection:
+  acl_change:
+    eventSource: s3.amazonaws.com
+    eventName:
+    - PutBucketAcl
+    - PutBucketPolicy
+    - PutObjectAcl
+  anonymous_get:
+    eventSource: s3.amazonaws.com
+    eventName: GetObject
+    userIdentity.type: Anonymous
+  condition: acl_change or anonymous_get
+fields:
+- sourceIPAddress
+- userIdentity.sessionContext.sessionIssuer.userName
+- requestParameters.bucketName
+- requestParameters.key
+falsepositives:
+- плановая публикация статики (CDN-бакеты) — ведите список разрешённых бакетов и проверяйте BlockPublicAccess
+  на уровне аккаунта
+level: high
+tags:
+- attack.collection
+- attack.t1530
+- cwe.732
+author: hackbook
+related:
+- 'payloads-card: payloads/cloud/aws-s3-object-acl-leak.md'

@@ -1,0 +1,42 @@
+# Извлечено из карточки: payloads/web/auth-bypass/2fa-bypass-classic.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Обход 2FA — доступ к ресурсу при неподтверждённом челлендже
+id: e5f6a7b8-0102-4e5f-9a7b-000000000102
+status: experimental
+description: Событие доступа к защищённому разделу при twofa_status=challenge_pending (первый фактор пройден,
+  второй — нет) либо лог auth_flow с пропущенным шагом totp_verify. Прямой переход /account/verify ->
+  /account/settings — классический обход 2FA.
+references:
+- https://attack.mitre.org/techniques/T1557/
+- https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/04-Authentication_Testing/04-Testing_for_Bypassing_Authentication_Schema
+logsource:
+  category: application
+  definition: 'логи приложения: статус 2FA в сессии и шаги auth_flow'
+detection:
+  pending_access:
+    event_action: resource_access
+    twofa_status: challenge_pending
+  skipped_step:
+    event_action: auth_flow
+    skipped_step|contains:
+    - totp
+    - 2fa
+    - otp
+  condition: pending_access or skipped_step
+fields:
+- source_ip
+- request_path
+- session_user
+- twofa_status
+- skipped_step
+falsepositives:
+- восстановление сессии после сбоя (редко; сверяйте с политикой step-up auth)
+level: high
+tags:
+- attack.credential_access
+- attack.t1557
+- cwe.287
+author: hackbook
+related:
+- 'payloads-card: payloads/web/auth-bypass/2fa-bypass-classic.md'

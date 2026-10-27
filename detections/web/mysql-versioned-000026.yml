@@ -1,0 +1,40 @@
+# Извлечено из карточки: payloads/web/sqli/mysql-inline-comment-bypass.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: MySQL — обход фильтров versioned-комментариями /*! и /**/
+id: e5f6a7b8-0026-4e5f-9a7b-000000000026
+status: experimental
+description: Query-строка содержит MySQL-специфичные inline-комментарии /*!50000UNION*/, которыми обходят
+  blacklist-фильтры, либо /**/ вместо пробелов.
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://dev.mysql.com/doc/refman/8.0/en/comments.html
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой
+detection:
+  selection:
+    cs-uri-query|contains:
+    - /*!
+    - /**/union
+    - /**/select
+    - /**/or
+    - /**/and
+    - /*!50000
+    - /*!32302
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- версионные комментарии в SQL, который легитимно приходит из админки (исключайте по c-ip)
+level: medium
+tags:
+- attack.initial_access
+- attack.t1190
+- attack.t1140
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/mysql-inline-comment-bypass.md'

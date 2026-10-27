@@ -1,0 +1,41 @@
+# Извлечено из карточки: payloads/web/upload/magic-bytes-polyglot.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Файл-полиглот — исполняемый код после магических байтов изображения
+id: e5f6a7b8-0057-4e5f-9a7b-000000000057
+status: experimental
+description: Загружаемый «image/*» файл содержит PHP/JSP-код сразу после корректных магических байтов
+  (GIF89a;<?php ...). Проверка только заголовка файла такой полиглот пропускает.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  definition: логи загрузок/DLP с превью содержимого файла
+detection:
+  upload:
+    event_action: file_upload
+  image_type:
+    content_type|contains: image/
+  code_in_preview:
+    file_preview|contains:
+    - <?php
+    - <?=
+    - <%
+    - '#!/bin/sh'
+    - '<jsp:'
+  condition: upload and image_type and code_in_preview
+fields:
+- source_ip
+- filename
+- content_type
+- file_preview
+falsepositives:
+- SVG с легитимным скриптом анимации (выносите image/svg+xml в отдельное правило)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.434
+author: hackbook
+related:
+- 'payloads-card: payloads/web/upload/magic-bytes-polyglot.md'

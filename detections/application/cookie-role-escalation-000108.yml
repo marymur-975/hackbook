@@ -1,0 +1,43 @@
+# Извлечено из карточки: payloads/web/deserialization/cookie-state-forgery.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Подделка состояния в подписанном cookie — role escalation и сбой подписи
+id: e5f6a7b8-0108-4e5f-9a7b-000000000108
+status: experimental
+description: 'Сессия читается из подписанного, но не зашифрованного cookie: видны провалы проверки подписи
+  (подделку не удалось скрыть) и расхождение роли из cookie с ролью в БД (подделка удалась — например,
+  flask-unsign + свой секрет).'
+references:
+- https://attack.mitre.org/techniques/T1606/
+- https://flask.palletsprojects.com/en/latest/security/
+logsource:
+  category: application
+  definition: 'логи приложения: события session_load с результатом и ролями'
+detection:
+  tamper_failure:
+    event_action: session_load
+    failure_reason|contains:
+    - signature mismatch
+    - bad signature
+    - tamper
+  role_conflict:
+    event_action: session_load
+    session_role: admin
+    expected_role: user
+  condition: tamper_failure or role_conflict
+fields:
+- source_ip
+- request_path
+- session_role
+- expected_role
+- failure_reason
+falsepositives:
+- ротация секретов подписи (валидные старые cookie отваливаются пачкой — сверяйте с временем релиза)
+level: high
+tags:
+- attack.credential_access
+- attack.t1606
+- cwe.345
+author: hackbook
+related:
+- 'payloads-card: payloads/web/deserialization/cookie-state-forgery.md'

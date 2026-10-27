@@ -1,0 +1,58 @@
+# Извлечено из карточки: payloads/privilege-escalation/windows/service-permissions.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Подмена binPath службы или запуск службы из нестандартного каталога
+id: c3d4e5f6-0007-4c3d-9e4f-000000000207
+status: experimental
+description: Изменение конфигурации службы (binPath) и запуск исполняемого файла службой из каталогов,
+  доступных на запись непривилегированным пользователям.
+references:
+- https://attack.mitre.org/techniques/T1574/009/
+- https://attack.mitre.org/techniques/T1543/003/
+logsource:
+  product: windows
+  service: security
+  definition: аудит изменений служб (4697, 7045) + Sysmon EventID 1
+detection:
+  service_config_change:
+    EventID: 4697
+  new_service:
+    EventID: 7045
+    ImagePath|contains:
+    - \Users\
+    - \Temp\
+    - \ProgramData\
+    - \Public\
+    - cmd.exe
+    - powershell
+    - mshta
+  process_from_writable:
+    EventID: 1
+    ParentImage|endswith: \services.exe
+    Image|contains:
+    - \Users\
+    - \Temp\
+    - \ProgramData\
+  sc_config:
+    EventID: 1
+    Image|endswith: \sc.exe
+    CommandLine|contains:
+    - config
+    - binPath
+  condition: new_service or process_from_writable or sc_config
+fields:
+- ImagePath
+- CommandLine
+- ParentImage
+- AccountName
+falsepositives:
+- установщики вендорного ПО (фильтруйте по подписи и ParentImage)
+level: high
+tags:
+- attack.persistence
+- attack.privilege_escalation
+- attack.t1574.009
+- attack.t1543.003
+author: hackbook
+related:
+- 'payloads-card: payloads/privilege-escalation/windows/service-permissions.md'

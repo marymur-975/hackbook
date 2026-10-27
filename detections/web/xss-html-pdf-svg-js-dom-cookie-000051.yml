@@ -1,0 +1,43 @@
+# Извлечено из карточки: payloads/web/xss/pdf-svg-generation.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: XSS в HTML->PDF/SVG конвейере — JS с эксфильтрацией DOM и cookie
+id: e5f6a7b8-0051-4e5f-9a7b-000000000051
+status: experimental
+description: 'Пользовательские данные попадают в шаблон, который рендерит headless-браузер (Puppeteer/wkhtmltopdf/WeasyPrint):
+  fetch/btoa(document...) в теле запроса, событие pdf_generate с JS-вставкой. Успех — утечка cookie/ DOM
+  на внешний хост.'
+references:
+- https://attack.mitre.org/techniques/T1189/
+logsource:
+  category: webserver
+  definition: access-лог и логи сервиса генерации PDF (event_action pdf_generate)
+detection:
+  selection_query:
+    cs-uri-query|contains:
+    - btoa(document
+    - <script>fetch
+    - onerror="fetch('http
+  selection_pdf:
+    event_action: pdf_generate
+    request_body|contains:
+    - <script>fetch
+    - document.cookie
+    - btoa(document
+    - <iframe
+  condition: selection_query or selection_pdf
+fields:
+- c-ip
+- cs-uri-query
+- request_path
+- request_body
+falsepositives:
+- штатные шаблоны отчётов с <iframe> (исключайте внутренние источники шаблонов)
+level: high
+tags:
+- attack.initial_access
+- attack.t1189
+- cwe.79
+author: hackbook
+related:
+- 'payloads-card: payloads/web/xss/pdf-svg-generation.md'

@@ -1,0 +1,42 @@
+# Извлечено из карточки: payloads/web/logic/graphql-introspection-batching.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: GraphQL-злоупотребление — глубина, алиасы и батчинг запросов
+id: e5f6a7b8-0079-4e5f-9a7b-000000000079
+status: experimental
+description: 'Аномалии по метрикам GraphQL-запросов: глубина вложенности >= 10, >= 5 алиасов (alias-бомба
+  для обхода rate-limit), батч из >= 5 операций, а также IntrospectionQuery в продуктивном контуре.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://graphql.org/learn/introspection/
+logsource:
+  category: application
+  definition: логи API-шлюза GraphQL с метриками запроса (depth, aliases, batch)
+detection:
+  depth_bomb:
+    query_depth|gte: 10
+  alias_bomb:
+    alias_count|gte: 5
+  batch_bomb:
+    batch_size|gte: 5
+  introspection_prod:
+    operation_name: IntrospectionQuery
+  condition: depth_bomb or alias_bomb or batch_bomb or introspection_prod
+fields:
+- source_ip
+- operation_name
+- query_depth
+- alias_count
+- batch_size
+- duration_ms
+falsepositives:
+- легитимные агрегирующие запросы мобильных клиентов (глубина 5-7) — пороги подбирайте по профилю своей
+  нагрузки
+level: medium
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.400
+author: hackbook
+related:
+- 'payloads-card: payloads/web/logic/graphql-introspection-batching.md'

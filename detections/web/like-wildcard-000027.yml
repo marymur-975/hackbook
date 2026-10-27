@@ -1,0 +1,37 @@
+# Извлечено из карточки: payloads/web/sqli/mysql-like-wildcard.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: LIKE-wildcard инъекция — % и _ в параметрах перечисления
+id: e5f6a7b8-0027-4e5f-9a7b-000000000027
+status: experimental
+description: Параметр заканчивается на %' или содержит %' OR / LIKE '% — атакующий использует подстановочные
+  символы LIKE для перебора и обхода фильтрации, в том числе в связке с тавтологией.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой
+detection:
+  selection:
+    cs-uri-query|contains:
+    - admin%'
+    - '%'' OR'
+    - '%'' AND'
+    - '%'' --'
+    - LIKE '%
+    - =%25'
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- поисковые строки с символом % (фильтруйте по cs-uri-stem и объёму запросов)
+level: medium
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/mysql-like-wildcard.md'

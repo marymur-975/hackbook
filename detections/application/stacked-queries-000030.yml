@@ -1,0 +1,48 @@
+# Извлечено из карточки: payloads/web/sqli/mysql-stacked-queries.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Stacked queries — второй запрос через точку с запятой
+id: e5f6a7b8-0030-4e5f-9a7b-000000000030
+status: experimental
+description: В параметре после закрывающей кавычки и точки с запятой идёт UPDATE/INSERT/ DELETE/DROP/EXEC/COPY
+  — попытка выполнить второй запрос. В журнале БД — синтаксическая ошибка рядом с ключевым словом второго
+  запроса.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  service: database
+  definition: access-лог приложения и журнал ошибок СУБД
+detection:
+  query_probe:
+    cs-uri-query|contains:
+    - '''; UPDATE'
+    - '''; INSERT'
+    - '''; DELETE'
+    - '''; DROP'
+    - '''; EXEC'
+    - '''; COPY'
+    - ; UPDATE users
+    - ; INSERT INTO
+  db_error:
+    error_message|contains:
+    - near 'UPDATE
+    - near 'INSERT
+    - near 'DELETE
+    - near 'DROP
+  condition: query_probe or db_error
+fields:
+- c-ip
+- cs-uri-query
+- error_message
+- statement
+falsepositives:
+- API батч-операций, принимающие несколько значений через ';' (исключайте по cs-uri-stem)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/mysql-stacked-queries.md'

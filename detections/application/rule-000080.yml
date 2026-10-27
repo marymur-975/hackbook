@@ -1,0 +1,45 @@
+# Извлечено из карточки: payloads/web/logic/price-quantity-tampering.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Манипуляция ценой/количеством в заказе — отрицательные и нулевые значения
+id: e5f6a7b8-0080-4e5f-9a7b-000000000080
+status: experimental
+description: В теле создания заказа встречаются отрицательные qty/price, нулевая цена, смена валюты или
+  повторное применение одноразового купона. Сервер должен пересчитывать суммы сам — такие значения в запросе
+  всегда аномалия.
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://portswigger.net/web-security/logic-flaws
+logsource:
+  category: application
+  definition: 'логи приложения: события создания/изменения заказа с телом запроса'
+detection:
+  order_action:
+    event_action:
+    - order_create
+    - cart_update
+    - checkout
+  tampering:
+    request_body|contains:
+    - '"qty":-'
+    - '"qty":0'
+    - '"price":0'
+    - '"price":-'
+    - '"amount":-'
+    - '"discount":100'
+  condition: order_action and tampering
+fields:
+- source_ip
+- request_path
+- request_body
+falsepositives:
+- возвраты и корректировки, где отрицательные qty легальны (они идут под другим event_action — выносите
+  в фильтр)
+level: high
+tags:
+- attack.impact
+- attack.t1190
+- cwe.841
+author: hackbook
+related:
+- 'payloads-card: payloads/web/logic/price-quantity-tampering.md'

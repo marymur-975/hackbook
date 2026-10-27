@@ -1,0 +1,52 @@
+# Извлечено из карточки: payloads/web/ssrf/blind-callback.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Blind SSRF — outbound-обращения к OOB-платформам атакующего
+id: e5f6a7b8-0068-4e5f-9a7b-000000000068
+status: experimental
+description: Параметр url/redirect указывает на известные callback-платформы (burpcollaborator, oastify,
+  interact.sh, requestbin, pipedream), либо DNS-лог фиксирует запросы веб-сервера к таким доменам.
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://portswigger.net/web-security/ssrf/blind
+logsource:
+  category: dns
+  definition: DNS-лог + access-лог с параметром url
+detection:
+  selection_query:
+    cs-uri-query|contains:
+    - burpcollaborator
+    - oastify
+    - interact.sh
+    - requestbin
+    - pipedream
+    - canarytokens
+    - ngrok.io
+    - oast.fun
+  selection_dns:
+    qname|contains:
+    - burpcollaborator
+    - oastify
+    - interact.sh
+    - requestbin
+    - pipedream
+    - canarytokens
+    - ngrok.io
+    - oast.fun
+  condition: selection_query or selection_dns
+fields:
+- c-ip
+- cs-uri-query
+- qname
+- src_ip
+falsepositives:
+- отсутствуют в норме: обращения к OOB-платформам из прода всегда инцидент
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- attack.t1071
+- cwe.918
+author: hackbook
+related:
+- 'payloads-card: payloads/web/ssrf/blind-callback.md'

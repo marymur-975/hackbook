@@ -1,0 +1,79 @@
+# LDIF для лабораторного каталога OpenLDAP.
+# Намеренно содержит анонимно читаемые записи — это учебная находка
+# (payloads/network/ldap-anonymous-bind.md).
+#
+# Загружается контейнером bitnami/openldap из /ldifs.
+
+dn: ou=people,dc=lab,dc=local
+objectClass: organizationalUnit
+ou: people
+
+dn: ou=groups,dc=lab,dc=local
+objectClass: organizationalUnit
+ou: groups
+
+dn: ou=services,dc=lab,dc=local
+objectClass: organizationalUnit
+ou: services
+
+dn: cn=aadmin,ou=people,dc=lab,dc=local
+objectClass: inetOrgPerson
+cn: aadmin
+sn: Admin
+givenName: Anna
+uid: aadmin
+mail: aadmin@lab.local
+title: Domain Administrator
+telephoneNumber: +7 000 000-00-01
+description: Учётная запись администратора каталога
+
+dn: cn=ivanov,ou=people,dc=lab,dc=local
+objectClass: inetOrgPerson
+cn: ivanov
+sn: Ivanov
+givenName: Ivan
+uid: ivanov
+mail: i.ivanov@lab.local
+title: Backend Developer
+
+dn: cn=petrova,ou=people,dc=lab,dc=local
+objectClass: inetOrgPerson
+cn: petrova
+sn: Petrova
+givenName: Olga
+uid: petrova
+mail: o.petrova@lab.local
+title: Finance Manager
+
+dn: cn=svc_backup,ou=services,dc=lab,dc=local
+objectClass: inetOrgPerson
+cn: svc_backup
+sn: Backup
+uid: svc_backup
+mail: backup@lab.local
+title: Backup Service Account
+description: Сервисная учётка резервного копирования
+
+dn: cn=svc_sql,ou=services,dc=lab,dc=local
+objectClass: inetOrgPerson
+cn: svc_sql
+sn: SQL
+uid: svc_sql
+mail: sql@lab.local
+title: Database Service Account
+description: Учётка службы СУБД (см. главу про Active Directory)
+
+dn: cn=admins,ou=groups,dc=lab,dc=local
+objectClass: groupOfNames
+cn: admins
+member: cn=aadmin,ou=people,dc=lab,dc=local
+
+dn: cn=developers,ou=groups,dc=lab,dc=local
+objectClass: groupOfNames
+cn: developers
+member: cn=ivanov,ou=people,dc=lab,dc=local
+
+dn: cn=finance,ou=groups,dc=lab,dc=local
+objectClass: groupOfNames
+cn: finance
+member: cn=petrova,ou=people,dc=lab,dc=local

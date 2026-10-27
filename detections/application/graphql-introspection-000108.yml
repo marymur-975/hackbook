@@ -1,0 +1,49 @@
+# Извлечено из карточки: payloads/web/detection/graphql-abuse-logs.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: 'Злоупотребление GraphQL: introspection, батчинг или аномально тяжёлый запрос'
+id: b2c3d4e5-0008-4b2c-8d3e-000000000108
+status: experimental
+description: 'Признаки разведки схемы и ресурсных атак через GraphQL-эндпоинт. Поля специфичны для логов
+  API-шлюза: замените имена на фактические.'
+references:
+- https://attack.mitre.org/techniques/T1595/002/
+- payloads/web/logic/graphql-introspection-batching.md
+logsource:
+  category: application
+  product: graphql
+  definition: логи API-шлюза с полями operation_name, query_depth, batch_size
+detection:
+  introspection:
+    request_path|endswith: /graphql
+    query_text|contains:
+    - __schema
+    - __type(
+    - __typename
+  batching:
+    request_path|endswith: /graphql
+    batch_size|gt: 5
+  heavy:
+    request_path|endswith: /graphql
+    query_depth|gt: 8
+  aliases:
+    request_path|endswith: /graphql
+    alias_count|gt: 20
+  condition: introspection or batching or heavy or aliases
+fields:
+- source_ip
+- user_id
+- operation_name
+- query_depth
+- batch_size
+- duration_ms
+falsepositives:
+- внутренняя разработка и инструменты типа GraphQL Playground (выносите по user_id/IP)
+level: medium
+tags:
+- attack.reconnaissance
+- attack.t1595.002
+- attack.impact
+author: hackbook
+related:
+- 'payloads-card: payloads/web/detection/graphql-abuse-logs.md'

@@ -1,0 +1,51 @@
+# Извлечено из карточки: payloads/web/sqli/generic-out-of-band-dns.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: SQL-инъекция с OOB-каналом — xp_dirtree/UTL_HTTP и DNS-callback
+id: e5f6a7b8-0019-4e5f-9a7b-000000000019
+status: experimental
+description: В запросе видны OOB-функции СУБД (xp_dirtree, UTL_HTTP, UTL_INADDR), либо DNS-сервер фиксирует
+  обращения к известным OOB-платформам (dnslog, oastify, burpcollaborator, interact.sh) с сервера приложения.
+references:
+- https://attack.mitre.org/techniques/T1048/
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: dns
+  definition: журнал DNS-сервера/резолвера + access-лог приложения
+detection:
+  query_oob:
+    cs-uri-query|contains:
+    - xp_dirtree
+    - xp_filelist
+    - xp_subdirs
+    - UTL_HTTP
+    - UTL_INADDR
+    - LOAD_FILE(0x
+  dns_oob_platform:
+    qname|contains:
+    - dnslog
+    - oastify
+    - burpcollaborator
+    - interact.sh
+    - requestbin
+    - canarytokens
+    - pipedream
+    - oast.fun
+    - ngrok.io
+  condition: query_oob or dns_oob_platform
+fields:
+- c-ip
+- cs-uri-query
+- qname
+- src_ip
+falsepositives:
+- интеграции, легитимно использующие UTL_HTTP (Oracle EBS) — исключайте по src_ip
+level: high
+tags:
+- attack.exfiltration
+- attack.t1048
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/generic-out-of-band-dns.md'

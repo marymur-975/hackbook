@@ -1,0 +1,40 @@
+# Извлечено из карточки: payloads/cloud/kubernetes-anonymous-api.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Kubernetes API — успешные анонимные запросы
+id: f6a7b8c9-0001-4f6a-8b9c-000000000001
+status: experimental
+description: 'Запросы от system:anonymous/system:unauthenticated, завершившиеся успехом (200/201/101):
+  кластер отдаёт данные неаутентифицированным клиентам — анонимный доступ включён и подкреплён RBAC-binding''ами.'
+references:
+- https://attack.mitre.org/techniques/T1613/
+- https://kubernetes.io/docs/reference/access-authn-authz/authentication/
+logsource:
+  product: kubernetes
+  service: audit
+  definition: 'Kubernetes Audit Log (policy: Metadata и выше для всех verb)'
+detection:
+  selection:
+    user_username: system:anonymous
+  success:
+    responseStatus_code:
+    - 200
+    - 201
+    - 101
+  condition: selection and success
+fields:
+- user_username
+- verb
+- requestURI
+- objectRef_resource
+- sourceIPs
+falsepositives:
+- health-check probe'ы балансировщика к /healthz /livez /readyz — выносите эти requestURI в исключения
+level: critical
+tags:
+- attack.discovery
+- attack.t1613
+- cwe.306
+author: hackbook
+related:
+- 'payloads-card: payloads/cloud/kubernetes-anonymous-api.md'

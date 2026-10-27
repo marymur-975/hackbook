@@ -1,0 +1,39 @@
+# Извлечено из карточки: payloads/web/sqli/mssql-error-based-convert.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: MSSQL error-based — CONVERT(int, ...) выводит данные в тексте ошибки
+id: e5f6a7b8-0020-4e5f-9a7b-000000000020
+status: experimental
+description: Параметр содержит CONVERT(int,(SELECT ...)), либо в журнале MSSQL ошибка «Conversion failed
+  when converting the nvarchar value ...» — в ней видно значение, которое хотел получить атакующий.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  service: database
+  definition: access-лог приложения и журнал ошибок MSSQL
+detection:
+  query_probe:
+    cs-uri-query|contains:
+    - CONVERT(int
+    - CONVERT(INT
+    - CONVERT(varchar
+    - TRY_CONVERT
+  db_error:
+    error_message|contains: Conversion failed when converting
+  condition: query_probe or db_error
+fields:
+- c-ip
+- cs-uri-query
+- error_message
+- statement
+falsepositives:
+- ошибки легитимных приведений типов в хранимых процедурах (сверяйте statement с кодом приложения)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/mssql-error-based-convert.md'

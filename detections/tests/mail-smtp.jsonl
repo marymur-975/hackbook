@@ -1,0 +1,222 @@
+{"process": "postfix/smtpd", "client_ip": "203.0.113.7", "queue_id": "A1B2C3", "message": "connect from unknown[203.0.113.7]: relay=smtp.gmail.com client=unknown[203.0.113.7]", "note": "неаутентифицированный клиент пересылает внешнему получателю"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.7", "queue_id": "A1B2C4", "message": "NOQUEUE: reject: RCPT from unknown[203.0.113.7]: 554 5.7.1 <external@example.com>: Relay access denied", "note": "relay отклонён (защита сработала)"}
+{"process": "postfix/smtpd", "client_ip": "198.51.100.9", "queue_id": "", "message": "VRFY ivanov", "note": "проба VRFY из интернета"}
+{"process": "postfix/smtpd", "client_ip": "198.51.100.9", "queue_id": "", "message": "EXPN postmaster", "note": "проба EXPN"}
+{"process": "postfix/smtpd", "client_ip": "198.51.100.20", "queue_id": "", "message": "warning: unknown[198.51.100.20]: SASL authentication failed; seq=0", "note": "перебор паролей на submission-порте"}
+{"process": "postfix/smtpd", "client_ip": "198.51.100.20", "queue_id": "", "message": "warning: unknown[198.51.100.20]: SASL authentication failed; seq=1", "note": "перебор паролей на submission-порте"}
+{"process": "postfix/smtpd", "client_ip": "198.51.100.20", "queue_id": "", "message": "warning: unknown[198.51.100.20]: SASL authentication failed; seq=2", "note": "перебор паролей на submission-порте"}
+{"process": "postfix/smtpd", "client_ip": "198.51.100.20", "queue_id": "", "message": "warning: unknown[198.51.100.20]: SASL authentication failed; seq=3", "note": "перебор паролей на submission-порте"}
+{"process": "postfix/smtpd", "client_ip": "198.51.100.20", "queue_id": "", "message": "warning: unknown[198.51.100.20]: SASL authentication failed; seq=4", "note": "перебор паролей на submission-порте"}
+{"process": "postfix/smtpd", "client_ip": "198.51.100.20", "queue_id": "", "message": "warning: unknown[198.51.100.20]: SASL authentication failed; seq=5", "note": "перебор паролей на submission-порте"}
+{"process": "postfix/smtpd", "client_ip": "198.51.100.20", "queue_id": "", "message": "warning: unknown[198.51.100.20]: SASL authentication failed; seq=6", "note": "перебор паролей на submission-порте"}
+{"process": "postfix/smtpd", "client_ip": "198.51.100.20", "queue_id": "", "message": "warning: unknown[198.51.100.20]: SASL authentication failed; seq=7", "note": "перебор паролей на submission-порте"}
+{"process": "postfix/smtpd", "client_ip": "198.51.100.20", "queue_id": "", "message": "warning: unknown[198.51.100.20]: SASL authentication failed; seq=8", "note": "перебор паролей на submission-порте"}
+{"process": "postfix/smtpd", "client_ip": "198.51.100.20", "queue_id": "", "message": "warning: unknown[198.51.100.20]: SASL authentication failed; seq=9", "note": "перебор паролей на submission-порте"}
+{"process": "postfix/smtpd", "client_ip": "198.51.100.20", "queue_id": "", "message": "warning: unknown[198.51.100.20]: SASL authentication failed; seq=10", "note": "перебор паролей на submission-порте"}
+{"process": "postfix/smtpd", "client_ip": "198.51.100.20", "queue_id": "", "message": "warning: unknown[198.51.100.20]: SASL authentication failed; seq=11", "note": "перебор паролей на submission-порте"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK0", "message": "to=<user0@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK1", "message": "to=<user1@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK2", "message": "to=<user2@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK3", "message": "to=<user3@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK4", "message": "to=<user4@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK5", "message": "to=<user5@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK6", "message": "to=<user6@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK7", "message": "to=<user7@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK8", "message": "to=<user8@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK9", "message": "to=<user9@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK10", "message": "to=<user10@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK11", "message": "to=<user11@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK12", "message": "to=<user12@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK13", "message": "to=<user13@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK14", "message": "to=<user14@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK15", "message": "to=<user15@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK16", "message": "to=<user16@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK17", "message": "to=<user17@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK18", "message": "to=<user18@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK19", "message": "to=<user19@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK20", "message": "to=<user20@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK21", "message": "to=<user21@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK22", "message": "to=<user22@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK23", "message": "to=<user23@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK24", "message": "to=<user24@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK25", "message": "to=<user25@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK26", "message": "to=<user26@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK27", "message": "to=<user27@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK28", "message": "to=<user28@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK29", "message": "to=<user29@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK30", "message": "to=<user30@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK31", "message": "to=<user31@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK32", "message": "to=<user32@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK33", "message": "to=<user33@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK34", "message": "to=<user34@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK35", "message": "to=<user35@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK36", "message": "to=<user36@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK37", "message": "to=<user37@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK38", "message": "to=<user38@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK39", "message": "to=<user39@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK40", "message": "to=<user40@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK41", "message": "to=<user41@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK42", "message": "to=<user42@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK43", "message": "to=<user43@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK44", "message": "to=<user44@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK45", "message": "to=<user45@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK46", "message": "to=<user46@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK47", "message": "to=<user47@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK48", "message": "to=<user48@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK49", "message": "to=<user49@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK50", "message": "to=<user50@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK51", "message": "to=<user51@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK52", "message": "to=<user52@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK53", "message": "to=<user53@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK54", "message": "to=<user54@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK55", "message": "to=<user55@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK56", "message": "to=<user56@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK57", "message": "to=<user57@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK58", "message": "to=<user58@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK59", "message": "to=<user59@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK60", "message": "to=<user60@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK61", "message": "to=<user61@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK62", "message": "to=<user62@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK63", "message": "to=<user63@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK64", "message": "to=<user64@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK65", "message": "to=<user65@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK66", "message": "to=<user66@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK67", "message": "to=<user67@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK68", "message": "to=<user68@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK69", "message": "to=<user69@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK70", "message": "to=<user70@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK71", "message": "to=<user71@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK72", "message": "to=<user72@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK73", "message": "to=<user73@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK74", "message": "to=<user74@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK75", "message": "to=<user75@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK76", "message": "to=<user76@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK77", "message": "to=<user77@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK78", "message": "to=<user78@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK79", "message": "to=<user79@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK80", "message": "to=<user80@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK81", "message": "to=<user81@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK82", "message": "to=<user82@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK83", "message": "to=<user83@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK84", "message": "to=<user84@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK85", "message": "to=<user85@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK86", "message": "to=<user86@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK87", "message": "to=<user87@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK88", "message": "to=<user88@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK89", "message": "to=<user89@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK90", "message": "to=<user90@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK91", "message": "to=<user91@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK92", "message": "to=<user92@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK93", "message": "to=<user93@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK94", "message": "to=<user94@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK95", "message": "to=<user95@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK96", "message": "to=<user96@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK97", "message": "to=<user97@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK98", "message": "to=<user98@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK99", "message": "to=<user99@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK100", "message": "to=<user100@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK101", "message": "to=<user101@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK102", "message": "to=<user102@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK103", "message": "to=<user103@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK104", "message": "to=<user104@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK105", "message": "to=<user105@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK106", "message": "to=<user106@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK107", "message": "to=<user107@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK108", "message": "to=<user108@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK109", "message": "to=<user109@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK110", "message": "to=<user110@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK111", "message": "to=<user111@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK112", "message": "to=<user112@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK113", "message": "to=<user113@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK114", "message": "to=<user114@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK115", "message": "to=<user115@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK116", "message": "to=<user116@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK117", "message": "to=<user117@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK118", "message": "to=<user118@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK119", "message": "to=<user119@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK120", "message": "to=<user120@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK121", "message": "to=<user121@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK122", "message": "to=<user122@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK123", "message": "to=<user123@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK124", "message": "to=<user124@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK125", "message": "to=<user125@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK126", "message": "to=<user126@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK127", "message": "to=<user127@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK128", "message": "to=<user128@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK129", "message": "to=<user129@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK130", "message": "to=<user130@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK131", "message": "to=<user131@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK132", "message": "to=<user132@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK133", "message": "to=<user133@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK134", "message": "to=<user134@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK135", "message": "to=<user135@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK136", "message": "to=<user136@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK137", "message": "to=<user137@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK138", "message": "to=<user138@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK139", "message": "to=<user139@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK140", "message": "to=<user140@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK141", "message": "to=<user141@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK142", "message": "to=<user142@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK143", "message": "to=<user143@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK144", "message": "to=<user144@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK145", "message": "to=<user145@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK146", "message": "to=<user146@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK147", "message": "to=<user147@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK148", "message": "to=<user148@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK149", "message": "to=<user149@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK150", "message": "to=<user150@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK151", "message": "to=<user151@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK152", "message": "to=<user152@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK153", "message": "to=<user153@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK154", "message": "to=<user154@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK155", "message": "to=<user155@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK156", "message": "to=<user156@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK157", "message": "to=<user157@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK158", "message": "to=<user158@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK159", "message": "to=<user159@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK160", "message": "to=<user160@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK161", "message": "to=<user161@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK162", "message": "to=<user162@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK163", "message": "to=<user163@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK164", "message": "to=<user164@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK165", "message": "to=<user165@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK166", "message": "to=<user166@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK167", "message": "to=<user167@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK168", "message": "to=<user168@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK169", "message": "to=<user169@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK170", "message": "to=<user170@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK171", "message": "to=<user171@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK172", "message": "to=<user172@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK173", "message": "to=<user173@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK174", "message": "to=<user174@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK175", "message": "to=<user175@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK176", "message": "to=<user176@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK177", "message": "to=<user177@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK178", "message": "to=<user178@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK179", "message": "to=<user179@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK180", "message": "to=<user180@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK181", "message": "to=<user181@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK182", "message": "to=<user182@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK183", "message": "to=<user183@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK184", "message": "to=<user184@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK185", "message": "to=<user185@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK186", "message": "to=<user186@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK187", "message": "to=<user187@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK188", "message": "to=<user188@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK189", "message": "to=<user189@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK190", "message": "to=<user190@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK191", "message": "to=<user191@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK192", "message": "to=<user192@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK193", "message": "to=<user193@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK194", "message": "to=<user194@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK195", "message": "to=<user195@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK196", "message": "to=<user196@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK197", "message": "to=<user197@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK198", "message": "to=<user198@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK199", "message": "to=<user199@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "203.0.113.33", "queue_id": "BULK200", "message": "to=<user200@victim.example>, relay=none, status=bounced", "note": "массовая рассылка внешним получателям"}
+{"process": "postfix/smtpd", "client_ip": "10.10.20.5", "queue_id": "LOCAL0", "message": "to=<user0@corp.lab>, relay=local, status=sent", "note": "обычная внутренняя почта — порог не превышен"}
+{"process": "postfix/smtpd", "client_ip": "10.10.20.5", "queue_id": "LOCAL1", "message": "to=<user1@corp.lab>, relay=local, status=sent", "note": "обычная внутренняя почта — порог не превышен"}
+{"process": "postfix/smtpd", "client_ip": "10.10.20.5", "queue_id": "LOCAL2", "message": "to=<user2@corp.lab>, relay=local, status=sent", "note": "обычная внутренняя почта — порог не превышен"}
+{"process": "postfix/smtpd", "client_ip": "10.10.20.5", "queue_id": "LOCAL3", "message": "to=<user3@corp.lab>, relay=local, status=sent", "note": "обычная внутренняя почта — порог не превышен"}
+{"process": "postfix/smtpd", "client_ip": "10.10.20.5", "queue_id": "LOCAL4", "message": "to=<user4@corp.lab>, relay=local, status=sent", "note": "обычная внутренняя почта — порог не превышен"}

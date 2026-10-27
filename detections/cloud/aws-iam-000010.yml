@@ -1,0 +1,37 @@
+# Извлечено из карточки: payloads/cloud/aws-iam-privilege-escalation.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: AWS — изменение IAM-политик как признак эскалации
+id: a1b2c3d4-0010-4a1b-9c1d-000000000010
+status: experimental
+description: Вызовы IAM API, которые сами по себе выдают дополнительные права. Легитимны только в рамках
+  управляемого процесса изменения доступов.
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: iam.amazonaws.com
+    eventName:
+    - CreatePolicyVersion
+    - SetDefaultPolicyVersion
+    - AttachRolePolicy
+    - AttachUserPolicy
+    - AttachGroupPolicy
+    - PutRolePolicy
+    - PutUserPolicy
+    - PassRole
+    - CreateAccessKey
+    - AddUserToGroup
+  filter_breakglass:
+    userIdentity.sessionContext.sessionIssuer.userName: iam-breakglass
+  condition: selection and not filter_breakglass
+falsepositives:
+- автоматизация IaC (Terraform/CloudFormation) — вынесите её в отдельную роль и filter
+level: high
+tags:
+- attack.privilege_escalation
+- attack.t1098
+author: hackbook
+related:
+- 'payloads-card: payloads/cloud/aws-iam-privilege-escalation.md'

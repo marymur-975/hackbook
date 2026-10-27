@@ -1,0 +1,40 @@
+# Извлечено из карточки: payloads/network/ldap-anonymous-bind.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: LDAP anonymous bind и перечисление каталога без аутентификации
+id: a7b8c9d0-0003-4a7b-9c8d-000000000003
+status: experimental
+description: BIND с пустым dn (anonymous) в журнале slapd/OpenLDAP, за которым обычно следует SRCH по
+  всему дереву с filter=(objectclass=*). На AD-стороне аналог — событие 2889 (unsigned/anonymous binds).
+references:
+- https://attack.mitre.org/techniques/T1087/
+logsource:
+  product: linux
+  service: ldap
+  definition: журнал slapd (loglevel 256 stats) или AD LDAP-диагностика (event 2889)
+detection:
+  anonymous_bind:
+    service: slapd
+    message|contains:
+    - BIND dn=""
+    - (anonymous)
+    - ANONYMOUS
+  full_tree_search:
+    service: slapd
+    message|contains:
+    - filter="(objectclass=*)"
+    - scope=2 filter
+  condition: anonymous_bind or full_tree_search
+fields:
+- source_ip
+- message
+falsepositives:
+- health-check'и балансировщиков, читающие rootDSE анонимно (одиночные запросы без SRCH по дереву)
+level: high
+tags:
+- attack.discovery
+- attack.t1087
+- cwe.306
+author: hackbook
+related:
+- 'payloads-card: payloads/network/ldap-anonymous-bind.md'

@@ -1,0 +1,38 @@
+# Извлечено из карточки: payloads/cloud/gcp-metadata-token.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: GCP — запрос токена сервисного аккаунта из metadata-сервиса
+id: f6a7b8c9-0012-4f6a-8b9c-000000000012
+status: experimental
+description: Исходящий HTTP к metadata.google.internal (169.254.169.254) по пути /computeMetadata/v1/.../token
+  — получение OAuth-токена SA изнутри инстанса. В связке с SSRF это утечка токена наружу.
+references:
+- https://attack.mitre.org/techniques/T1552/005/
+- https://cloud.google.com/compute/docs/metadata/overview
+logsource:
+  category: firewall
+  definition: 'egress-лог прокси/файрвола: все исходящие HTTP рабочих нагрузок'
+detection:
+  selection:
+    dst_ip: 169.254.169.254
+  metadata_path:
+    uri|contains: computeMetadata
+  metadata_host:
+    http_host: metadata.google.internal
+  condition: selection and (metadata_path or metadata_host)
+fields:
+- src_ip
+- dst_ip
+- uri
+- http_host
+falsepositives:
+- штатные библиотеки GCP берут токены из метаданных постоянно — алерт ценен, когда источник (src_ip) не
+  должен этого делать (публичный сервис) или запрос идёт после внешнего ввода (SSRF)
+level: high
+tags:
+- attack.credential_access
+- attack.t1552.005
+- cwe.918
+author: hackbook
+related:
+- 'payloads-card: payloads/cloud/gcp-metadata-token.md'

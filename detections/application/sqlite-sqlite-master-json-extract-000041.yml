@@ -1,0 +1,45 @@
+# Извлечено из карточки: payloads/web/sqli/sqlite-json-extract.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: SQLite — перечисление схемы через sqlite_master и json_extract
+id: e5f6a7b8-0041-4e5f-9a7b-000000000041
+status: experimental
+description: Параметр содержит sqlite_master/sqlite_schema (UNION-перечисление схемы) или json_extract()
+  (выуживание JSON-полей), либо приложение на SQLite падает с OperationalError на таком запросе.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  service: database
+  definition: access-лог приложения и лог ошибок SQLite (sqlite3.OperationalError)
+detection:
+  query_probe:
+    cs-uri-query|contains:
+    - sqlite_master
+    - sqlite_schema
+    - json_extract(
+    - SQLITE_VERSION()
+  db_error:
+    error_message|contains:
+    - sqlite3.OperationalError
+    - no such column
+  db_statement:
+    statement|contains:
+    - sqlite_master
+    - json_extract
+  condition: query_probe or (db_error and db_statement)
+fields:
+- c-ip
+- cs-uri-query
+- error_message
+- statement
+falsepositives:
+- приложения, легитимно использующие json_extract в API-фильтрах (исключайте по cs-uri-stem)
+level: medium
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/sqlite-json-extract.md'

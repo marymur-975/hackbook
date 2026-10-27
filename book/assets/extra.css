@@ -1,0 +1,151 @@
+/* Дополнительные стили сайта hackbook.
+   Подключается через extra_css в book/mkdocs.yml. */
+
+/* Карточки payload'ов: канонический блок с нагрузкой */
+.md-typeset pre code {
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.md-typeset .highlight {
+  border-left: 3px solid var(--md-accent-fg-color);
+  border-radius: 0.15rem;
+}
+
+/* Предупреждения об этике — заметнее, чем обычный admonition */
+.md-typeset .admonition.danger,
+.md-typeset .admonition.warning {
+  border-width: 0 0 0 0.2rem;
+}
+
+/* Таблицы: горизонтальный скролл вместо ломающейся вёрстки */
+.md-typeset table:not([class]) {
+  display: table;
+  width: 100%;
+  font-size: 0.78rem;
+}
+
+.md-typeset__table {
+  overflow-x: auto;
+}
+
+/* Метки front-matter, выведенные как inline-код */
+.md-typeset code {
+  padding: 0 0.3em;
+  word-break: break-word;
+}
+
+/* Компактные списки в карточках remediation */
+.md-typeset ul li p {
+  margin: 0;
+}
+
+/* Разрешаем перенос длинных слов в таблицах, чтобы текст не вылезал */
+.md-typeset table:not([class]) td,
+.md-typeset table:not([class]) th {
+  word-break: break-word;
+  white-space: normal;
+  hyphens: auto;
+  min-width: 120px; /* Чтобы совсем не сжимались в точку */
+}
+
+/* Принудительно держим заголовок "Сложность" в одну строку */
+.md-typeset table:not([class]) th:nth-child(3) {
+  white-space: nowrap;
+  min-width: 100px;
+}
+
+/* Принудительно делаем чекбоксы интерактивными */
+.md-typeset .task-list-item input[type="checkbox"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 100;
+  position: relative;
+}
+
+/* Печать: убираем навигацию, оставляем контент */
+@media print {
+  .md-sidebar,
+  .md-header,
+  .md-footer,
+  .md-tabs {
+    display: none !important;
+  }
+  .md-content {
+    margin: 0;
+  }
+  .md-typeset pre {
+    white-space: pre-wrap;
+  }
+}
+
+/* =========================================
+   КИБЕРПАНК-СТИЛЬ (HACKBOOK)
+   ========================================= */
+
+/* 1. Легкая матричная сетка на фоне */
+body {
+  background-image:
+    linear-gradient(rgba(0, 255, 204, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 204, 0.03) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+/* 2. Неоновое свечение для активной вкладки и кнопок */
+.md-tabs__link--active,
+.md-nav__link--active {
+  color: #00ffcc !important; /* Кибер-бирюза */
+  text-shadow: 0 0 8px rgba(0, 255, 204, 0.6);
+}
+
+/* 3. Стилизация блоков кода (неоновый край) */
+.md-typeset pre > code {
+  border-left: 3px solid #00ffcc;
+  box-shadow: inset 5px 0 15px -5px rgba(0, 255, 204, 0.2);
+}
+
+/* 4. Красивый неоновый скроллбар */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0e1117;
+}
+::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00ffcc;
+}
+
+/* 5. Подсветка ссылок при наведении */
+.md-typeset a:hover {
+  color: #ff0055; /* Неон-розовый для контраста */
+  text-shadow: 0 0 5px rgba(255, 0, 85, 0.5);
+}
+
+/* 6. Таблицы в стиле "хакерский терминал" */
+.md-typeset table:not([class]) {
+  border: 1px solid #30363d;
+  box-shadow: 0 0 10px rgba(0, 255, 204, 0.1);
+}
+.md-typeset table:not([class]) th {
+  background-color: #161b22;
+  color: #00ffcc;
+  border-bottom: 2px solid #00ffcc;
+}
+
+/* 7. Кнопки в стиле "неон" */
+.md-button {
+  border: 1px solid #00ffcc;
+  color: #00ffcc;
+  box-shadow: 0 0 5px rgba(0, 255, 204, 0.3);
+  transition: all 0.3s ease;
+}
+.md-button:hover {
+  background: #00ffcc;
+  color: #0e1117;
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.8);
+}

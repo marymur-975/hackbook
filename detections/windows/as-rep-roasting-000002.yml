@@ -1,0 +1,27 @@
+# Извлечено из карточки: payloads/network/ad/as-rep-roasting.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: AS-REP roasting — запрос билета без пред-аутентификации
+id: a1b2c3d4-0002-4a1b-9c1d-000000000002
+status: experimental
+description: Event 4768 с PreAuthType=0 означает, что KDC выдал AS-REP без проверки знания пароля — признак
+  учётки с DONT_REQ_PREAUTH и возможного roasting.
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4768
+    PreAuthType: '0x0'
+  filter_known_service:
+    AccountName|endswith: $
+  condition: selection and not filter_known_service
+falsepositives:
+- legacy-приложения с обоснованным отключением pre-auth
+level: high
+tags:
+- attack.credential_access
+- attack.t1558.004
+author: hackbook
+related:
+- 'payloads-card: payloads/network/ad/as-rep-roasting.md'

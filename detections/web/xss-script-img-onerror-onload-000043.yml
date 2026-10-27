@@ -1,0 +1,38 @@
+# Извлечено из карточки: payloads/web/xss/img-onerror-no-script-tag.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: XSS без script-тега — обработчики событий img (onerror/onload)
+id: e5f6a7b8-0043-4e5f-9a7b-000000000043
+status: experimental
+description: 'Векторы, обходящие наивный фильтр по «script»: <img src=x onerror=...>, onerror с HTML-сущностями
+  и колбэками на внешние домены.'
+references:
+- https://attack.mitre.org/techniques/T1189/
+- https://portswigger.net/web-security/cross-site-scripting/cheat-sheet
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой
+detection:
+  selection:
+    cs-uri-query|contains:
+    - <img src=x onerror
+    - onerror=alert
+    - onerror=fetch
+    - onerror=&#
+    - onerror="fetch
+    - <img/src/onerror
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- редко: фрагменты вёрстки в параметрах редакторов (исключайте по cs-uri-stem)
+level: high
+tags:
+- attack.initial_access
+- attack.t1189
+- cwe.79
+author: hackbook
+related:
+- 'payloads-card: payloads/web/xss/img-onerror-no-script-tag.md'

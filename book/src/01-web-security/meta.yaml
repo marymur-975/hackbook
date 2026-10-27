@@ -1,0 +1,26 @@
+title: "Web Security: инъекции, XSS и всё, что между ними"
+chapter: 1
+difficulty: intermediate
+category: web
+tags: [web, sqli, xss, ssrf, lfi, xxe, cmdi, ssti, http]
+prerequisites: ["HTTP Basics", "Основы SQL", "Как работает браузер"]
+lab: "labs/web-labs/sqli-lab"
+estimated_minutes: 90
+status: published
+graph:
+  - target: web
+    type: category_of
+  - target: sqli
+    type: covered_in
+  - target: xss
+    type: covered_in
+  - target: ssrf
+    type: covered_in
+  - target: lfi-rfi
+    type: covered_in
+  - target: xxe
+    type: covered_in
+  - target: cmdi
+    type: covered_in
+  - target: ssti
+    type: covered_in

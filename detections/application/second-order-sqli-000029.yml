@@ -1,0 +1,41 @@
+# Извлечено из карточки: payloads/web/sqli/mysql-second-order.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Second-order SQLi — сохранённое значение срабатывает в другом запросе
+id: e5f6a7b8-0029-4e5f-9a7b-000000000029
+status: experimental
+description: В журнале MySQL синтаксическая ошибка в запросе, куда значение попало не из текущего HTTP-запроса,
+  а из хранилища (statement содержит SQL-маркеры вроде UNION SELECT внутри строковых данных).
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  service: database
+  definition: журнал ошибок MySQL с текстом проблемного запроса (log-error, log_queries_not_using_indexes)
+detection:
+  stored_marker:
+    statement|contains:
+    - ''' UNION SELECT'
+    - ''' OR ''1''=''1'
+    - ''' AND 1=1'
+    - '''-- -'
+  syntax_error:
+    error_message|contains:
+    - You have an error in your SQL syntax
+    error_code: 1064
+  condition: stored_marker and syntax_error
+fields:
+- db_user
+- client_ip
+- error_message
+- statement
+falsepositives:
+- CMS, хранящие SQL-фрагменты как данные (шаблоны отчётов) — исключайте по db_user
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/mysql-second-order.md'

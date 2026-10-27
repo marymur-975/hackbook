@@ -1,0 +1,44 @@
+# Извлечено из карточки: payloads/web/sqli/second-order-stored.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: First-order маркеры — SQL-синтаксис сохраняется в пользовательских данных
+id: e5f6a7b8-0040-4e5f-9a7b-000000000040
+status: experimental
+description: 'Пользователь сохраняет в профиле/комментарии/тикета значение с SQL-маркерами (UNION SELECT,
+  тавтология, комментарий-терминатор). Само по себе сохранение безопасно, но эти строки — закладки second-order
+  инъекции: детектируйте их на входе и ищите в ошибках БД позже.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  definition: 'логи приложения: действия записи пользовательских данных с телом запроса'
+detection:
+  stored_action:
+    event_action:
+    - profile_update
+    - comment_create
+    - registration
+    - support_ticket
+  sql_marker:
+    request_body|contains:
+    - ''' UNION SELECT'
+    - ''' OR ''1''=''1'
+    - '''-- -'
+    - ''' -- -'
+    - ''' AND 1=1'
+  condition: stored_action and sql_marker
+fields:
+- source_ip
+- request_path
+- event_action
+- request_body
+falsepositives:
+- пользователи-разработчики, обсуждающие SQL в комментариях (редко в полях профиля)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/second-order-stored.md'

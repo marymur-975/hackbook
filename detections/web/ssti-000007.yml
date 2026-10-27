@@ -1,0 +1,50 @@
+# Извлечено из карточки: payloads/web/ssti/jinja2-detection.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: SSTI-пробы — шаблонные выражения в параметрах и ошибки движков
+id: e5f6a7b8-0007-4e5f-9a7b-000000000007
+status: experimental
+description: В query-строке встречаются канонические SSTI-пробы ({{7*7}}, ${7*7}, {{config}}), либо шаблонизатор
+  пользователя падает с ошибкой движка (jinja2 SecurityError/TemplateSyntaxError) при рендере пользовательского
+  шаблона.
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://portswigger.net/research/server-side-template-injection
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой + логи приложения с ошибками шаблонизатора
+detection:
+  probe_query:
+    cs-uri-query|contains:
+    - '{{7*7}}'
+    - ${7*7}
+    - '%7b%7b7*7%7d%7d'
+    - '{{config'
+    - '{{self._TemplateReference'
+    - '{{request.application'
+    - <%= 7*7 %>
+  engine_error:
+    error_message|contains:
+    - jinja2
+    - SandboxedEnvironment
+    - TemplateSyntaxError
+    - UndefinedError
+  user_template:
+    template_source: user_input
+  condition: probe_query or (engine_error and user_template)
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+- error_message
+falsepositives:
+- фронтенд-шаблоны (Vue/Angular/handlebars) передают {{...}} как данные — исключайте статические пути
+  и известные API-эндпоинты
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.1336
+author: hackbook
+related:
+- 'payloads-card: payloads/web/ssti/jinja2-detection.md'

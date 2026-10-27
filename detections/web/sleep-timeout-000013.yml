@@ -1,0 +1,41 @@
+# Извлечено из карточки: payloads/web/cmdi/blind-time-based.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Слепая инъекция команд — задержка ответа совпадает с sleep/timeout
+id: e5f6a7b8-0013-4e5f-9a7b-000000000013
+status: experimental
+description: Запрос содержит маркер искусственной задержки (sleep, timeout, ping -c), а время обработки
+  (time-taken) превышает порог и согласуется с задержкой.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: webserver
+  definition: access-лог с временем обработки запроса (IIS time-taken / nginx $request_time)
+detection:
+  delay_marker:
+    cs-uri-query|contains:
+    - 'sleep '
+    - sleep${IFS}
+    - ;sleep
+    - '|sleep'
+    - 'timeout '
+    - ping -c
+  slow_response:
+    time-taken|gte: 4000
+  condition: delay_marker and slow_response
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+- time-taken
+falsepositives:
+- штатно долгие запросы со словом sleep в тексте (форумы, документация) — сверяйте time-taken с числом
+  секунд в параметре
+level: medium
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.78
+author: hackbook
+related:
+- 'payloads-card: payloads/web/cmdi/blind-time-based.md'

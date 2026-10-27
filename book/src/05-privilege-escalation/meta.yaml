@@ -1,0 +1,22 @@
+title: "Эскалация привилегий: Linux и Windows"
+chapter: 5
+difficulty: advanced
+category: privilege-escalation
+tags: [privilege-escalation, linux, windows, sudo, suid, kernel, service, dll-hijack]
+prerequisites:
+  - "Сетевая безопасность: разведка, сервисы, сегментация"
+  - "Active Directory: поверхность атаки домена"
+lab: "labs/network-labs"
+estimated_minutes: 120
+status: published
+graph:
+  - target: privilege-escalation
+    type: category_of
+  - target: credential-access
+    type: covered_in
+  - target: container-escape
+    type: related_to
+  - target: active-directory
+    type: related_to
+  - target: rce
+    type: related_to

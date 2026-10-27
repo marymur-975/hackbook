@@ -1,0 +1,15 @@
+{"ts": "2026-10-20T19:00:01Z", "service": "bind", "source_ip": "10.10.20.90", "message": "client @0x7f8c 10.10.20.90#54321 (lab.local): transfer of 'lab.local/IN': AXFR started", "note": "запрос полной передачи зоны AXFR"}
+{"ts": "2026-10-20T19:00:02Z", "service": "bind", "source_ip": "10.10.20.90", "message": "client @0x7f8c 10.10.20.90#54321 (lab.local): zone transfer 'lab.local/IN': AXFR ended: 234 records", "note": "передача зоны завершена — утечка всех записей"}
+{"ts": "2026-10-20T19:00:03Z", "service": "bind", "source_ip": "10.10.30.2", "message": "client @0x7f1a 10.10.30.2#41000 (app.corp.lab): query: app.corp.lab IN A +E(0)K", "note": "обычный A-запрос — не совпадение"}
+{"ts": "2026-10-20T19:01:01Z", "service": "vsftpd", "source_ip": "203.0.113.50", "message": "[ftp] login ok: user=anonymous, anon-password=anonymous@", "note": "анонимный вход на FTP"}
+{"ts": "2026-10-20T19:01:02Z", "service": "vsftpd", "source_ip": "203.0.113.50", "message": "[ftp] FTP response: Client \"203.0.113.50\", USER anonymous -> 230 Login successful", "note": "USER anonymous принят сервером"}
+{"ts": "2026-10-20T19:01:03Z", "service": "vsftpd", "source_ip": "10.10.20.5", "message": "[ftp] login ok: user=deploy", "note": "обычный вход пользователя — не совпадение"}
+{"ts": "2026-10-20T19:02:01Z", "service": "slapd", "source_ip": "10.10.20.91", "message": "conn=1001 op=0 BIND dn=\"\" method=128 (anonymous)", "note": "LDAP anonymous bind принят"}
+{"ts": "2026-10-20T19:02:02Z", "service": "slapd", "source_ip": "10.10.20.91", "message": "conn=1001 op=1 SRCH base=\"dc=lab,dc=local\" scope=2 filter=\"(objectclass=*)\"", "note": "перечисление всего дерева после анонимного bind"}
+{"ts": "2026-10-20T19:02:03Z", "service": "slapd", "source_ip": "10.10.20.6", "message": "conn=1002 op=0 BIND dn=\"cn=app,dc=lab,dc=local\" method=128", "note": "служебный simple bind — не совпадение"}
+{"ts": "2026-10-20T19:03:01Z", "service": "redis", "source_ip": "10.10.20.92", "message": "Accepted connection from 10.10.20.92:44322; command=INFO keyspace without AUTH", "note": "команда к Redis без аутентификации"}
+{"ts": "2026-10-20T19:03:02Z", "service": "redis", "source_ip": "10.10.20.92", "message": "command=CONFIG SET dir /var/spool/cron/crontabs (no AUTH)", "note": "CONFIG SET — попытка закрепления через cron"}
+{"ts": "2026-10-20T19:04:01Z", "service": "smbd", "source_ip": "10.10.20.93", "message": "Session setup: NULL session (user='', domain='') from 10.10.20.93", "note": "SMB null-сессия установлена"}
+{"ts": "2026-10-20T19:04:02Z", "service": "smbd", "source_ip": "10.10.20.93", "message": "IPC$ share access granted to anonymous user", "note": "анонимный доступ к IPC$ (перечисление шар/пайпов)"}
+{"ts": "2026-10-20T19:05:01Z", "service": "snmpd", "source_ip": "203.0.113.60", "message": "Connection from UDP: [203.0.113.60]:41234->[10.10.10.1] community=public GET sysDescr.0", "note": "SNMP-запрос с community 'public'"}
+{"ts": "2026-10-20T19:05:02Z", "service": "snmpd", "source_ip": "203.0.113.60", "message": "Received SNMP packet with bad community string 'private'", "note": "перебор community-строк"}

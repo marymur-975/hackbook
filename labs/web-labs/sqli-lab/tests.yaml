@@ -1,0 +1,47 @@
+# Конфигурация тестов для tools/payload-tester.sh
+# Формат намеренно простой (key: value), чтобы bash-тестер не тянул PyYAML.
+name: sqli-lab
+base_url: http://localhost:8080
+description: >-
+  SQLite-приложение с намеренной конкатенацией в /item?id= и /search?q=,
+  уязвимой формой входа /login и раскрытием текста ошибок СУБД.
+
+requests:
+  - path: /item
+    method: GET
+    param: id
+    success_markers:
+      - "SQL error"
+      - "sqlite3"
+      - "no such column"
+      - "unrecognized token"
+    fail_markers:
+      - "Внутренняя ошибка"
+
+  - path: /item_safe
+    method: GET
+    param: id
+    expect_no_markers:
+      - "SQL error"
+    notes: "контрольная точка: здесь payload'ы срабатывать НЕ должны"
+
+  - path: /search
+    method: GET
+    param: q
+    success_markers:
+      - "SQL error"
+      - "ThinkPad"
+
+  - path: /login
+    method: POST
+    fields: [login, password]
+    success_markers:
+      - "Вход выполнен"
+      - "SQL error"
+
+expected_results:
+  # что должно получиться при прогоне тестов на поднятой лабе
+  vulnerable_endpoints: ["/item", "/search", "/login"]
+  safe_endpoints: ["/item_safe", "/search_safe", "/login_safe"]
+  dbms: sqlite
+  columns_in_item_query: 5

@@ -1,0 +1,40 @@
+# Извлечено из карточки: payloads/web/sqli/generic-comment-terminators.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: SQL-маркеры — комментарий-терминатор после кавычки в параметре
+id: e5f6a7b8-0017-4e5f-9a7b-000000000017
+status: experimental
+description: 'В query-строке встречается кавычка (в т.ч. URL-кодированная %27), сразу за которой идёт
+  SQL-комментарий (-- - , --, #) — приём обрыва остатка запроса.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: webserver
+  definition: access-лог с полной (декодированной или сырой) query-строкой
+detection:
+  selection:
+    cs-uri-query|contains:
+    - ''' -- -'
+    - '''-- -'
+    - '''--'
+    - '''#'
+    - ''' #'
+    - '%27%23'
+    - '%27--'
+    - '%2720--'
+    - '''/*'
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- текстовый поиск с апострофами и тире (O'Brien--Smith) — сверяйте с cs-uri-stem
+level: medium
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/generic-comment-terminators.md'

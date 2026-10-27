@@ -1,0 +1,39 @@
+# Извлечено из карточки: payloads/web/xxe/xinclude-fragment.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: XInclude — подключение локального файла из XML-фрагмента
+id: e5f6a7b8-0006-4e5f-9a7b-000000000006
+status: experimental
+description: 'Запрос содержит XInclude-фрагмент (xi:include / xmlns:xi) со ссылкой на локальный файл.
+  Работает даже там, где атакующий не управляет DTD: сервер сам оборачивает значение поля в XML.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://www.w3.org/TR/xinclude/
+logsource:
+  category: application
+  product: xml_parser
+  definition: логи приложения/WAF с телом запроса (включая SOAP и поля форм)
+detection:
+  xinclude_marker:
+    request_body|contains:
+    - xi:include
+    - xmlns:xi=
+  local_file:
+    request_body|contains:
+    - file:///
+    - file://localhost
+  condition: xinclude_marker and local_file
+fields:
+- source_ip
+- request_path
+- request_body
+falsepositives:
+- SOAP-сервисы, легитимно использующие XInclude для сборки документов (встречается редко)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.611
+author: hackbook
+related:
+- 'payloads-card: payloads/web/xxe/xinclude-fragment.md'

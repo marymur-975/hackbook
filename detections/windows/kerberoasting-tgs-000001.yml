@@ -1,0 +1,32 @@
+# Извлечено из карточки: payloads/network/ad/kerberoasting-spn.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Возможный Kerberoasting — аномальные TGS-запросы
+id: a1b2c3d4-0001-4a1b-9c1d-000000000001
+status: experimental
+description: Одна учётка запрашивает сервисные билеты ко многим разным SPN за короткое время, либо используется
+  шифрование RC4 (etype 0x17) для сервисного билета.
+references:
+- https://attack.mitre.org/techniques/T1558/003/
+logsource:
+  product: windows
+  service: security
+  definition: Требуется аудит Kerberos Authentication Service (Event 4769)
+detection:
+  selection_rc4:
+    EventID: 4769
+    TicketEncryptionType: '0x17'
+  selection_volume:
+    EventID: 4769
+  timeframe: 5m
+  condition: selection_rc4 or (selection_volume | count(ServiceName) by LogonAccount > 15)
+falsepositives:
+- сервисные учётки, легитимно обращающиеся к множеству SPN (брокеры, мониторинг)
+- миграции и массовые перезапуски служб
+level: high
+tags:
+- attack.credential_access
+- attack.t1558.003
+author: hackbook
+related:
+- 'payloads-card: payloads/network/ad/kerberoasting-spn.md'

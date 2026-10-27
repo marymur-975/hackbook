@@ -1,0 +1,42 @@
+# Извлечено из карточки: payloads/cloud/kubernetes-api-anonymous-rbac.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Kubernetes API — анонимная разведка, включая отклонённые запросы
+id: f6a7b8c9-0002-4f6a-8b9c-000000000002
+status: experimental
+description: 'Любая активность system:anonymous, в том числе 401/403 и selfsubjectrulesreviews: сканирование
+  внешнего API-сервера (6443) и перечисление доступных прав.'
+references:
+- https://attack.mitre.org/techniques/T1595/
+- https://attack.mitre.org/techniques/T1613/
+logsource:
+  product: kubernetes
+  service: audit
+  definition: Kubernetes Audit Log, включая стадии отказа в доступе
+detection:
+  selection:
+    user_username: system:anonymous
+  filter_healthz:
+    requestURI:
+    - /healthz
+    - /livez
+    - /readyz
+    - /version
+  condition: selection and not filter_healthz
+fields:
+- user_username
+- verb
+- requestURI
+- responseStatus_code
+- sourceIPs
+falsepositives:
+- probe'ы и мониторинг без токена — исключайте их URI и внутренние sourceIPs
+level: high
+tags:
+- attack.discovery
+- attack.t1595
+- attack.t1613
+- cwe.306
+author: hackbook
+related:
+- 'payloads-card: payloads/cloud/kubernetes-api-anonymous-rbac.md'

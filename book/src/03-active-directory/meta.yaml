@@ -1,0 +1,24 @@
+title: "Active Directory: поверхность атаки домена"
+chapter: 3
+difficulty: advanced
+category: active-directory
+tags: [active-directory, kerberos, ntlm, ldap, gpo, adcs, privilege-escalation]
+prerequisites:
+  - "Сетевая безопасность: разведка, сервисы, сегментация"
+  - "Основы Kerberos"
+lab: null
+estimated_minutes: 110
+status: published
+graph:
+  - target: active-directory
+    type: category_of
+  - target: credential-access
+    type: covered_in
+  - target: privilege-escalation
+    type: covered_in
+  - target: default-credentials
+    type: related_to
+  - target: bruteforce
+    type: related_to
+  - target: network
+    type: related_to

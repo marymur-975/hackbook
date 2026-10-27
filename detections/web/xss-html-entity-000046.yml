@@ -1,0 +1,41 @@
+# Извлечено из карточки: payloads/web/xss/html-entity-encoding-bypass.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: XSS с HTML-entity/двойным кодированием обработчиков событий
+id: e5f6a7b8-0046-4e5f-9a7b-000000000046
+status: experimental
+description: Обработчики событий или теги закодированы сущностями (&#97;&#108;... = alert, &lt;script&gt;)
+  либо двойным URL-кодированием — обход фильтров, сравнивающих только литералы.
+references:
+- https://attack.mitre.org/techniques/T1189/
+- https://attack.mitre.org/techniques/T1027/
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой
+detection:
+  selection:
+    cs-uri-query|contains:
+    - '&#97;'
+    - '&#x61;'
+    - onerror=&#
+    - onload=&#
+    - '&#106;avascript'
+    - '&lt;script&gt;'
+    - '&#60;script'
+    - '%253Cscript'
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- контент с легитимными HTML-сущностями (статьи, код-сниппеты) — сверяйте с cs-uri-stem
+level: medium
+tags:
+- attack.initial_access
+- attack.t1189
+- attack.t1027
+- cwe.79
+author: hackbook
+related:
+- 'payloads-card: payloads/web/xss/html-entity-encoding-bypass.md'

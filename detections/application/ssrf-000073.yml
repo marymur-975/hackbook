@@ -1,0 +1,47 @@
+# Извлечено из карточки: payloads/web/ssrf/redirect-chain-bypass.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: SSRF через цепочку редиректов — белый домен ведёт на внутренний адрес
+id: e5f6a7b8-0073-4e5f-9a7b-000000000073
+status: experimental
+description: 'Запрос проходит первичную валидацию (URL на разрешённый домен), но сервер следует редиректу
+  на внутренний/метаданные-адрес. Детект: событие url_fetch в логах приложения, где итоговый адрес — внутренний,
+  а также открытые редирект-параметры (to=, redirect=, next=) во входящих запросах.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  definition: 'логи приложения: события исходящих fetch с итоговым URL'
+detection:
+  selection_app:
+    event_action: url_fetch
+    url_fetched|contains:
+    - 169.254.169.254
+    - 127.0.0.1
+    - '[::1]'
+    - metadata.google.internal
+    - localhost
+  selection_query:
+    cs-uri-query|contains:
+    - ?to=http
+    - redirect=http
+    - next=http
+    - redir=http
+    - r?to=
+  condition: selection_app or selection_query
+fields:
+- source_ip
+- request_path
+- url_fetched
+- status_code
+falsepositives:
+- легитимные редирект-шлюзы (SSO) — сверяйте список разрешённых конечных адресов
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.918
+- cwe.601
+author: hackbook
+related:
+- 'payloads-card: payloads/web/ssrf/redirect-chain-bypass.md'

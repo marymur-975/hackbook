@@ -1,0 +1,58 @@
+# Извлечено из карточки: payloads/privilege-escalation/windows/token-and-uac-bypass.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Назначение или использование опасных привилегий токена
+id: c3d4e5f6-0008-4c3d-9e4f-000000000208
+status: experimental
+description: Пользователю назначены или использованы привилегии, дающие эскалацию (SeDebug, SeImpersonate,
+  SeTcb, SeLoadDriver, SeBackup, SeRestore, SeTakeOwnership) вне ожидаемого контекста.
+references:
+- https://attack.mitre.org/techniques/T1134/
+- https://attack.mitre.org/techniques/T1548/002/
+logsource:
+  product: windows
+  service: security
+  definition: 'аудит привилегий: события 4672-4674'
+detection:
+  assigned:
+    EventID: 4672
+    SeDebugPrivilege: present
+  used:
+    EventID:
+    - 4673
+    - 4674
+    PrivilegeList|contains:
+    - SeDebugPrivilege
+    - SeImpersonatePrivilege
+    - SeAssignPrimaryTokenPrivilege
+    - SeTcbPrivilege
+    - SeLoadDriverPrivilege
+    - SeBackupPrivilege
+    - SeRestorePrivilege
+    - SeTakeOwnershipPrivilege
+  uac_bypass_processes:
+    EventID: 1
+    Image|endswith:
+    - \fodhelper.exe
+    - \computerdefaults.exe
+    - \sdclt.exe
+    - \wsreset.exe
+    - \slui.exe
+  condition: used or uac_bypass_processes
+fields:
+- AccountName
+- PrivilegeList
+- Image
+- CommandLine
+falsepositives:
+- резервное копирование (SeBackup) и восстановление (SeRestore) у профильных учёток
+- отладчики у разработчиков (SeDebug) — выносите в исключения по учётке и хосту
+level: high
+tags:
+- attack.privilege_escalation
+- attack.defense_evasion
+- attack.t1134
+- attack.t1548.002
+author: hackbook
+related:
+- 'payloads-card: payloads/privilege-escalation/windows/token-and-uac-bypass.md'

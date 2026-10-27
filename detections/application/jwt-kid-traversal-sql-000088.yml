@@ -1,0 +1,45 @@
+# Извлечено из карточки: payloads/web/http/jwt-kid-injection.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: JWT kid-инъекция — traversal/SQL/команды в идентификаторе ключа
+id: e5f6a7b8-0088-4e5f-9a7b-000000000088
+status: experimental
+description: 'Заголовок kid участвует в выборе ключа (файл, БД, команда) — инъекция в него даёт подпись
+  известным значением (/dev/null, старый ключ) или RCE. Признаки: ../, абсолютные пути, SQL/командные
+  маркеры в jwt_kid.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://portswigger.net/web-security/jwt
+logsource:
+  category: application
+  definition: логи верификации JWT с полем jwt_kid
+detection:
+  selection:
+    event_action: jwt_verify
+    jwt_kid|contains:
+    - ../
+    - ..\
+    - /dev/null
+    - /etc/passwd
+    - union select
+    - ''' OR '
+    - '; '
+    - '|'
+    - sleep(
+  condition: selection
+fields:
+- source_ip
+- jwt_alg
+- jwt_kid
+- failure_reason
+falsepositives:
+- kid в формате пути к ключу внутри хранилища (/keys/2026-10.pem) — сверяйте с реестром своих kid; traversal
+  и спецсимволы в легитимных kid не встречаются
+level: critical
+tags:
+- attack.credential_access
+- attack.t1190
+- cwe.347
+author: hackbook
+related:
+- 'payloads-card: payloads/web/http/jwt-kid-injection.md'

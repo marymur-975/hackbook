@@ -1,0 +1,42 @@
+# Извлечено из карточки: payloads/cloud/aws-s3-bucket-enum.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Анонимное перечисление S3-бакетов
+id: f6a7b8c9-0007-4f6a-8b9c-000000000007
+status: experimental
+description: ListObjects/GetBucketLocation/ListBuckets от анонимного принципала (userIdentity.type=Anonymous)
+  — разведка публичных бакетов, в т.ч. --no-sign-request из awscli.
+references:
+- https://attack.mitre.org/techniques/T1580/
+- https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-with-s3-actions.html
+logsource:
+  product: aws
+  service: cloudtrail
+  definition: CloudTrail data events для S3 (включены отдельно) + server access logging
+detection:
+  selection:
+    eventSource: s3.amazonaws.com
+    eventName:
+    - ListObjects
+    - ListObjectsV2
+    - GetBucketLocation
+    - ListBuckets
+    - ListAllMyBuckets
+  anonymous:
+    userIdentity.type: Anonymous
+  condition: selection and anonymous
+fields:
+- sourceIPAddress
+- requestParameters.bucketName
+- eventName
+falsepositives:
+- легитимные публичные датасеты, которые читают анонимно (статические сайты, open data) — исключайте известные
+  бакеты
+level: medium
+tags:
+- attack.discovery
+- attack.t1580
+- cwe.732
+author: hackbook
+related:
+- 'payloads-card: payloads/cloud/aws-s3-bucket-enum.md'

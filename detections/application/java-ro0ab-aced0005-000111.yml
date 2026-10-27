@@ -1,0 +1,45 @@
+# Извлечено из карточки: payloads/web/deserialization/java-native-gadget.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Java-десериализация — нативный поток (rO0AB/aced0005) во входящих данных
+id: e5f6a7b8-0111-4e5f-9a7b-000000000111
+status: experimental
+description: 'Тело запроса начинается с сигнатуры Java-сериализации AC ED 00 05 — в base64 (rO0AB) или
+  hex (aced0005). Подтверждение эксплуатации: срабатывание JEP 290 deserialization filter (InvalidClassException:
+  filter status).'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://www.oracle.com/java/technologies/javase/serializationfiltering.html
+logsource:
+  category: application
+  definition: логи приложения/WAF с телом запроса и stack trace ошибок
+detection:
+  selection_body:
+    request_body|contains:
+    - rO0AB
+    - aced0005
+    - ACED0005
+    - AC ED 00 05
+  selection_error:
+    error_message|contains:
+    - InvalidClassException
+    - 'filter status: REJECTED'
+    - ObjectInputStream
+    - StreamCorruptedException
+  condition: selection_body or selection_error
+fields:
+- source_ip
+- request_path
+- request_content_type
+- error_message
+falsepositives:
+- легитимный RMI/JMX-трафик между своими сервисами (внутренние каналы — исключайте по source_ip, но мигрируйте
+  на JSON/protobuf)
+level: critical
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.502
+author: hackbook
+related:
+- 'payloads-card: payloads/web/deserialization/java-native-gadget.md'

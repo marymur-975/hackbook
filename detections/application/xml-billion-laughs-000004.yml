@@ -1,0 +1,46 @@
+# Извлечено из карточки: payloads/web/xxe/param-entity-dos.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: XML-бомба (billion laughs) — аномальный парсинг с раскрытием сущностей
+id: e5f6a7b8-0004-4e5f-9a7b-000000000004
+status: experimental
+description: 'XML-запрос вызывает экспоненциальное раскрытие вложенных сущностей: характерные цепочки
+  (&a;&a;), ошибка о лимите сущностей/памяти либо аномально долгий парсинг одного запроса.'
+references:
+- https://attack.mitre.org/techniques/T1496/
+- https://owasp.org/www-community/attacks/XML_Denial_of_Service_(XDoS)
+logsource:
+  category: application
+  product: xml_parser
+  definition: логи приложения с телом запроса, временем обработки и ошибками парсера
+detection:
+  xml_request:
+    request_content_type|contains: xml
+  entity_nesting:
+    request_body|contains:
+    - '&a;&a;'
+    - '&b;&b;'
+    - '&lol'
+  memory_error:
+    error_message|contains:
+    - entity expansion
+    - Out of memory
+    - memory allocation failed
+  slow_parse:
+    duration_ms|gte: 10000
+  condition: xml_request and (entity_nesting or memory_error or slow_parse)
+fields:
+- source_ip
+- request_path
+- duration_ms
+- error_message
+falsepositives:
+- большие легитимные XML-импорты (порог duration_ms подбирайте по профилю нагрузки)
+level: medium
+tags:
+- attack.impact
+- attack.t1496
+- cwe.776
+author: hackbook
+related:
+- 'payloads-card: payloads/web/xxe/param-entity-dos.md'

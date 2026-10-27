@@ -1,0 +1,22 @@
+title: "Облачные платформы: AWS, GCP, Azure, Kubernetes"
+chapter: 4
+difficulty: advanced
+category: cloud
+tags: [cloud, aws, gcp, azure, kubernetes, iam, imds, misconfiguration]
+prerequisites:
+  - "Web Security: инъекции, XSS и всё, что между ними"
+  - "Сетевая безопасность: разведка, сервисы, сегментация"
+lab: null
+estimated_minutes: 100
+status: published
+graph:
+  - target: cloud
+    type: category_of
+  - target: ssrf
+    type: related_to
+  - target: privilege-escalation
+    type: covered_in
+  - target: container-escape
+    type: covered_in
+  - target: info-disclosure
+    type: related_to

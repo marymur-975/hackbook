@@ -1,0 +1,40 @@
+# Извлечено из карточки: payloads/web/sqli/mysql-time-based-sleep.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: MySQL time-based blind — SLEEP/BENCHMARK с подтверждённой задержкой
+id: e5f6a7b8-0032-4e5f-9a7b-000000000032
+status: experimental
+description: В параметре видны SLEEP()/BENCHMARK()/GET_LOCK(), а время обработки запроса (time-taken)
+  превышает порог и согласуется с запрошенной задержкой.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: webserver
+  definition: access-лог с временем обработки запроса (time-taken/$request_time)
+detection:
+  selection:
+    cs-uri-query|contains:
+    - SLEEP(
+    - BENCHMARK(
+    - IF(1=1,SLEEP
+    - GET_LOCK(
+  slow_response:
+    time-taken|gte: 4000
+  filter_pg:
+    cs-uri-query|contains: pg_sleep
+  condition: selection and slow_response and not filter_pg
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+- time-taken
+falsepositives:
+- медленные запросы, в тексте которых случайно встретилось слово SLEEP (подтверждение задержкой обязательно)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/mysql-time-based-sleep.md'

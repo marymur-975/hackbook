@@ -1,0 +1,42 @@
+# Извлечено из карточки: payloads/network/ad/acl-abuse-genericall.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Добавление участника в привилегированную группу AD
+id: a1b2c3d4-0005-4a1b-9c1d-000000000005
+status: stable
+description: Events 4728/4732/4756/4761 для групп, содержащих Admins/Operators. Легитимные изменения редки
+  и должны соответствовать заявке.
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID:
+    - 4728
+    - 4732
+    - 4756
+    - 4761
+    GroupName:
+    - Domain Admins
+    - Enterprise Admins
+    - Schema Admins
+    - Administrators
+    - Account Operators
+    - Backup Operators
+    - Server Operators
+    - Print Operators
+    - Group Policy Creator Owners
+    - DnsAdmins
+  filter_print:
+    GroupName:
+    - Print Operators
+  condition: selection and not filter_print
+falsepositives:
+- плановые изменения по заявке (сопоставляйте с ITSM)
+level: high
+tags:
+- attack.persistence
+- attack.t1098
+author: hackbook
+related:
+- 'payloads-card: payloads/network/ad/acl-abuse-genericall.md'

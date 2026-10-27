@@ -1,0 +1,51 @@
+# Извлечено из карточки: payloads/privilege-escalation/linux/suid-misconfiguration.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Запуск SUID-бинарника, не входящего в эталонный набор ОС
+id: c3d4e5f6-0001-4c3d-9e4f-000000000201
+status: experimental
+description: Новый или нестандартный SUID/SGID-файл исполняется от имени root непривилегированным родителем
+  — признак использования SUID для эскалации.
+references:
+- https://attack.mitre.org/techniques/T1548/001/
+- https://gtfobins.github.io/
+logsource:
+  product: linux
+  service: auditd
+  definition: правила аудита на execve; Sysmon for Linux EventID 1
+detection:
+  selection:
+    EventType: EXECVE
+    auid|lt: 1000
+    euid: 0
+    Image|contains:
+    - /usr/local/bin/
+    - /tmp/
+    - /var/tmp/
+    - /home/
+    - /dev/shm/
+  filter_known:
+    Image:
+    - /usr/bin/sudo
+    - /usr/bin/passwd
+    - /usr/bin/mount
+    - /usr/bin/umount
+    - /usr/bin/su
+    - /usr/bin/newgrp
+    - /usr/bin/chsh
+    - /usr/bin/gpasswd
+  condition: selection and not filter_known
+fields:
+- Image
+- CommandLine
+- ParentImage
+- User
+falsepositives:
+- легитимные SUID-обёртки вендора ПО (внесите в filter_known после инвентаризации)
+level: high
+tags:
+- attack.privilege_escalation
+- attack.t1548.001
+author: hackbook
+related:
+- 'payloads-card: payloads/privilege-escalation/linux/suid-misconfiguration.md'

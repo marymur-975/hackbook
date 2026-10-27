@@ -1,0 +1,49 @@
+# Извлечено из карточки: payloads/web/upload/zip-slip-archive.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Zip Slip — запись файлов вне каталога при распаковке архива
+id: e5f6a7b8-0061-4e5f-9a7b-000000000061
+status: experimental
+description: 'Архив содержит записи с ../ в имени: распаковщик пишет файл за пределами целевого каталога
+  (в веб-корень). Признаки: traversal в списке записей архива и запись файлов unzip/tar в каталоги веб-сервера
+  (auditd).'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://snyk.io/research/zip-slip-vulnerability
+logsource:
+  category: application
+  definition: логи распаковки архивов + auditd на запись в веб-корень
+detection:
+  extract_marker:
+    event_action: archive_extract
+    file_preview|contains:
+    - ../
+    - ..\
+  audit_webroot_write:
+    EventType: PATH
+    Image|endswith:
+    - /unzip
+    - /tar
+    - /7z
+    - /bsdtar
+    Name|startswith:
+    - /var/www/
+    - /srv/www/
+    - /usr/share/nginx/
+  condition: extract_marker or audit_webroot_write
+fields:
+- source_ip
+- filename
+- file_preview
+- Name
+- Image
+falsepositives:
+- деплой-архивы, которые легитимно распаковываются в веб-корень из CI (белый список по User)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.22
+author: hackbook
+related:
+- 'payloads-card: payloads/web/upload/zip-slip-archive.md'

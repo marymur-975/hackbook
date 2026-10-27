@@ -1,0 +1,38 @@
+# Извлечено из карточки: payloads/web/xss/dom-location-hash.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: DOM XSS — payload в location.hash (клиентская телеметрия)
+id: e5f6a7b8-0047-4e5f-9a7b-000000000047
+status: experimental
+description: 'Фрагмент URL после # не отправляется на сервер — такой XSS виден только в клиентской телеметрии
+  (RUM, window.onerror, CSP-репорты). Правило ищет HTML-теги в page_url с фрагментом.'
+references:
+- https://attack.mitre.org/techniques/T1189/
+- https://owasp.org/www-community/attacks/xss/
+logsource:
+  category: application
+  definition: 'клиентская телеметрия/RUM: page_url, ошибки JS, CSP-отчёты'
+detection:
+  selection:
+    page_url|contains:
+    - '#<img'
+    - '#<script'
+    - '#<svg'
+    - '#<iframe'
+    - '#javascript:'
+    - '#!/'
+  condition: selection
+fields:
+- page_url
+- source_ip
+- error_message
+falsepositives:
+- SPA-роутинг с хэшем (#/path) — паттерны требуют HTML-тег или схему после
+level: medium
+tags:
+- attack.initial_access
+- attack.t1189
+- cwe.79
+author: hackbook
+related:
+- 'payloads-card: payloads/web/xss/dom-location-hash.md'

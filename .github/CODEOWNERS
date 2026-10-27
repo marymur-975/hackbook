@@ -1,0 +1,31 @@
+# CODEOWNERS — кто ревьюит изменения.
+# Замените @hackbook/maintainers на реальные учётные записи/команды.
+# Формат: <паттерн> <владелец> ...
+
+*                               @hackbook/maintainers
+
+# контент
+/book/src/01-web-security/      @hackbook/web-team
+/book/src/02-network/           @hackbook/network-team
+/book/src/03-active-directory/  @hackbook/ad-team
+/book/src/04-cloud/             @hackbook/cloud-team
+/book/src/05-privilege-escalation/ @hackbook/os-team
+/payloads/web/                  @hackbook/web-team
+/payloads/network/              @hackbook/network-team
+/payloads/cloud/                @hackbook/cloud-team
+
+# инфраструктура и инструменты
+/tools/                         @hackbook/tooling-team
+/labs/                          @hackbook/labs-team
+/wordlists/                     @hackbook/data-team
+/.github/workflows/             @hackbook/tooling-team
+/book/mkdocs.yml                @hackbook/tooling-team
+/requirements.txt               @hackbook/tooling-team
+
+# документы и политики
+/docs/SECURITY.md               @hackbook/maintainers
+/docs/STYLE-GUIDE.md            @hackbook/maintainers
+/docs/CONTRIBUTING.md           @hackbook/maintainers
+/LICENSE                        @hackbook/maintainers
+/LICENSE-content                @hackbook/maintainers
+/README.md                      @hackbook/maintainers

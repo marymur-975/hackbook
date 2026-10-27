@@ -1,0 +1,54 @@
+# Извлечено из карточки: payloads/web/detection/jwt-auth-anomalies.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Аномалии валидации JWT (подделка токена или подбор секрета)
+id: b2c3d4e5-0004-4b2c-8d3e-000000000104
+status: experimental
+description: Отказы проверки подписи JWT, неожиданный алгоритм в заголовке токена или несоответствие роли
+  в claims серверному состоянию. Поля приложения — замените имена на фактические для своего стека.
+references:
+- https://attack.mitre.org/techniques/T1606/001/
+- payloads/web/auth-bypass/jwt-alg-none.md
+logsource:
+  category: application
+  product: jwt
+  definition: структурированные логи сервиса аутентификации
+detection:
+  signature_failures:
+    event_action: jwt_verify
+    event_outcome: failure
+    failure_reason|contains:
+    - invalid signature
+    - signature
+  forbidden_alg:
+    event_action: jwt_verify
+    jwt_alg:
+    - none
+    - None
+    - NONE
+  role_mismatch:
+    event_action: authorization
+    event_outcome: failure
+    mismatch_kind: token_role_vs_store
+  volume:
+    event_action: jwt_verify
+    event_outcome: failure
+  timeframe: 5m
+  condition: forbidden_alg or role_mismatch or (volume | count() by source_ip > 10)
+fields:
+- source_ip
+- user_agent
+- jwt_alg
+- jwt_kid
+- token_sub
+falsepositives:
+- рассинхрон часов (exp/nbf) — проверяйте separate-правилом
+- ротация ключей без overlap-периода
+level: high
+tags:
+- attack.credential_access
+- attack.t1606.001
+- cwe.347
+author: hackbook
+related:
+- 'payloads-card: payloads/web/detection/jwt-auth-anomalies.md'

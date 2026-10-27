@@ -1,0 +1,49 @@
+# Извлечено из карточки: payloads/web/upload/mime-content-type-spoof.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Подмена Content-Type — скриптовое расширение с типом изображения
+id: e5f6a7b8-0058-4e5f-9a7b-000000000058
+status: experimental
+description: Имя файла заканчивается на исполняемое расширение (.php, .jsp, .aspx...), а заявленный Content-Type
+  — image/* или application/octet-stream. Расхождение «расширение vs MIME vs фактические байты» — признак
+  обхода валидации загрузок.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  definition: логи загрузок с именем файла и Content-Type из multipart
+detection:
+  upload:
+    event_action: file_upload
+  script_extension:
+    filename|endswith:
+    - .php
+    - .phtml
+    - .php5
+    - .jsp
+    - .jspx
+    - .aspx
+    - .asp
+    - .cgi
+    - .pl
+  non_script_type:
+    content_type|contains:
+    - image/
+    - text/plain
+    - application/octet-stream
+    - video/
+  condition: upload and script_extension and non_script_type
+fields:
+- source_ip
+- filename
+- content_type
+falsepositives:
+- загрузка исходников (.php как текст) в системах разработки — исключайте по request_path
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.434
+author: hackbook
+related:
+- 'payloads-card: payloads/web/upload/mime-content-type-spoof.md'

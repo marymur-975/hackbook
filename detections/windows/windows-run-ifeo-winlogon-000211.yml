@@ -1,0 +1,69 @@
+# Извлечено из карточки: payloads/privilege-escalation/windows/registry-and-startup.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Изменение механизмов автозапуска Windows (Run-ключи, IFEO, Winlogon)
+id: c3d4e5f6-0011-4c3d-9e4f-000000000211
+status: test
+description: Запись в ключи автозапуска, Image File Execution Options и Winlogon — основные точки закрепления
+  и эскалации через автозапуск.
+references:
+- https://attack.mitre.org/techniques/T1547/001/
+- https://attack.mitre.org/techniques/T1546/012/
+- https://attack.mitre.org/techniques/T1547/004/
+logsource:
+  product: windows
+  service: sysmon
+  definition: Sysmon EventID 12/13 (Registry object added/changed, value set)
+detection:
+  run_keys:
+    EventID: 13
+    TargetObject|contains:
+    - \Microsoft\Windows\CurrentVersion\Run
+    - \Microsoft\Windows\CurrentVersion\RunOnce
+    - \Policies\Explorer\Run
+  ifeo:
+    EventID: 13
+    TargetObject|contains: \Image File Execution Options\
+    TargetObject|contains|all:
+    - Debugger
+  winlogon:
+    EventID: 13
+    TargetObject|contains:
+    - Shell
+    - Userinit
+    - Notify
+  appinit:
+    EventID: 13
+    TargetObject|contains: AppInit_DLLs
+  com_hijack:
+    EventID: 13
+    TargetObject|contains: InprocServer32
+  suspicious_path:
+    Details|contains:
+    - \Users\Public\
+    - \AppData\Local\Temp\
+    - \ProgramData\
+    - powershell
+    - mshta
+    - rundll32
+    - regsvr32
+    - wscript
+    - cscript
+  condition: ifeo or winlogon or appinit or (run_keys and suspicious_path) or com_hijack
+fields:
+- TargetObject
+- Details
+- Image
+- User
+falsepositives:
+- установка и обновление легитимного ПО (фильтруйте по подписанному Image)
+- COM-регистрация при инсталляции приложений
+level: high
+tags:
+- attack.persistence
+- attack.privilege_escalation
+- attack.t1547.001
+- attack.t1546.012
+author: hackbook
+related:
+- 'payloads-card: payloads/privilege-escalation/windows/registry-and-startup.md'

@@ -1,0 +1,53 @@
+# Извлечено из карточки: payloads/web/ssrf/dns-rebinding.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: DNS rebinding — внешнее имя резолвится во внутренний адрес
+id: e5f6a7b8-0070-4e5f-9a7b-000000000070
+status: experimental
+description: 'Домен из запроса при повторном резолве отдаёт внутренний/link-local адрес (169.254.169.254,
+  127.0.0.1, 10.x). Признаки: rebinding-сервисы в qname (rb.example, nip.io, sslip.io), hex-IP поддомены
+  (7f000001), приватный адрес в ответе DNS на внешнее имя.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://portswigger.net/web-security/ssrf/bypassing-common-filters
+logsource:
+  category: dns
+  definition: DNS-лог с ответами (answers) + access-лог с параметром url
+detection:
+  rebinding_name:
+    qname|contains:
+    - rb.example
+    - rebind
+    - nip.io
+    - sslip.io
+    - localtest.me
+    - 127.0.0.1.
+  private_answer:
+    answers|contains:
+    - 169.254.169.254
+    - 127.0.0.1
+    - 10.10.
+    - 192.168.
+  selection_query:
+    cs-uri-query|contains:
+    - rb.example
+    - nip.io
+    - sslip.io
+    - localtest.me
+    - c0a80001
+  condition: (rebinding_name and private_answer) or selection_query
+fields:
+- qname
+- answers
+- src_ip
+- cs-uri-query
+falsepositives:
+- split-horizon DNS, легитимно отдающий внутренние адреса (исключайте свои зоны)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.918
+author: hackbook
+related:
+- 'payloads-card: payloads/web/ssrf/dns-rebinding.md'

@@ -1,0 +1,39 @@
+# Извлечено из карточки: payloads/web/http/request-smuggling-cl-te.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Request smuggling CL.TE — конфликт Content-Length и Transfer-Encoding
+id: e5f6a7b8-0092-4e5f-9a7b-000000000092
+status: experimental
+description: 'HTTP/1.1-запрос несёт и Content-Length, и Transfer-Encoding: chunked — фронтенд и бэкенд
+  по-разному определяют границу тела, что позволяет протащить «хвост» как начало следующего запроса.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://portswigger.net/web-security/request-smuggling
+logsource:
+  category: proxy
+  definition: 'журнал HTTP-шлюза: заголовки CL/TE каждого запроса'
+detection:
+  http1:
+    scheme: http/1.1
+  cl_te_conflict:
+    content_length_count|gte: 1
+    transfer_encoding|contains: chunked
+  condition: http1 and cl_te_conflict
+fields:
+- source_ip
+- method
+- path
+- content_lengths
+- transfer_encoding
+- status
+falsepositives:
+- устаревшие клиенты, шлющие оба заголовка постоянно (стабильный источник — в исключения, но лучше чинить
+  клиент)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.444
+author: hackbook
+related:
+- 'payloads-card: payloads/web/http/request-smuggling-cl-te.md'

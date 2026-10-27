@@ -1,0 +1,49 @@
+# Извлечено из карточки: payloads/web/sqli/mysql-file-read-write.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: MySQL LOAD_FILE/INTO OUTFILE — чтение файлов и запись webshell
+id: e5f6a7b8-0025-4e5f-9a7b-000000000025
+status: experimental
+description: Попытка прочитать файл через LOAD_FILE() или записать его через INTO OUTFILE/DUMPFILE (webshell
+  в DOCUMENT_ROOT). В журнале БД — ошибки доступа к файлам с путями из запроса.
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://attack.mitre.org/techniques/T1505/003/
+logsource:
+  category: application
+  service: database
+  definition: access-лог приложения и журнал ошибок MySQL
+detection:
+  query_probe:
+    cs-uri-query|contains:
+    - LOAD_FILE(
+    - load_file(0x
+    - INTO OUTFILE
+    - INTO DUMPFILE
+  db_error:
+    error_message|contains:
+    - Can't create/write to file
+    - LOAD_FILE
+    - 'Errcode: 13'
+  db_statement:
+    statement|contains:
+    - LOAD_FILE
+    - INTO OUTFILE
+    - INTO DUMPFILE
+  condition: query_probe or db_error or db_statement
+fields:
+- c-ip
+- cs-uri-query
+- error_message
+- statement
+falsepositives:
+- штатные ETL-задачи с SELECT ... INTO OUTFILE (белый список по db_user и путям)
+level: critical
+tags:
+- attack.persistence
+- attack.t1190
+- attack.t1505.003
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/mysql-file-read-write.md'

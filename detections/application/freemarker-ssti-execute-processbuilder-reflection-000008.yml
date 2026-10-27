@@ -1,0 +1,49 @@
+# Извлечено из карточки: payloads/web/ssti/java-freemarker-reflection.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Freemarker SSTI — Execute/ProcessBuilder через reflection
+id: e5f6a7b8-0008-4e5f-9a7b-000000000008
+status: experimental
+description: 'В параметрах, теле запроса или в тексте ошибки приложения видны маркеры Freemarker-эксплойтов:
+  freemarker.template.utility.Execute, ?new(), <#assign, ObjectConstructor, ProcessBuilder.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://portswigger.net/research/server-side-template-injection
+logsource:
+  category: application
+  definition: логи Java-приложения (Freemarker) и access-лог с query-строкой
+detection:
+  query_marker:
+    cs-uri-query|contains:
+    - freemarker.template.utility.Execute
+    - ProcessBuilder
+    - ObjectConstructor
+    - <#assign
+    - ?new()
+  body_marker:
+    request_body|contains:
+    - freemarker.template.utility.Execute
+    - new ProcessBuilder
+    - <#assign
+    - ObjectConstructor
+  engine_error:
+    error_message|contains:
+    - freemarker
+    - TemplateModelException
+  condition: query_marker or body_marker or engine_error
+fields:
+- c-ip
+- cs-uri-query
+- request_path
+- error_message
+falsepositives:
+- ошибки легитимных Freemarker-шаблонов в dev-среде (в проде шаблон не должен собираться из пользовательских
+  данных — такие ошибки сами по себе повод для проверки)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.1336
+author: hackbook
+related:
+- 'payloads-card: payloads/web/ssti/java-freemarker-reflection.md'

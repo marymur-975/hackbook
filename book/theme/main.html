@@ -1,0 +1,30 @@
+{# Переопределение темы Material: встраиваем ссылку на граф знаний и дисклеймер
+об ответственном использовании в подвал каждой страницы. Файл подключается через
+`theme.custom_dir: theme` в book/mkdocs.yml. #} {% extends "base.html" %} {%
+block extrahead %} {{ super() }}
+<meta name="robots" content="index, follow" />
+<meta name="x-hackbook-chapter" content="{{ page.title }}" />
+{% endblock %} {% block content %}
+<div class="hackbook-notice">
+  <strong>Ответственное использование.</strong>
+  Материалы предназначены для обучения, лабораторий и систем, на тестирование
+  которых у вас есть письменное разрешение владельца.
+  <a href="/graph/index.html">Открыть граф знаний →</a>
+</div>
+{{ super() }}
+<style>
+  .hackbook-notice {
+    margin: 0 0 1.2rem;
+    padding: 0.7rem 1rem;
+    border-radius: 0.2rem;
+    border-left: 0.2rem solid var(--md-accent-fg-color);
+    background: var(--md-code-bg-color);
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+  .hackbook-notice a {
+    margin-left: 0.4rem;
+    white-space: nowrap;
+  }
+</style>
+{% endblock %}

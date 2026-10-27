@@ -1,0 +1,56 @@
+# Извлечено из карточки: payloads/privilege-escalation/linux/kernel-and-service-exploits.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Признак эксплуатации локальной уязвимости (pkexec/sudo/kernel)
+id: c3d4e5f6-0005-4c3d-9e4f-000000000205
+status: experimental
+description: Аномальные вызовы привилегированных помощников (pkexec, sudo) и процессы root, порождённые
+  пользовательской оболочкой, — типичные следы локальной эскалации.
+references:
+- https://attack.mitre.org/techniques/T1068/
+- https://nvd.nist.gov/vuln/detail/CVE-2021-4034
+logsource:
+  product: linux
+  service: auditd
+  definition: аудит execve + правила на загрузку модулей ядра
+detection:
+  pkexec_env:
+    Image|endswith: /pkexec
+    CommandLine|contains:
+    - /tmp/
+    - /dev/shm/
+    - GCONV_PATH
+    - LD_PRELOAD
+  sudo_anomaly:
+    Image|endswith: /sudo
+    CommandLine|contains:
+    - --version=
+    - ' -s '
+    - ' -i '
+  kernel_module_load:
+    EventType: SYSCALL
+    Syscall: init_module
+    auid|gte: 1000
+  root_child_of_shell:
+    EventType: EXECVE
+    euid: 0
+    ParentImage|contains:
+    - /bin/bash
+    - /bin/sh
+    - /usr/bin/python
+    auid|gte: 1000
+  condition: pkexec_env or sudo_anomaly or kernel_module_load or root_child_of_shell
+fields:
+- Image
+- CommandLine
+- ParentImage
+- User
+falsepositives:
+- интерактивное администрирование через sudo из оболочки (сужайте по хостам и User)
+level: high
+tags:
+- attack.privilege_escalation
+- attack.t1068
+author: hackbook
+related:
+- 'payloads-card: payloads/privilege-escalation/linux/kernel-and-service-exploits.md'

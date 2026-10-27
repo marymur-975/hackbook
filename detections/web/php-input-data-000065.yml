@@ -1,0 +1,43 @@
+# Извлечено из карточки: payloads/web/lfi-rfi/php-input-data-wrapper.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: php://input и data:// — выполнение кода из тела запроса
+id: e5f6a7b8-0065-4e5f-9a7b-000000000065
+status: experimental
+description: 'Include-параметр указывает на php://input или data://text/plain;base64 — тело POST-запроса
+  исполняется как PHP-код. Подтверждение: PHP-теги прямо в теле запроса.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: webserver
+  definition: access-лог + логи приложения с телом запроса
+detection:
+  selection_query:
+    cs-uri-query|contains:
+    - php://input
+    - data://text
+    - expect://
+    - zip://
+    - '#post-data'
+  selection_body:
+    request_body|contains:
+    - <?php system
+    - <?php echo shell_exec
+    - <?=system
+    - <?php eval
+  condition: selection_query or selection_body
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+- request_body
+falsepositives:
+- webhook-интеграции, передающие XML/PHP-фрагменты как данные (редко)
+level: critical
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.94
+author: hackbook
+related:
+- 'payloads-card: payloads/web/lfi-rfi/php-input-data-wrapper.md'

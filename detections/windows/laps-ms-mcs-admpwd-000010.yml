@@ -1,0 +1,42 @@
+# Извлечено из карточки: payloads/network/ad/laps-misconfiguration.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Чтение LAPS-пароля (ms-Mcs-AdmPwd) не привилегированной учёткой
+id: a7b8c9d0-0010-4a7b-9c8d-000000000010
+status: experimental
+description: 'Event 4662 с Properties ms-Mcs-AdmPwd: кто-то читает локальный пароль администратора машины
+  из LAPS. Если читает не helpdesk-группа или читает массово — это горизонтальное перемещение (пароль
+  = локальный админ на узле).'
+references:
+- https://attack.mitre.org/techniques/T1552/
+- https://adsecurity.org/?p=3164
+logsource:
+  product: windows
+  service: security
+  definition: SACL Directory Service Access на атрибуте ms-Mcs-AdmPwd (компьютеры)
+detection:
+  selection:
+    EventID: 4662
+    Properties|contains:
+    - ms-Mcs-AdmPwd
+    - msLAPS-Password
+  filter_laps_admins:
+    SubjectUserName|contains:
+    - svc_laps
+    - lapsadmin
+  condition: selection and not filter_laps_admins
+fields:
+- SubjectUserName
+- ObjectName
+- Properties
+falsepositives:
+- легитимный helpdesk, получающий пароль через UI LAPS/Windows LAPS — ведите список групп и дополняйте
+  filter_laps_admins
+level: high
+tags:
+- attack.credential_access
+- attack.t1552
+- cwe.522
+author: hackbook
+related:
+- 'payloads-card: payloads/network/ad/laps-misconfiguration.md'

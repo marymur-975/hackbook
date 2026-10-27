@@ -1,0 +1,17 @@
+# Метаданные главы (sidecar). Front-matter в chapter.md имеет приоритет.
+title: "Введение: как устроен hackbook"
+chapter: 0
+difficulty: beginner
+category: general
+tags: [введение, методология, структура, этика]
+prerequisites: []
+related_payloads: []
+lab: null
+estimated_minutes: 20
+status: published
+authors: [hackbook contributors]
+graph:
+  - target: web
+    type: related_to
+  - target: network
+    type: related_to

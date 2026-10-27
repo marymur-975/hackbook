@@ -1,0 +1,99 @@
+# Конфигурация тестов для tools/payload-tester.sh
+name: vuln-hub
+base_url: http://localhost:8090
+description: >-
+  Девять классов уязвимостей в одном приложении + безопасные аналоги:
+  SQLi, IDOR, XSS, SSRF, XXE, command injection, LFI, JWT (alg=none, слабый
+  секрет), 2FA-обход. Полный контракт поведения проверяется selftest.py.
+
+# Соответствие «тип карточки -> эндпоинт и параметр» (используется тестером,
+# когда у карточки нет собственного поля lab-специфичного запроса).
+type_endpoints:
+  sqli:            { path: /items,     param: id }
+  nosql:           { path: /items,     param: id }
+  xss:             { path: /echo,      param: q }
+  lfi:             { path: /read,      param: file }
+  rfi:             { path: /read,      param: file }
+  ssrf:            { path: /fetch,     param: url }
+  cmdi:            { path: /ping,      param: host }
+  ssti:            { path: /echo,      param: q }
+  xxe:             { path: /lookup,    method: POST, body: xml }
+  auth-bypass:     { path: /admin,     method: GET, token: true }
+  header:          { path: /echo,      param: q }
+
+requests:
+  - path: /items
+    method: GET
+    param: id
+    success_markers:
+      - "SQL error"
+      - "HB-ITEM"
+
+  - path: /items_safe
+    method: GET
+    param: id
+    expect_no_markers:
+      - "SQL error"
+
+  - path: /echo
+    method: GET
+    param: q
+    success_markers:
+      - "<svg"
+      - "onerror="
+
+  - path: /echo_safe
+    method: GET
+    param: q
+    expect_no_markers:
+      - "<svg"
+
+  - path: /read
+    method: GET
+    param: file
+    success_markers:
+      - "root:"
+
+  - path: /read_safe
+    method: GET
+    param: file
+    expect_no_markers:
+      - "root:x:0:0"
+
+  - path: /fetch
+    method: GET
+    param: url
+
+  - path: /ping
+    method: GET
+    param: host
+    success_markers:
+      - "uid="
+
+  - path: /lookup
+    method: POST
+    content_type: application/xml
+
+expected_results:
+  vulnerable_endpoints:
+    - /items
+    - /notes
+    - /echo
+    - /fetch
+    - /lookup
+    - /ping
+    - /read
+    - /login
+    - /verify
+  safe_endpoints:
+    - /items_safe
+    - /notes_safe
+    - /echo_safe
+    - /fetch_safe
+    - /lookup_safe
+    - /ping_safe
+    - /read_safe
+    - /login_safe
+    - /verify_safe
+    - /me_safe
+  contract: "labs/web-labs/vuln-hub/selftest.py (30 проверок)"

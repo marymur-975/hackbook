@@ -1,0 +1,40 @@
+# Извлечено из карточки: payloads/web/deserialization/dotnet-viewstate.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: ASP.NET ViewState — подделка состояния при отключённой MAC-валидации
+id: e5f6a7b8-0109-4e5f-9a7b-000000000109
+status: experimental
+description: Запросы с __VIEWSTATE, которые падают с «state information is invalid», или предупреждения
+  о отключённой MAC-валидации — признак эксплуатации ViewState (вплоть до RCE через известные гаджеты
+  при known machineKey).
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://learn.microsoft.com/en-us/previous-versions/msp-n-p/ff649351(v=pandp.10)
+logsource:
+  category: application
+  definition: 'логи ASP.NET-приложения: тело POST и ошибки ViewState'
+detection:
+  viewstate_marker:
+    request_body|contains: __VIEWSTATE
+  tamper_error:
+    error_message|contains:
+    - state information is invalid
+    - Validation of viewstate MAC failed
+    - ViewStateException
+    - MAC validation
+  condition: viewstate_marker and tamper_error
+fields:
+- source_ip
+- request_path
+- error_message
+falsepositives:
+- протухшие страницы после деплоя (однократные ошибки у легитимных пользователей; серия от одного IP —
+  атака)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.502
+author: hackbook
+related:
+- 'payloads-card: payloads/web/deserialization/dotnet-viewstate.md'

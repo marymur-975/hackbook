@@ -1,0 +1,38 @@
+# Извлечено из карточки: payloads/web/xss/svg-onload-namespace.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: XSS через SVG — onload/onbegin и animate-элементы
+id: e5f6a7b8-0048-4e5f-9a7b-000000000048
+status: experimental
+description: 'SVG-элементы с обработчиками (onload, animate onbegin) в параметрах запроса: выполняются
+  при встраивании картинки в DOM без тега script.'
+references:
+- https://attack.mitre.org/techniques/T1189/
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой
+detection:
+  selection:
+    cs-uri-query|contains:
+    - <svg><animate
+    - animate onbegin
+    - <svg onload
+    - <svg/onload
+    - <svg><script
+    - setAttributeNS
+    - onbegin=alert
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- редакторы графики, передающие SVG-разметку (исключайте известные эндпоинты)
+level: high
+tags:
+- attack.initial_access
+- attack.t1189
+- cwe.79
+author: hackbook
+related:
+- 'payloads-card: payloads/web/xss/svg-onload-namespace.md'

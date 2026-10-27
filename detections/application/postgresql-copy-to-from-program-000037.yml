@@ -1,0 +1,54 @@
+# Извлечено из карточки: payloads/web/sqli/postgresql-copy-program.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: PostgreSQL COPY TO/FROM PROGRAM — выполнение команд сервером БД
+id: e5f6a7b8-0037-4e5f-9a7b-000000000037
+status: experimental
+description: 'COPY ... TO PROGRAM / FROM PROGRAM выполняет произвольную команду от имени postgres. Признаки:
+  маркеры в параметрах и журнале БД, а также файлы, созданные процессом postgres в /tmp (auditd PATH).'
+references:
+- https://attack.mitre.org/techniques/T1059/
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  service: database
+  definition: access-лог, журнал PostgreSQL (log_statement=all) и auditd на сервере БД
+detection:
+  query_probe:
+    cs-uri-query|contains:
+    - TO PROGRAM
+    - FROM PROGRAM
+    - COPY (SELECT
+  db_statement:
+    statement|contains:
+    - TO PROGRAM
+    - FROM PROGRAM
+  db_error:
+    error_message|contains:
+    - copy to a file using the server program
+    - program with arguments
+  file_write:
+    EventType: PATH
+    Image|contains: /postgresql/
+    Name|startswith:
+    - /tmp/
+    - /var/tmp/
+    - /dev/shm/
+  condition: query_probe or db_statement or db_error or file_write
+fields:
+- c-ip
+- cs-uri-query
+- statement
+- Name
+- Image
+falsepositives:
+- штатный импорт/экспорт через COPY (без PROGRAM) — паттерны включают именно PROGRAM
+level: critical
+tags:
+- attack.execution
+- attack.t1059
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/postgresql-copy-program.md'

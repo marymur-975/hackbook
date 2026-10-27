@@ -1,0 +1,37 @@
+# Извлечено из карточки: payloads/network/snmp-community-enum.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: SNMP-перебор community-строк и запросы с public/private
+id: a7b8c9d0-0007-4a7b-9c8d-000000000007
+status: experimental
+description: Журнал snmpd фиксирует запросы с дефолтными community (public/private) или серии «bad community
+  string» — enumeration оборудования (snmpwalk) и подбор сообщества.
+references:
+- https://attack.mitre.org/techniques/T1595/
+logsource:
+  product: linux
+  service: snmp
+  definition: syslog snmpd (или сетевого устройства) с сообщениями об аутентификации
+detection:
+  selection:
+    service: snmpd
+    message|contains:
+    - community=public
+    - community=private
+    - bad community
+    - community string
+    - authentication failure
+  condition: selection
+fields:
+- source_ip
+- message
+falsepositives:
+- мониторинг, до сих пор ходящий с public (это само по себе находка — переведите на SNMPv3 USM)
+level: medium
+tags:
+- attack.discovery
+- attack.t1595
+- cwe.798
+author: hackbook
+related:
+- 'payloads-card: payloads/network/snmp-community-enum.md'

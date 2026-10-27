@@ -1,0 +1,46 @@
+# Извлечено из карточки: payloads/cloud/lambda-env-vars-confused-deputy.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Lambda confused deputy — смена конфигурации функции и чужой AssumeRole
+id: f6a7b8c9-0011-4f6a-8b9c-000000000011
+status: experimental
+description: UpdateFunctionConfiguration/UpdateFunctionCode (секреты в env доступны любому коду функции)
+  и sts:AssumeRole сервисной роли из контекста другой функции — классический confused deputy с временными
+  ключами роли исполнения.
+references:
+- https://attack.mitre.org/techniques/T1552/005/
+- https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html
+logsource:
+  product: aws
+  service: cloudtrail
+  definition: CloudTrail management events Lambda + STS AssumeRole
+detection:
+  lambda_change:
+    eventSource: lambda.amazonaws.com
+    eventName:
+    - UpdateFunctionConfiguration
+    - UpdateFunctionCode
+    - CreateFunction
+  cross_role_assume:
+    eventSource: sts.amazonaws.com
+    eventName: AssumeRole
+    userIdentity.type: AssumedRole
+  lambda_role:
+    requestParameters.roleName|contains: lambda-
+  condition: lambda_change or (cross_role_assume and lambda_role)
+fields:
+- userIdentity.sessionContext.sessionIssuer.userName
+- sourceIPAddress
+- requestParameters.functionName
+- requestParameters.roleName
+falsepositives:
+- штатные деплои функций из CI — исключайте роль деплоя, но держите алерт на cross_role_assume между разными
+  сервисами
+level: medium
+tags:
+- attack.privilege_escalation
+- attack.t1552.005
+- cwe.441
+author: hackbook
+related:
+- 'payloads-card: payloads/cloud/lambda-env-vars-confused-deputy.md'

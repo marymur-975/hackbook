@@ -1,0 +1,42 @@
+# Извлечено из карточки: payloads/web/sqli/generic-having-group-by-error.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: SQL-проба HAVING/GROUP BY — ошибка группировки раскрывает схему
+id: e5f6a7b8-0018-4e5f-9a7b-000000000018
+status: experimental
+description: Параметр содержит HAVING 1=1 / GROUP BY-пробу, либо СУБД вернула ошибку «column is invalid
+  in the select list ... GROUP BY clause» — атакующий подбирает имена колонок по текстам ошибок.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  service: database
+  definition: access-лог приложения и журнал ошибок СУБД с текстом запроса
+detection:
+  query_probe:
+    cs-uri-query|contains:
+    - ''' HAVING'
+    - HAVING 1=1
+    - GROUP BY columnnames
+    - ''' GROUP BY'
+  db_error:
+    error_message|contains:
+    - is not contained in either an aggregate function
+    - mixing of GROUP columns
+    - not in GROUP BY clause
+  condition: query_probe or db_error
+fields:
+- c-ip
+- cs-uri-query
+- error_message
+- statement
+falsepositives:
+- ошибки аналитических запросов самой BI-системы (исключайте её сервисную учётку)
+level: medium
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/generic-having-group-by-error.md'

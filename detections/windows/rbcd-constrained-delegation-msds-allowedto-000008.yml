@@ -1,0 +1,43 @@
+# Извлечено из карточки: payloads/network/ad/constrained-delegation-rbcd.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: RBCD/constrained delegation — правка msDS-AllowedTo* атрибутов
+id: a7b8c9d0-0008-4a7b-9c8d-000000000008
+status: experimental
+description: 'Event 5136 на атрибутах msDS-AllowedToActOnBehalfOfOtherIdentity (RBCD) или msDS-AllowedToDelegateTo
+  (constrained delegation): назначение делегирования — ключевой шаг атаки «service for user» к любому
+  сервису.'
+references:
+- https://attack.mitre.org/techniques/T1474/
+- https://adsecurity.org/?p=1667
+logsource:
+  product: windows
+  service: security
+  definition: SACL/аудит Directory Service Changes (5136) на объектах computer/user
+detection:
+  selection:
+    EventID: 5136
+    AttributeLDAPDisplayName|contains:
+    - msDS-AllowedToActOnBehalfOfOtherIdentity
+    - msDS-AllowedToDelegateTo
+  filter_schema_admin:
+    SubjectUserName:
+    - svc_admgmt
+  condition: selection and not filter_schema_admin
+fields:
+- ObjectDN
+- ObjectClass
+- AttributeLDAPDisplayName
+- AttributeValue
+- SubjectUserName
+falsepositives:
+- плановая настройка делегирования администраторами AD (сверяйте с тикетами; значение AttributeValue =
+  SID того, кому делегируют — проверяйте его)
+level: high
+tags:
+- attack.privilege_escalation
+- attack.t1474
+- cwe.284
+author: hackbook
+related:
+- 'payloads-card: payloads/network/ad/constrained-delegation-rbcd.md'

@@ -1,0 +1,44 @@
+# Извлечено из карточки: payloads/web/deserialization/php-unserialize-pop.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: PHP-десериализация — сериализованные объекты (O:N:) во входящих данных
+id: e5f6a7b8-0113-4e5f-9a7b-000000000113
+status: experimental
+description: В параметрах/cookie встречается PHP-сериализация (O:4:"User":2:{...}) или её base64-форма,
+  а приложение логирует ошибки unserialize() — признак POP- атаки через магические методы (__wakeup/__destruct).
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://www.php.net/manual/ru/function.unserialize.php
+logsource:
+  category: application
+  definition: логи приложения с телом запроса, cookie и ошибками unserialize
+detection:
+  selection_body:
+    request_body|contains:
+    - O:4:"
+    - O:8:"
+    - s:4:"role"
+    - a:2:{
+    - __wakeup
+  selection_error:
+    error_message|contains:
+    - unserialize()
+    - 'Uncaught Exception: Serialization'
+    - __destruct
+  condition: selection_body or selection_error
+fields:
+- source_ip
+- request_path
+- request_body
+- error_message
+falsepositives:
+- WordPress-плагины, передающие сериализованные массивы в своих AJAX-ручках (исключайте известные эндпоинты
+  по request_path)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.502
+author: hackbook
+related:
+- 'payloads-card: payloads/web/deserialization/php-unserialize-pop.md'

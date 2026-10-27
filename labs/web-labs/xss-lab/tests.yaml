@@ -1,0 +1,49 @@
+# Конфигурация тестов для tools/payload-tester.sh
+name: xss-lab
+base_url: http://localhost:8081
+description: >-
+  Три контекста отражения (HTML-тело, атрибут, JS-строка), наивный blacklist-фильтр
+  и гостевая книга со stored XSS. Есть контрольные точки /safe и /csp.
+
+requests:
+  - path: /reflect
+    method: GET
+    param: q
+    success_markers:
+      - "<svg"
+      - "<img"
+      - "onerror="
+    notes: "значение возвращается в HTML без экранирования"
+
+  - path: /attribute
+    method: GET
+    param: v
+    success_markers:
+      - "onfocus="
+      - "\" autofocus"
+
+  - path: /js
+    method: GET
+    param: name
+    success_markers:
+      - "';alert"
+
+  - path: /filtered
+    method: GET
+    param: q
+    success_markers:
+      - "onerror="
+    notes: "blacklist вырезает только <script"
+
+  - path: /safe
+    method: GET
+    param: q
+    expect_no_markers:
+      - "<svg"
+      - "<img"
+    notes: "контрольная точка: экранирование, векторы не должны отражаться сырыми"
+
+expected_results:
+  vulnerable_endpoints: ["/reflect", "/attribute", "/js", "/filtered", "/guestbook"]
+  safe_endpoints: ["/safe", "/csp"]
+  contexts: ["html-body", "html-attribute", "javascript-string", "stored"]

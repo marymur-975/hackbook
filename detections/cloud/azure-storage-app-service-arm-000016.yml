@@ -1,0 +1,42 @@
+# Извлечено из карточки: payloads/cloud/azure-appservice-storage-keys.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Azure — запрос ключей storage и секретов App Service через ARM
+id: f6a7b8c9-0016-4f6a-8b9c-000000000016
+status: experimental
+description: 'Операции LISTKEYS/LISTSECRETS/CONFIG-LIST в Activity Log: кто-то запрашивает полный доступ
+  к storage-аккаунту или connection strings App Service в открытом виде (az webapp config ... list, show-connection-string).'
+references:
+- https://attack.mitre.org/techniques/T1552/005/
+- https://learn.microsoft.com/en-us/azure/app-service/configure-common
+logsource:
+  product: azure
+  service: activitylog
+  definition: Azure Activity Log (Microsoft.Storage/Microsoft.Web операции)
+detection:
+  selection:
+    operationName|contains:
+    - LISTKEYS/ACTION
+    - LISTSECRETS
+    - CONFIG/LIST/ACTION
+    - CONNECTIONSTRINGS
+    - LISTFUNCTIONKEYS
+  filter_automation:
+    caller|contains: automation@
+  condition: selection and not filter_automation
+fields:
+- caller
+- operationName
+- resourceGroup
+- status
+falsepositives:
+- runbook-автоматизация и backup-сервисы (префикс automation@ в filter) — дополняйте список своими managed
+  identity автоматизации
+level: high
+tags:
+- attack.credential_access
+- attack.t1552.005
+- cwe.522
+author: hackbook
+related:
+- 'payloads-card: payloads/cloud/azure-appservice-storage-keys.md'

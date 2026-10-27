@@ -1,0 +1,40 @@
+# Извлечено из карточки: payloads/web/xxe/error-based-entity.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Error-based XXE — содержимое файла уходит в сообщении об ошибке
+id: e5f6a7b8-0003-4e5f-9a7b-000000000003
+status: experimental
+description: Вложенная параметрическая сущность с percent-кодированием (&#x25) либо ошибка парсера «failed
+  to load external entity», в URL которой видно содержимое прочитанного файла.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  product: xml_parser
+  definition: логи приложения с телом запроса и ошибками парсера
+detection:
+  xml_request:
+    request_content_type|contains: xml
+  nested_entity:
+    request_body|contains: '&#x25'
+  parser_leak:
+    error_message|contains:
+    - failed to load external entity
+    - xmlParseEntityRef
+    - PEReference
+  condition: xml_request and (nested_entity or parser_leak)
+fields:
+- source_ip
+- request_path
+- request_body
+- error_message
+falsepositives:
+- ошибки парсера на битых легитимных XML (проверяйте наличие DOCTYPE в теле)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.611
+author: hackbook
+related:
+- 'payloads-card: payloads/web/xxe/error-based-entity.md'

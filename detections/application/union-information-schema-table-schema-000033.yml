@@ -1,0 +1,46 @@
+# Извлечено из карточки: payloads/web/sqli/mysql-union-select-enumeration.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: UNION-перечисление схемы — information_schema/table_schema в параметрах
+id: e5f6a7b8-0033-4e5f-9a7b-000000000033
+status: experimental
+description: Запрос к information_schema/table_schema или GROUP_CONCAT через UNION — этап выгрузки структуры
+  БД. В журнале MySQL — ошибка «different number of columns» при подборе количества колонок.
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://attack.mitre.org/techniques/T1213/
+logsource:
+  category: application
+  service: database
+  definition: access-лог приложения и журнал ошибок MySQL
+detection:
+  query_probe:
+    cs-uri-query|contains:
+    - information_schema
+    - table_schema
+    - GROUP_CONCAT(
+    - UNION SELECT NULL,NULL
+  db_error:
+    error_message|contains:
+    - different number of columns
+  db_statement:
+    statement|contains:
+    - information_schema
+    - table_schema
+  condition: query_probe or db_error or db_statement
+fields:
+- c-ip
+- cs-uri-query
+- error_message
+- statement
+falsepositives:
+- админки и ORM, легитимно читающие information_schema (исключайте по db_user/c-ip)
+level: high
+tags:
+- attack.collection
+- attack.t1190
+- attack.t1213
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/mysql-union-select-enumeration.md'

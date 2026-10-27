@@ -1,0 +1,43 @@
+# Извлечено из карточки: payloads/web/xss/csp-bypass-jsonp.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Обход CSP через JSONP-эндпоинты доверенных доменов
+id: e5f6a7b8-0050-4e5f-9a7b-000000000050
+status: experimental
+description: Загрузка script src с домена из whitelist CSP, у которого есть JSONP-колбэк (accounts.google.com/o/oauth2/revoke?callback=...).
+  Видно и в access-логе, и в CSP-отчётах браузера (blocked/violated script-src с callback= в URI).
+references:
+- https://attack.mitre.org/techniques/T1189/
+- https://content-security-policy.com/
+logsource:
+  category: webserver
+  definition: access-лог и endpoint сбора CSP-отчётов браузера
+detection:
+  selection_query:
+    cs-uri-query|contains:
+    - callback=alert
+    - revoke?callback=
+    - /jsonp?callback=
+    - callback=prompt
+    - callback=fetch
+  selection_csp:
+    event_action: csp_report
+    blocked_uri|contains:
+    - callback=
+    - jsonp
+  condition: selection_query or selection_csp
+fields:
+- c-ip
+- cs-uri-query
+- violated_directive
+- blocked_uri
+falsepositives:
+- легитимные JSONP-интеграции (устаревшие виджеты) — они постоянны, а не появляются внезапно
+level: medium
+tags:
+- attack.defense_evasion
+- attack.t1189
+- cwe.79
+author: hackbook
+related:
+- 'payloads-card: payloads/web/xss/csp-bypass-jsonp.md'

@@ -1,0 +1,43 @@
+# Извлечено из карточки: payloads/web/http/csrf-token-bypass.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: CSRF — межсайтовый POST без токена и проваленная CSRF-проверка
+id: e5f6a7b8-0083-4e5f-9a7b-000000000083
+status: experimental
+description: POST на изменяющий данные эндпоинт приходит с Referer стороннего сайта (или без Referer при
+  включённой защите), либо приложение само логирует провал CSRF-проверки (token missing/mismatch).
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html
+logsource:
+  category: webserver
+  definition: access-лог с Referer + логи приложения с результатом CSRF-проверки
+detection:
+  selection_access:
+    cs-method: POST
+    cs-referer|contains: http
+  filter_own_referer:
+    cs-referer|contains:
+    - corp.lab
+    - app.example
+  selection_app:
+    event_action: csrf_check
+    event_outcome: failure
+  condition: (selection_access and not filter_own_referer) or selection_app
+fields:
+- c-ip
+- cs-uri-stem
+- cs-referer
+- request_path
+- failure_reason
+falsepositives:
+- мобильные приложения и интеграции без Referer — для них действует второй признак (csrf_check failure),
+  а не отсутствие заголовка
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.352
+author: hackbook
+related:
+- 'payloads-card: payloads/web/http/csrf-token-bypass.md'

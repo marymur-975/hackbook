@@ -1,0 +1,190 @@
+# Конфигурация сайта книги hackbook (MkDocs + Material).
+#
+# Дерево docs/ НЕ редактируется руками: оно генерируется из book/src/
+# скриптом `tools/mkdocs-site.py` (см. также шаг «Prepare site tree» в CI).
+#
+#   python ../tools/mkdocs-site.py --clean
+#   mkdocs serve --config-file book/mkdocs.yml
+#   mkdocs build --config-file book/mkdocs.yml --site-dir build/site
+
+site_name: hackbook
+site_description: >-
+  Учебник, база payload'ов, словари и лаборатории по практической кибербезопасности.
+  Теория, воспроизводимые карточки атак, детектирование и исправление.
+site_author: hackbook contributors
+# site_url: https://hackbook.github.io/hackbook/
+# repo_url: https://github.com/hackbook/hackbook
+# repo_name: hackbook/hackbook
+# edit_uri: edit/main/book/src/
+
+docs_dir: docs
+site_dir: build/site
+
+theme:
+  name: material
+  language: ru
+  font:
+    text: Inter
+    code: JetBrains Mono
+  custom_dir: theme
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Тёмная тема
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Светлая тема
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.action.edit
+    - content.tooltips
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+    logo: material/shield-bug
+  favicon: assets/favicon.ico
+
+extra_css:
+  - assets/extra.css
+
+extra_javascript:
+  - assets/progress.js
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/hackbook/hackbook
+  generator: false
+  status:
+    new: Добавлено в текущем квартале
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - sane_lists
+  - smarty
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      base_path:
+        - ..
+      check_paths: false
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+plugins:
+  - search:
+      lang:
+        - ru
+        - en
+  # Директивы {{ include "..." }} раскрываются на этапе генерации дерева docs/
+  # (tools/mkdocs-site.py), поэтому плагины подключения файлов не требуются.
+  # раскомментируйте после `pip install mkdocs-minify-plugin`:
+  # - minify:
+  #     minify_html: true
+  # раскомментируйте после `pip install mkdocs-git-revision-date-localized-plugin`:
+  # - git-revision-date-localized:
+  #     type: date
+  #     fallback_to_build_date: true
+
+nav:
+  - Начало: index.md
+  - Книга:
+      - Введение: 00-introduction/index.md
+      - Web Security:
+          - Обзор: 01-web-security/index.md
+          - SQLi: 01-web-security/sqli/index.md
+          - XSS: 01-web-security/xss/index.md
+      - Сетевая безопасность:
+          - Обзор: 02-network/index.md
+          - Сетевые сервисы: 02-network/services/index.md
+      - Active Directory:
+          - Обзор: 03-active-directory/index.md
+          - Атаки на AD: 03-active-directory/attacks/index.md
+      - Облачные платформы:
+          - Обзор: 04-cloud/index.md
+          - Метаданные и SSRF: 04-cloud/metadata/index.md
+      - Эскалация привилегий:
+          - Обзор: 05-privilege-escalation/index.md
+          - Linux: 05-privilege-escalation/linux/index.md
+      - Контейнеры и K8s:
+          - Обзор: 06-container-k8s/index.md
+          - Атаки на Kubernetes: 06-container-k8s/k8s-attacks/index.md
+      - Мобильная безопасность:
+          - Обзор: 07-mobile/index.md
+          - Android: 07-mobile/android/index.md
+      - Криптография и JWT:
+          - Обзор: 08-crypto-jwt/index.md
+          - Атаки на JWT: 08-crypto-jwt/jwt-attacks/index.md
+      - CI/CD:
+          - Обзор: 09-ci-cd/index.md
+          - GitHub Actions: 09-ci-cd/github-actions/index.md
+      - Malware & RE:
+          - Обзор: 10-malware-re/index.md
+          - Основы реверс-инжиниринга: 10-malware-re/basics/index.md
+      - Wireless: 11-wireless/index.md
+  - Справочники:
+      - Обзор: cheatsheets/README.md
+      - Граф знаний: graph/index.html
+      - Словари: wordlists/README.md
+      - Детекты (Sigma): detections/index.md
+      - Лаборатории: labs/README.md
+      - Nmap: cheatsheets/nmap.md
+  - Проект:
+      - Вклад в проект: docs/CONTRIBUTING.md
+      - Стиль оформления: docs/STYLE-GUIDE.md
+      - Дорожная карта: docs/ROADMAP.md
+  - Сценарии:
+      - Обзор: walkthroughs/README.md
+      - SQLi Lab: walkthroughs/sqli-lab.md
+
+# ── PDF/EPUB ─────────────────────────────────────────────────────────
+# MkDocs собирает HTML-сайт. PDF и EPUB генерируются отдельным скриптом
+# (без headless-браузера в CI):
+#   python tools/pdf-builder.py --format all
+# Результат — book/build/hackbook.{pdf,epub,html}.

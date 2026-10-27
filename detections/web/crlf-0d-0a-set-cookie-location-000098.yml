@@ -1,0 +1,43 @@
+# Извлечено из карточки: payloads/web/headers/crlf-header-injection.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: CRLF-инъекция в заголовки — %0d%0a с Set-Cookie/Location в параметрах
+id: e5f6a7b8-0098-4e5f-9a7b-000000000098
+status: experimental
+description: В query-строке или User-Agent встречаются %0d%0a (CRLF) вместе с заголовочными конструкциями
+  (Set-Cookie:, Location:) — попытка инъекции собственных заголовков/ответов через уязвимый редирект или
+  логирование.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: webserver
+  definition: access-лог с query-строкой и User-Agent
+detection:
+  selection:
+    cs-uri-query|contains:
+    - '%0d%0a'
+    - '%0D%0A'
+    - '%250d%250a'
+    - \r\n
+  ua_selection:
+    cs-user-agent|contains:
+    - '%0d%0a'
+    - '%0D%0A'
+    - \r\n
+  condition: selection or ua_selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+- cs-user-agent
+- sc-status
+falsepositives:
+- поисковые запросы про URL-кодирование (редко); легитимных %0d%0a в параметрах не бывает
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.113
+author: hackbook
+related:
+- 'payloads-card: payloads/web/headers/crlf-header-injection.md'

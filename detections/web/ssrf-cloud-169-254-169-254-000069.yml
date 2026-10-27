@@ -1,0 +1,41 @@
+# Извлечено из карточки: payloads/web/ssrf/cloud-metadata-169254.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: SSRF на cloud-метаданные — 169.254.169.254 и аналоги
+id: e5f6a7b8-0069-4e5f-9a7b-000000000069
+status: experimental
+description: Обращение к link-local адресу метаданных облака (AWS/Azure 169.254.169.254, GCP metadata.google.internal,
+  AWS IPv6 fd00:ec2::254, Alibaba 100.100.100.200) или к путям latest/meta-data, computeMetadata.
+references:
+- https://attack.mitre.org/techniques/T1552/005/
+- https://hackingthe.cloud/aws/post_exploitation/instance_metadata/
+logsource:
+  category: webserver
+  definition: access-лог с параметром url + egress-логи прокси/файрвола
+detection:
+  selection:
+    cs-uri-query|contains:
+    - 169.254.169.254
+    - metadata.google.internal
+    - 100.100.100.200
+    - 169.254.170.2
+    - fd00:ec2::254
+    - latest/meta-data
+    - computeMetadata
+    - /metadata/instance
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- внутренние health-check-агенты облака (исключайте их IP, но не сам маркер)
+level: critical
+tags:
+- attack.credential_access
+- attack.t1190
+- attack.t1552.005
+- cwe.918
+author: hackbook
+related:
+- 'payloads-card: payloads/web/ssrf/cloud-metadata-169254.md'

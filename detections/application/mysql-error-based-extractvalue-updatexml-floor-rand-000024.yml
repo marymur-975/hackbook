@@ -1,0 +1,42 @@
+# Извлечено из карточки: payloads/web/sqli/mysql-error-based-extractvalue.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: MySQL error-based — EXTRACTVALUE/UPDATEXML/floor-rand в параметрах и ошибках
+id: e5f6a7b8-0024-4e5f-9a7b-000000000024
+status: experimental
+description: 'Классические MySQL-функции вывода данных через ошибку: EXTRACTVALUE, UPDATEXML, CONCAT(0x7e,...)
+  и floor(rand(0)*2). В журнале БД — ошибка «XPATH syntax error» или «Duplicate entry» с полезными данными.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  service: database
+  definition: access-лог приложения и журнал ошибок MySQL
+detection:
+  query_probe:
+    cs-uri-query|contains:
+    - EXTRACTVALUE(
+    - UPDATEXML(
+    - CONCAT(0x7e
+    - FLOOR(RAND(0)*2)
+    - GROUP BY FLOOR
+  db_error:
+    error_message|contains:
+    - XPATH syntax error
+    - Duplicate entry
+  condition: query_probe or db_error
+fields:
+- c-ip
+- cs-uri-query
+- error_message
+- statement
+falsepositives:
+- приложения, легитимно использующие EXTRACTVALUE для XML-колонок (исключайте по cs-uri-stem/db_user)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/mysql-error-based-extractvalue.md'

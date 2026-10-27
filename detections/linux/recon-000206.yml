@@ -1,0 +1,53 @@
+# Извлечено из карточки: payloads/privilege-escalation/linux/enumeration-checklist.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Массовое перечисление системы пользователем (recon перед эскалацией)
+id: c3d4e5f6-0006-4c3d-9e4f-000000000206
+status: experimental
+description: Комбинация команд разведки прав и конфигурации от одного пользователя за короткий промежуток
+  времени, либо запуск известных инструментов перечисления.
+references:
+- https://attack.mitre.org/techniques/T1082/
+- https://attack.mitre.org/techniques/T1083/
+logsource:
+  product: linux
+  service: auditd
+  definition: аудит execve для пользовательских сессий
+detection:
+  tools:
+    CommandLine|contains:
+    - linpeas
+    - LinEnum
+    - linux-smart-enumeration
+    - unix-privesc-check
+    - pspy
+    - getcap -r
+    - showmount -e
+    - find / -perm -4000
+    - find / -perm -2000
+  sensitive_read:
+    CommandLine|contains:
+    - /etc/shadow
+    - /etc/sudoers
+    - id_rsa
+    - .bash_history
+  recon_volume:
+    EventType: EXECVE
+    auid|gte: 1000
+  timeframe: 10m
+  condition: tools or sensitive_read or (recon_volume | count() by auid > 200)
+fields:
+- CommandLine
+- User
+- ParentImage
+falsepositives:
+- администраторы и инвентаризационные агенты (выносите по User/ParentImage)
+- CI-агенты и системы мониторинга безопасности
+level: medium
+tags:
+- attack.discovery
+- attack.t1082
+- attack.t1083
+author: hackbook
+related:
+- 'payloads-card: payloads/privilege-escalation/linux/enumeration-checklist.md'

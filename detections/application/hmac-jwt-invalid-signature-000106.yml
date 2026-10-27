@@ -1,0 +1,37 @@
+# Извлечено из карточки: payloads/web/auth-bypass/jwt-weak-secret.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Подбор HMAC-секрета JWT — шквал invalid signature от одного источника
+id: e5f6a7b8-0106-4e5f-9a7b-000000000106
+status: experimental
+description: Многократные провалы верификации подписи HS256 от одного IP — офлайн- словарь jwt-secrets
+  применяют онлайн (или через автомат). Успех после серии провалов означает, что секрет подобран.
+references:
+- https://attack.mitre.org/techniques/T1606/
+- https://attack.mitre.org/techniques/T1110/
+logsource:
+  category: application
+  definition: логи верификации JWT с причиной отказа и source_ip
+detection:
+  bruteforce:
+    event_action: jwt_verify
+    event_outcome: failure
+    failure_reason|contains: invalid signature
+  condition: bruteforce | count() by source_ip > 10
+fields:
+- source_ip
+- jwt_alg
+- token_sub
+- failure_reason
+falsepositives:
+- рассинхрон ключей между инстансами сервиса (все источники «свои» — сверяйте с деплоями); единичные провалы
+  пользователей порог не проходят
+level: high
+tags:
+- attack.credential_access
+- attack.t1606
+- attack.t1110
+- cwe.798
+author: hackbook
+related:
+- 'payloads-card: payloads/web/auth-bypass/jwt-weak-secret.md'

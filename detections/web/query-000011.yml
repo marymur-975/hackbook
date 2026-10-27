@@ -1,0 +1,44 @@
+# Извлечено из карточки: payloads/web/cmdi/basic-chained-commands.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Инъекция команд — цепочки и подстановки в query-строке
+id: e5f6a7b8-0011-4e5f-9a7b-000000000011
+status: experimental
+description: В query-строке видны разделители команд (; | && backtick) в сочетании с типовыми командами
+  разведки (id, whoami, cat) или подстановками $().
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой
+detection:
+  selection:
+    cs-uri-query|contains:
+    - ;id
+    - ;whoami
+    - ';cat '
+    - '|id'
+    - '|whoami'
+    - '|cat '
+    - '&&id'
+    - '&&whoami'
+    - '`id`'
+    - $(id)
+    - $(whoami)
+    - $(cat
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+- sc-status
+falsepositives:
+- параметры-идентификаторы вида ;id=5 в legacy-URL (уточняйте по cs-uri-stem)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.78
+author: hackbook
+related:
+- 'payloads-card: payloads/web/cmdi/basic-chained-commands.md'

@@ -1,0 +1,38 @@
+# Извлечено из карточки: payloads/web/xxe/svg-upload-vector.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: XXE через загруженный SVG — DOCTYPE и сущности в «изображении»
+id: e5f6a7b8-0005-4e5f-9a7b-000000000005
+status: experimental
+description: 'Загружаемый файл с расширением .svg содержит DOCTYPE/ENTITY или внешние ссылки. SVG — XML-контейнер:
+  его парсят серверные библиотеки, и XXE срабатывает без отправки отдельного XML-запроса.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  definition: логи загрузок с именем файла и превью содержимого (или DLP/WAF)
+detection:
+  svg_upload:
+    filename|endswith: .svg
+  suspicious_content:
+    file_preview|contains:
+    - <!DOCTYPE
+    - <!ENTITY
+    - SYSTEM "
+    - xlink:href="http
+  condition: svg_upload and suspicious_content
+fields:
+- source_ip
+- request_path
+- filename
+- file_preview
+falsepositives:
+- SVG-экспорт из графических редакторов со ссылками на внешние шрифты (xlink:href)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.611
+author: hackbook
+related:
+- 'payloads-card: payloads/web/xxe/svg-upload-vector.md'

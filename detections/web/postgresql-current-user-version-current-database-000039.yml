@@ -1,0 +1,36 @@
+# Извлечено из карточки: payloads/web/sqli/postgresql-stack-version.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: PostgreSQL — снятие контекста через current_user/version()/current_database()
+id: e5f6a7b8-0039-4e5f-9a7b-000000000039
+status: experimental
+description: 'UNION-запросы с current_user, version(), current_database() — этап разведки: атакующий определяет
+  версию PostgreSQL и права текущей учётки.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой
+detection:
+  selection:
+    cs-uri-query|contains:
+    - current_database()
+    - current_user, version()
+    - pg_catalog.version()
+    - UNION SELECT current_user
+    - version(), current_database
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- health-check-эндпоинты, возвращающие версию БД (исключайте по cs-uri-stem)
+level: medium
+tags:
+- attack.discovery
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/postgresql-stack-version.md'

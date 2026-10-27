@@ -1,0 +1,6 @@
+{"ts": "2026-10-20T18:00:01Z", "event_type": "runner_registration", "runner_token_prefix": "glrt-", "source_ip": "203.0.113.40", "project_path": "backend/api", "note": "регистрация нового раннера с внешнего IP"}
+{"ts": "2026-10-20T18:00:02Z", "event_type": "api_request", "auth_kind": "ci_job_token", "source_ip": "203.0.113.40", "api_path": "/api/v4/projects", "status": 200, "note": "job-токен перечисляет проекты GitLab API"}
+{"ts": "2026-10-20T18:00:03Z", "event_type": "job_start", "source_ip": "10.10.60.5", "project_path": "frontend/site", "note": "обычная задача на внутреннем раннере — не совпадение"}
+{"ts": "2026-10-20T18:01:01Z", "event_type": "image_push", "registry": "registry.corp.lab", "image": "payments/api", "tag": "latest", "signed": false, "digest_verified": false, "note": "push неподписанного образа с mutable-тегом"}
+{"ts": "2026-10-20T18:01:02Z", "event_type": "image_pull", "registry": "registry.corp.lab", "image": "alpine", "tag": "3.19", "signed": false, "digest_verified": false, "note": "pull по тегу без проверки digest и подписи"}
+{"ts": "2026-10-20T18:01:03Z", "event_type": "image_push", "registry": "registry.corp.lab", "image": "frontend/site", "tag": "v1.2.3", "signed": true, "digest_verified": true, "note": "подписанный релиз — не совпадение"}

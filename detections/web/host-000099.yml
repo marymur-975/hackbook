@@ -1,0 +1,38 @@
+# Извлечено из карточки: payloads/web/headers/host-header-cache-poisoning.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Host-заголовок стороннего домена в закэшированном ответе
+id: e5f6a7b8-0099-4e5f-9a7b-000000000099
+status: experimental
+description: X-Forwarded-Host (или Host) с доменом не из списка приложения попадает в ответ, который затем
+  кэшируется (cache_status HIT) — классическое отравление кэша через host-based заголовки.
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://portswigger.net/web-security/web-cache-poisoning
+logsource:
+  category: proxy
+  definition: 'журнал шлюза: X-Forwarded-Host, Host и cache_status ответа'
+detection:
+  xfh_present:
+    x_forwarded_host|contains: .
+  cache_hit:
+    cache_status: HIT
+  filter_own_host:
+    x_forwarded_host|contains: corp.lab
+  condition: xfh_present and cache_hit and not filter_own_host
+fields:
+- source_ip
+- path
+- host
+- x_forwarded_host
+- cache_status
+falsepositives:
+- мультитенантные домены клиентов — пополняйте filter_own_host
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.644
+author: hackbook
+related:
+- 'payloads-card: payloads/web/headers/host-header-cache-poisoning.md'

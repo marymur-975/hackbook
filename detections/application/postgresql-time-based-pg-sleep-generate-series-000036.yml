@@ -1,0 +1,42 @@
+# Извлечено из карточки: payloads/web/sqli/postgresql-boolean-sleep.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: PostgreSQL time-based — pg_sleep/generate_series в параметрах и журнале БД
+id: e5f6a7b8-0036-4e5f-9a7b-000000000036
+status: experimental
+description: Параметр содержит pg_sleep()/generate_series(...), либо журнал PostgreSQL фиксирует такой
+  запрос (в т.ч. отменённый по statement timeout).
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  service: database
+  definition: access-лог с time-taken и журнал PostgreSQL (log_statement, log_min_duration_statement)
+detection:
+  query_probe:
+    cs-uri-query|contains:
+    - pg_sleep(
+    - SELECT pg_sleep
+    - generate_series(1,1000
+    - pg_catalog.pg_sleep
+  db_statement:
+    statement|contains: pg_sleep
+  db_timeout:
+    error_message|contains:
+    - canceling statement due to statement timeout
+  condition: query_probe or db_statement or db_timeout
+fields:
+- c-ip
+- cs-uri-query
+- statement
+- error_message
+falsepositives:
+- тесты производительности, легитимно вызывающие pg_sleep (исключайте по db_user)
+level: medium
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/postgresql-boolean-sleep.md'

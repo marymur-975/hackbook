@@ -1,0 +1,38 @@
+# Извлечено из карточки: payloads/web/sqli/mysql-boolean-blind.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: MySQL boolean-based blind — посимвольные условия SUBSTRING/ASCII
+id: e5f6a7b8-0023-4e5f-9a7b-000000000023
+status: experimental
+description: 'В параметрах видны конструкции посимвольного перебора: SUBSTRING((SELECT..., ASCII(SUBSTRING(...)),
+  MID((SELECT..., ORD(MID(...)). Серия таких запросов от одного IP — почти наверняка sqlmap или ручной
+  blind-перебор.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой
+detection:
+  selection:
+    cs-uri-query|contains:
+    - SUBSTRING((SELECT
+    - ASCII(SUBSTRING
+    - MID((SELECT
+    - ORD(MID(
+    - IF(SUBSTRING
+    - AND SUBSTRING(
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- параметры поиска, дословно передающие SQL-фрагменты (редко)
+level: medium
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/mysql-boolean-blind.md'

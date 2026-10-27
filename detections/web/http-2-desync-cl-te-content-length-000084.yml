@@ -1,0 +1,41 @@
+# Извлечено из карточки: payloads/web/http/h2-cl-desync.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: HTTP/2 desync — CL и TE одновременно или два Content-Length
+id: e5f6a7b8-0084-4e5f-9a7b-000000000084
+status: experimental
+description: 'В HTTP/2 запрещены Transfer-Encoding и несколько Content-Length, но промежуточные серверы
+  иногда транслируют их в HTTP/1.1 бэкенду — основа h2.cl/h2.te desync-атак. Признаки: CL+TE в одном запросе,
+  count(CL) >= 2.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://portswigger.net/research/http2
+logsource:
+  category: proxy
+  definition: журнал HTTP-шлюза с числом заголовков CL и значением TE
+detection:
+  http2:
+    scheme: h2
+  cl_with_te:
+    content_length_count|gte: 1
+    transfer_encoding|contains: chunked
+  dual_cl:
+    content_length_count|gte: 2
+  condition: http2 and (cl_with_te or dual_cl)
+fields:
+- source_ip
+- method
+- path
+- content_lengths
+- transfer_encoding
+- status
+falsepositives:
+- багованные HTTP-клиенты/библиотеки (постоянный источник — в исключения)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.444
+author: hackbook
+related:
+- 'payloads-card: payloads/web/http/h2-cl-desync.md'

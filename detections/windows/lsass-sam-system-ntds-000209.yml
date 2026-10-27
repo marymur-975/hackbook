@@ -1,0 +1,74 @@
+# Извлечено из карточки: payloads/privilege-escalation/windows/credential-harvesting.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Доступ к LSASS или извлечение SAM/SYSTEM/NTDS
+id: c3d4e5f6-0009-4c3d-9e4f-000000000209
+status: stable
+description: Открытие процесса lsass.exe сторонним процессом, создание теневых копий, reg save системных
+  кустов, dump-файлы в нестандартных каталогах.
+references:
+- https://attack.mitre.org/techniques/T1003/001/
+- https://attack.mitre.org/techniques/T1003/002/
+- https://attack.mitre.org/techniques/T1003/003/
+logsource:
+  product: windows
+  service: sysmon
+  definition: Sysmon EventID 1, 10, 11; Security 4663/4688
+detection:
+  lsass_access:
+    EventID: 10
+    TargetImage|endswith: \lsass.exe
+    GrantedAccess|contains:
+    - '0x1010'
+    - '0x1410'
+    - '0x1438'
+    - '0x143a'
+    - '0x1fffff'
+  shadow_copy:
+    EventID: 1
+    Image|endswith:
+    - \vssadmin.exe
+    - \wmic.exe
+    - \diskshadow.exe
+    - \ntdsutil.exe
+    - \esentutl.exe
+    CommandLine|contains:
+    - shadowcopy
+    - create shadow
+    - backup
+  reg_save:
+    EventID: 1
+    Image|endswith: \reg.exe
+    CommandLine|contains:
+    - save
+    - HKLM\sam
+    - HKLM\system
+    - HKLM\security
+  comsvcs_dump:
+    EventID: 1
+    CommandLine|contains:
+    - comsvcs.dll
+    - MiniDump
+  dump_file:
+    EventID: 11
+    TargetFilename|contains:
+    - \lsass
+    - .dmp
+  condition: lsass_access or shadow_copy or reg_save or comsvcs_dump or dump_file
+fields:
+- Image
+- CommandLine
+- TargetImage
+- User
+falsepositives:
+- антивирусы и EDR-агенты (исключайте по подписи и пути)
+- легитимные операции резервного копирования (выделенная учётка, расписание)
+level: critical
+tags:
+- attack.credential_access
+- attack.t1003.001
+- attack.t1003.002
+- attack.t1003.003
+author: hackbook
+related:
+- 'payloads-card: payloads/privilege-escalation/windows/credential-harvesting.md'

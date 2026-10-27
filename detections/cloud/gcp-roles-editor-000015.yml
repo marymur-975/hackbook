@@ -1,0 +1,45 @@
+# Извлечено из карточки: payloads/cloud/gcp-sa-keys-and-default-editor.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: GCP — создание ключей сервисных аккаунтов и раздача roles/editor
+id: f6a7b8c9-0015-4f6a-8b9c-000000000015
+status: experimental
+description: 'CreateServiceAccountKey (долгосрочные ключи — главный путь утечки в GCP) и SetIamPolicy
+  с roles/editor|owner на проект: закрепление широких прав.'
+references:
+- https://attack.mitre.org/techniques/T1098/
+- https://attack.mitre.org/techniques/T1552/005/
+logsource:
+  product: gcp
+  service: gcp_audit
+  definition: 'Cloud Audit Logs: Admin Activity (пишется всегда, не отключается)'
+detection:
+  key_creation:
+    protoPayload.methodName|contains:
+    - CreateServiceAccountKey
+    - iam.serviceAccountKeys.create
+  iam_grant:
+    protoPayload.methodName: google.iam.admin.v1.SetIamPolicy
+    protoPayload.request.role:
+    - roles/editor
+    - roles/owner
+    - roles/iam.securityAdmin
+    - roles/iam.serviceAccountTokenCreator
+  condition: key_creation or iam_grant
+fields:
+- protoPayload.authenticationInfo.principalEmail
+- protoPayload.methodName
+- protoPayload.resourceName
+- protoPayload.request.role
+falsepositives:
+- плановая выдача ролей через IaC — сверяйте с PR/тикетами; для ключей SA предпочитайте workload identity
+  federation
+level: high
+tags:
+- attack.persistence
+- attack.t1098
+- attack.t1552.005
+- cwe.732
+author: hackbook
+related:
+- 'payloads-card: payloads/cloud/gcp-sa-keys-and-default-editor.md'

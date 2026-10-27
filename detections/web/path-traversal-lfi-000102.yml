@@ -1,0 +1,56 @@
+# Извлечено из карточки: payloads/web/detection/webserver-lfi-traversal.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Path traversal / LFI в параметрах запроса
+id: b2c3d4e5-0002-4b2c-8d3e-000000000102
+status: stable
+description: Последовательности ../ в литеральном, одно- и двойном URL-кодировании, а также обращения
+  к системным файлам и stream wrappers в параметрах запроса.
+references:
+- https://attack.mitre.org/techniques/T1083/
+- payloads/web/lfi-rfi/traversal-etc-passwd.md
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой
+detection:
+  traversal:
+    cs-uri-query|contains:
+    - ../
+    - ..\
+    - '%2e%2e%2f'
+    - '%2e%2e/'
+    - ..%2f
+    - '%252e%252e'
+    - ..;/
+    - '....//'
+    - '%c0%ae%c0%ae'
+    - '%uff0e%uff0e'
+  system_files:
+    cs-uri-query|contains:
+    - /etc/passwd
+    - /etc/shadow
+    - /proc/self/
+    - /var/log/
+    - win.ini
+    - boot.ini
+    - web.config
+    - php://filter
+    - php://input
+    - data://
+    - file:///
+  condition: traversal or system_files
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+- sc-status
+falsepositives:
+- редкие легитимные ссылки с ../ в query (проверьте свои приложения и вынесите в исключения)
+level: high
+tags:
+- attack.initial_access
+- attack.t1083
+- cwe.22
+author: hackbook
+related:
+- 'payloads-card: payloads/web/detection/webserver-lfi-traversal.md'

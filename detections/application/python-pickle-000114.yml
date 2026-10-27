@@ -1,0 +1,56 @@
+# Извлечено из карточки: payloads/web/deserialization/python-pickle.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Python pickle во входящих данных — опкоды и ошибки восстановления классов
+id: e5f6a7b8-0114-4e5f-9a7b-000000000114
+status: experimental
+description: 'Тело запроса/задачи содержит pickle-опкоды (cos, system, Reduce) или base64 pickle (gASV...),
+  а в логах — «Can''t get attribute ... __main__» (pickle пытался восстановить неизвестный класс). Host-подтверждение:
+  python-воркер порождает shell.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://docs.python.org/3/library/pickle.html
+logsource:
+  category: application
+  definition: логи приложения с телом запроса + auditd execve на воркерах
+detection:
+  selection_body:
+    request_body|contains:
+    - 'cos
+
+      system'
+    - __reduce__
+    - pickle.loads
+    - gASV
+  selection_error:
+    error_message|contains:
+    - Can't get attribute
+    - UnpicklingError
+    - pickle.loads
+  worker_shell:
+    EventType: EXECVE
+    ParentImage|endswith:
+    - /python3
+    - /python
+    Image|endswith:
+    - /sh
+    - /bash
+    - /nc
+  condition: selection_body or selection_error or worker_shell
+fields:
+- source_ip
+- request_path
+- error_message
+- ParentImage
+- Image
+falsepositives:
+- Celery/RQ-воркеры, легитимно получающие pickle из внутренней очереди — worker_shell исключайте по известным
+  ParentImage+User своих воркеров
+level: critical
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.502
+author: hackbook
+related:
+- 'payloads-card: payloads/web/deserialization/python-pickle.md'

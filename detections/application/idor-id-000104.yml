@@ -1,0 +1,38 @@
+# Извлечено из карточки: payloads/web/auth-bypass/idor-sequential-ids.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: IDOR — успешный доступ к чужим объектам по последовательным id
+id: e5f6a7b8-0104-4e5f-9a7b-000000000104
+status: experimental
+description: 'Событие object_access с user_is_owner=false и успешным исходом: сессия читает/меняет объекты
+  (invoices/1002, orders/57) принадлежащие другим пользователям. Серия таких событий с шагом ±1 — перебор.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://owasp.org/www-project-api-security/
+logsource:
+  category: application
+  definition: 'логи приложения: доступ к объектам с владельцем и исходом (ownership check)'
+detection:
+  selection:
+    event_action: object_access
+    user_is_owner: false
+    event_outcome: success
+  condition: selection
+fields:
+- source_ip
+- request_path
+- object_type
+- object_id
+- session_user_id
+- owner_user_id
+falsepositives:
+- легитимный кросс-доступ (поддержка, общие проекты) — ведите список ролей, которым разрешён доступ к
+  чужим объектам, и фильтруйте по session_user_id
+level: high
+tags:
+- attack.collection
+- attack.t1190
+- cwe.639
+author: hackbook
+related:
+- 'payloads-card: payloads/web/auth-bypass/idor-sequential-ids.md'

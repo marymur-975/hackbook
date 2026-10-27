@@ -1,0 +1,7 @@
+{"ts": "2026-10-20T12:00:01Z", "src_ip": "10.10.30.8", "qname": "a8f5f167f44f4964e6c998dee827110c.dnslog.attacker.tld", "qtype": "TXT", "response_code": "NOERROR", "answers": [], "note": "sqlmap --dns-domain: hex-поддомен (OOB-эксфильтрация)"}
+{"ts": "2026-10-20T12:00:02Z", "src_ip": "10.10.30.8", "qname": "x7data.oastify.com", "qtype": "A", "response_code": "NOERROR", "answers": ["93.184.216.34"], "note": "callback на платформу Burp OAST"}
+{"ts": "2026-10-20T12:00:03Z", "src_ip": "10.10.30.8", "qname": "data.attacker.tld", "qtype": "A", "response_code": "NOERROR", "answers": ["93.184.216.34"], "note": "UNC-callback от xp_dirtree"}
+{"ts": "2026-10-20T12:00:04Z", "src_ip": "10.10.30.8", "qname": "rebind.attacker.tld", "qtype": "A", "response_code": "NOERROR", "answers": ["169.254.169.254"], "note": "DNS rebinding: внешнее имя зарезолвилось в адрес метаданных"}
+{"ts": "2026-10-20T12:00:07Z", "src_ip": "10.10.30.8", "qname": "7f000001.c0a80001.rb.example.tld", "qtype": "A", "response_code": "NOERROR", "answers": ["127.0.0.1"], "note": "rebinding-сервис: hex-IP зарезолвился в loopback"}
+{"ts": "2026-10-20T12:00:05Z", "src_ip": "10.10.30.9", "qname": "app.corp.lab", "qtype": "A", "response_code": "NOERROR", "answers": ["10.10.30.20"], "note": "обычный внутренний запрос — не совпадение"}
+{"ts": "2026-10-20T12:00:06Z", "src_ip": "10.10.30.9", "qname": "cdn.example.com", "qtype": "AAAA", "response_code": "NOERROR", "answers": ["2606:2800:220:1:248:1893:25c8:1946"], "note": "обычный внешний запрос — не совпадение"}

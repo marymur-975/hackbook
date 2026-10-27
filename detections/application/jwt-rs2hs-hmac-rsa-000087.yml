@@ -1,0 +1,47 @@
+# Извлечено из карточки: payloads/web/http/jwt-confused-alg-rs2hs.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: JWT RS2HS — HMAC-подпись токена проверяется публичным RSA-ключом
+id: e5f6a7b8-0087-4e5f-9a7b-000000000087
+status: experimental
+description: 'Токен с alg=HS256, у которого kid указывает на асимметричный (RSA) ключ: атакующий подписывает
+  токен публичным ключом как HMAC-секретом. Признак — сочетание HS*-алгоритма с rsa-* в kid; успех такой
+  проверки критичен.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://portswigger.net/web-security/jwt/algorithm-confusion
+logsource:
+  category: application
+  definition: 'логи верификации JWT: jwt_alg, jwt_kid, исход проверки'
+detection:
+  selection:
+    event_action: jwt_verify
+    jwt_alg:
+    - HS256
+    - HS384
+    - HS512
+  rsa_kid:
+    jwt_kid|contains:
+    - rsa
+    - RSA
+    - asymmetric
+    - public
+  condition: selection and rsa_kid
+fields:
+- source_ip
+- jwt_alg
+- jwt_kid
+- token_sub
+- event_outcome
+falsepositives:
+- гибридные схемы с осознанным kid=rsa-*+HMAC (практически не встречаются; если есть — внесите в исключения
+  и задокументируйте)
+level: critical
+tags:
+- attack.credential_access
+- attack.t1190
+- attack.t1606
+- cwe.347
+author: hackbook
+related:
+- 'payloads-card: payloads/web/http/jwt-confused-alg-rs2hs.md'

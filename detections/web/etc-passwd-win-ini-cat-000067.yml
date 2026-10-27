@@ -1,0 +1,53 @@
+# Извлечено из карточки: payloads/web/lfi-rfi/traversal-etc-passwd.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Чтение системных файлов через веб — /etc/passwd, win.ini и веб-процесс с cat
+id: e5f6a7b8-0067-4e5f-9a7b-000000000067
+status: experimental
+description: 'Целевые файлы классического LFI в параметрах запроса (/etc/passwd, /etc/shadow, win.ini,
+  boot.ini). Host-подтверждение: дочерний процесс веб-сервера читает те же файлы (auditd execve).'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://attack.mitre.org/techniques/T1083/
+logsource:
+  category: webserver
+  definition: access-лог + auditd execve на веб-сервере
+detection:
+  selection_query:
+    cs-uri-query|contains:
+    - etc/passwd
+    - etc/shadow
+    - windows\win.ini
+    - winnt/win.ini
+    - boot.ini
+  web_child_read:
+    EventType: EXECVE
+    ParentImage|endswith:
+    - /apache2
+    - /httpd
+    - /nginx
+    - /php-fpm
+    - /java
+    - /tomcat
+    CommandLine|contains:
+    - /etc/passwd
+    - /etc/shadow
+    - win.ini
+    - /proc/self
+  condition: selection_query or web_child_read
+fields:
+- c-ip
+- cs-uri-query
+- CommandLine
+- ParentImage
+falsepositives:
+- health-check-скрипты, читающие /etc/passwd легально (исключайте по User)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- attack.t1083
+- cwe.22
+author: hackbook
+related:
+- 'payloads-card: payloads/web/lfi-rfi/traversal-etc-passwd.md'

@@ -1,0 +1,43 @@
+# Конфигурация тестов для tools/payload-tester.sh
+name: upload-lab
+base_url: http://localhost:8082
+description: >-
+  Загрузка файлов: blacklist расширений, доверие клиентскому Content-Type,
+  сохранение под оригинальным именем, stored XSS через filename.
+  Контрольная точка — /upload_safe.
+
+# Тестер отправляет карточку payload'а как multipart-файл с именем из поля
+# `filename` и проверяет маркеры в ответе.
+upload:
+  path: /upload
+  field: file
+  filename_from: payload        # использовать канонический payload как имя файла
+  content_type: image/png
+  success_markers:
+    - "Файл принят"
+    - "Сохранён как"
+  fail_markers:
+    - "запрещено"
+    - "не соответствует расширению"
+
+requests:
+  - path: /upload
+    method: POST
+    multipart: true
+    success_markers:
+      - "Файл принят"
+
+  - path: /upload_safe
+    method: POST
+    multipart: true
+    expect_no_markers:
+      - "Файл принят (safe)"
+    notes: "контрольная точка: whitelist + magic bytes + UUID-имя"
+
+expected_results:
+  vulnerable_endpoints: ["/upload", "/uploads/<name>", "/profile"]
+  safe_endpoints: ["/upload_safe"]
+  notes: >-
+    Python-приложение не исполняет PHP: цель заданий — показать, что файл
+    сохраняется под контролируемым именем и становится доступен по URL
+    (в стеке Apache+PHP / IIS / nginx+PHP-FPM это выполнение кода).

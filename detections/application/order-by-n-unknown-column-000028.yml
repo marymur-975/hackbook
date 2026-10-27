@@ -1,0 +1,45 @@
+# Извлечено из карточки: payloads/web/sqli/mysql-order-by-column-count.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Подбор числа колонок через ORDER BY N и ошибка «Unknown column»
+id: e5f6a7b8-0028-4e5f-9a7b-000000000028
+status: experimental
+description: 'Серия параметров ORDER BY 1,2,3...10 с возрастанием — классический этап подготовки UNION-инъекции.
+  Подтверждение: ошибка СУБД «Unknown column ''N'' in ''order clause''».'
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  service: database
+  definition: access-лог приложения и журнал ошибок MySQL
+detection:
+  query_probe:
+    cs-uri-query|contains:
+    - ''' ORDER BY'
+    - ORDER BY 1--
+    - ORDER BY 3 --
+    - ORDER BY 10 --
+    - ORDER BY 10--
+  db_error:
+    error_message|contains:
+    - Unknown column
+    - in 'order clause'
+    - ORDER BY items must appear
+    - ORDER BY position
+  condition: query_probe or db_error
+fields:
+- c-ip
+- cs-uri-query
+- error_message
+- statement
+falsepositives:
+- штатная сортировка списков (ORDER BY без кавычки и комментария) — паттерны включают кавычку/комментарий
+  именно для отделения инъекций
+level: low
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/mysql-order-by-column-count.md'

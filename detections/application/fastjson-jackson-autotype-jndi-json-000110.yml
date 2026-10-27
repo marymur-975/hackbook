@@ -1,0 +1,47 @@
+# Извлечено из карточки: payloads/web/deserialization/fastjson-jackson-autotype.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Fastjson/Jackson autoType — JNDI-гаджеты в JSON-теле запроса
+id: e5f6a7b8-0110-4e5f-9a7b-000000000110
+status: experimental
+description: В JSON встречается "@type" с опасными классами (JdbcRowSetImpl, TemplatesImpl, Runtime) —
+  полиморфная десериализация, ведущая к JNDI-загрузке кода. Заблокированные попытки видны по ошибке «autoType
+  is not support».
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://github.com/safe6Sec/Fastjson
+logsource:
+  category: application
+  definition: логи приложения с телом JSON-запросов и ошибками парсера
+detection:
+  selection_body:
+    request_body|contains:
+    - '"@type"'
+    - JdbcRowSetImpl
+    - dataSourceName
+    - com.sun.rowset
+    - TemplatesImpl
+    - enableDefaultTyping
+  selection_error:
+    error_message|contains:
+    - autoType is not support
+    - fastjson
+    - PolymorphicDeserialization
+    - Default typing is not safe
+  condition: selection_body or selection_error
+fields:
+- source_ip
+- request_path
+- request_body
+- error_message
+falsepositives:
+- внутренние сервисы, легитимно использующие @type (fastjson в штатном режиме) — исключайте доверенные
+  источники, но лучше мигрируйте их с autoType
+level: critical
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.502
+author: hackbook
+related:
+- 'payloads-card: payloads/web/deserialization/fastjson-jackson-autotype.md'

@@ -1,0 +1,43 @@
+# Извлечено из карточки: payloads/web/sqli/mssql-version-banner.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: MSSQL — снятие версии и контекста (@@version, DB_NAME, SUSER_SNAME)
+id: e5f6a7b8-0021-4e5f-9a7b-000000000021
+status: experimental
+description: В параметрах видны banner-функции MSSQL, либо текст ошибки содержит баннер «Microsoft SQL
+  Server 20xx» — атакующий определяет версию и учётный контекст перед эксплуатацией.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  service: database
+  definition: access-лог приложения и журнал ошибок MSSQL
+detection:
+  query_probe:
+    cs-uri-query|contains:
+    - '@@version'
+    - SUSER_SNAME
+    - DB_NAME()
+    - '@@servername'
+    - SYSTEM_USER
+    - HOST_NAME()
+  db_banner:
+    error_message|contains:
+    - Microsoft SQL Server 20
+    - 15.0.4
+    - 16.0.4
+  condition: query_probe or db_banner
+fields:
+- c-ip
+- cs-uri-query
+- error_message
+falsepositives:
+- мониторинг здоровья БД, опрашивающий @@version (исключайте по client_ip)
+level: medium
+tags:
+- attack.discovery
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/mssql-version-banner.md'

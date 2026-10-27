@@ -1,0 +1,38 @@
+# Извлечено из карточки: payloads/web/http/request-smuggling-te-cl.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Request smuggling TE.CL и аномалии chunked-тела с 4xx/5xx
+id: e5f6a7b8-0093-4e5f-9a7b-000000000093
+status: experimental
+description: Запросы chunked, которые фронтенд принял, а бэкенд отверг (4xx/5xx) — признак расхождения
+  в разборе TE (TE.CL и TE-обфускации). Дополняет правило CL.TE со стороны «странных» ответов.
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://portswigger.net/web-security/request-smuggling
+logsource:
+  category: proxy
+  definition: 'журнал HTTP-шлюза: TE, статусы фронтенда и бэкенда'
+detection:
+  http1:
+    scheme: http/1.1
+  chunked:
+    transfer_encoding|contains: chunked
+  backend_reject:
+    status|gte: 400
+  condition: http1 and chunked and backend_reject
+fields:
+- source_ip
+- method
+- path
+- transfer_encoding
+- status
+falsepositives:
+- обрывы соединений мобильных клиентов (единичны; серия от одного IP — атака)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.444
+author: hackbook
+related:
+- 'payloads-card: payloads/web/http/request-smuggling-te-cl.md'

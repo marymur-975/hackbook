@@ -1,0 +1,165 @@
+[
+  {
+    "title": "Введение: как устроен hackbook",
+    "chapter": "0",
+    "difficulty": "beginner",
+    "category": "general",
+    "tags": "[введение, методология, структура, этика]",
+    "prerequisites": "[]",
+    "related_payloads": "[]",
+    "lab": "null",
+    "path": "book\\src\\00-introduction\\chapter.md"
+  },
+  {
+    "title": "Web Security: инъекции, XSS и всё, что между ними",
+    "chapter": "1",
+    "difficulty": "intermediate",
+    "category": "web",
+    "tags": "[web, sqli, xss, ssrf, lfi, xxe, cmdi, ssti, http]",
+    "prerequisites": "[\"HTTP Basics\", \"Основы SQL\", \"Как работает браузер\"]",
+    "related_payloads": "",
+    "lab": "labs/web-labs/sqli-lab",
+    "path": "book\\src\\01-web-security\\chapter.md"
+  },
+  {
+    "title": "SQL Injection (SQLi)",
+    "chapter": "1.1",
+    "difficulty": "intermediate",
+    "tags": "[web, sqli, database]",
+    "path": "book\\src\\01-web-security\\sqli\\chapter.md"
+  },
+  {
+    "title": "Cross-Site Scripting (XSS)",
+    "chapter": "1.2",
+    "difficulty": "intermediate",
+    "tags": "[web, xss, javascript]",
+    "path": "book\\src\\01-web-security\\xss\\chapter.md"
+  },
+  {
+    "title": "Сетевая безопасность: разведка, сервисы, сегментация",
+    "chapter": "2",
+    "difficulty": "intermediate",
+    "category": "network",
+    "tags": "[network, recon, smb, ldap, snmp, dns, redis, segmentation]",
+    "prerequisites": "[\"Основы TCP/IP\", \"Модель OSI\", \"Базовый Linux\"]",
+    "related_payloads": "",
+    "lab": "labs/network-labs",
+    "path": "book\\src\\02-network\\chapter.md"
+  },
+  {
+    "title": "Сетевые сервисы",
+    "chapter": "2.1",
+    "difficulty": "beginner",
+    "tags": "[network, smb, ftp, snmp]",
+    "path": "book\\src\\02-network\\services\\chapter.md"
+  },
+  {
+    "title": "Active Directory: поверхность атаки домена",
+    "chapter": "3",
+    "difficulty": "advanced",
+    "category": "active-directory",
+    "tags": "[active-directory, kerberos, ntlm, ldap, gpo, privilege-escalation]",
+    "prerequisites": "",
+    "- \"Сетевая безопасность": "разведка, сервисы, сегментация",
+    "related_payloads": "",
+    "lab": "null",
+    "path": "book\\src\\03-active-directory\\chapter.md"
+  },
+  {
+    "title": "Атаки на Active Directory",
+    "chapter": "3.1",
+    "difficulty": "advanced",
+    "tags": "[active-directory, kerberos, smb]",
+    "path": "book\\src\\03-active-directory\\attacks\\chapter.md"
+  },
+  {
+    "title": "Облачные платформы: AWS, GCP, Azure, Kubernetes",
+    "chapter": "4",
+    "difficulty": "advanced",
+    "category": "cloud",
+    "tags": "[cloud, aws, gcp, azure, kubernetes, iam, imds, misconfiguration]",
+    "prerequisites": "",
+    "- \"Web Security": "инъекции, XSS и всё, что между ними",
+    "- \"Сетевая безопасность": "разведка, сервисы, сегментация",
+    "related_payloads": "",
+    "lab": "null",
+    "path": "book\\src\\04-cloud\\chapter.md"
+  },
+  {
+    "title": "Облачные метаданные и SSRF",
+    "chapter": "4.1",
+    "difficulty": "intermediate",
+    "tags": "[cloud, aws, gcp, ssrf]",
+    "path": "book\\src\\04-cloud\\metadata\\chapter.md"
+  },
+  {
+    "title": "Эскалация привилегий: Linux и Windows",
+    "chapter": "5",
+    "difficulty": "advanced",
+    "category": "privilege-escalation",
+    "tags": "[privilege-escalation, linux, windows, sudo, suid, kernel, service]",
+    "prerequisites": "",
+    "- \"Сетевая безопасность": "разведка, сервисы, сегментация",
+    "- \"Active Directory": "поверхность атаки домена",
+    "related_payloads": "",
+    "lab": "null",
+    "path": "book\\src\\05-privilege-escalation\\chapter.md"
+  },
+  {
+    "title": "Эскалация привилегий в Linux",
+    "chapter": "5.1",
+    "difficulty": "intermediate",
+    "tags": "[linux, privesc, sudo, suid]",
+    "path": "book\\src\\05-privilege-escalation\\linux\\chapter.md"
+  },
+  {
+    "path": "book\\src\\06-container-k8s\\chapter.md"
+  },
+  {
+    "title": "Атаки на Kubernetes",
+    "chapter": "6.1",
+    "difficulty": "advanced",
+    "tags": "[kubernetes, k8s, cloud, rbac]",
+    "path": "book\\src\\06-container-k8s\\k8s-attacks\\chapter.md"
+  },
+  {
+    "path": "book\\src\\07-mobile\\chapter.md"
+  },
+  {
+    "title": "Безопасность Android",
+    "chapter": "7.1",
+    "difficulty": "intermediate",
+    "tags": "[mobile, android, apk, frida]",
+    "path": "book\\src\\07-mobile\\android\\chapter.md"
+  },
+  {
+    "path": "book\\src\\08-crypto-jwt\\chapter.md"
+  },
+  {
+    "title": "Атаки на JWT (JSON Web Tokens)",
+    "chapter": "8.1",
+    "difficulty": "intermediate",
+    "tags": "[jwt, crypto, auth-bypass]",
+    "path": "book\\src\\08-crypto-jwt\\jwt-attacks\\chapter.md"
+  },
+  {
+    "path": "book\\src\\09-ci-cd\\chapter.md"
+  },
+  {
+    "title": "Безопасность GitHub Actions",
+    "chapter": "9.1",
+    "difficulty": "advanced",
+    "tags": "[ci-cd, github, supply-chain, actions]",
+    "path": "book\\src\\09-ci-cd\\github-actions\\chapter.md"
+  },
+  {
+    "path": "book\\src\\10-malware-re\\chapter.md"
+  },
+  {
+    "title": "Основы реверс-инжиниринга",
+    "chapter": "10.1",
+    "difficulty": "expert",
+    "tags": "[malware, reverse-engineering, re, ida, ghidra]",
+    "path": "book\\src\\10-malware-re\\basics\\chapter.md"
+  }
+]

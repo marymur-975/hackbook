@@ -1,0 +1,170 @@
+# Единая точка входа для лабораторий hackbook.
+#
+#   docker compose up -d              # поднять всё
+#   docker compose up -d sqli-lab     # только SQLi
+#   docker compose ps                 # статус и порты
+#   docker compose down -v            # остановить и удалить данные
+#
+# Все сервисы опубликованы ТОЛЬКО на 127.0.0.1 — наружу они не видны.
+# Сеть изолирована, исходящий доступ закрыт (internal: true) там, где это
+# не мешает учебным заданиям.
+
+name: hackbook-labs
+
+services:
+  sqli-lab:
+    build:
+      context: ../web-labs/sqli-lab
+    image: hackbook/sqli-lab:latest
+    container_name: hackbook-sqli-lab
+    restart: "no"
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      DB_PATH: /data/app.db
+      SHOW_DB_ERRORS: "1" # намеренно: раскрытие ошибок СУБД — учебная находка
+      PORT: "8080"
+    volumes:
+      - sqli-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    networks: [labnet]
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8080/health',timeout=2)",
+        ]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  xss-lab:
+    build:
+      context: ../web-labs/xss-lab
+    image: hackbook/xss-lab:latest
+    container_name: hackbook-xss-lab
+    restart: "no"
+    ports:
+      - "127.0.0.1:8081:8080"
+    environment:
+      DB_PATH: /data/app.db
+      PORT: "8080"
+    volumes:
+      - xss-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    networks: [labnet]
+
+  upload-lab:
+    build:
+      context: ../web-labs/upload-lab
+    image: hackbook/upload-lab:latest
+    container_name: hackbook-upload-lab
+    restart: "no"
+    ports:
+      - "127.0.0.1:8082:8080"
+    environment:
+      UPLOAD_DIR: /data/uploads
+      STATE_DB: /data/app.db
+      PORT: "8080"
+    volumes:
+      - upload-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    networks: [labnet]
+
+  vuln-hub:
+    build:
+      context: ../web-labs/vuln-hub
+    image: hackbook/vuln-hub:latest
+    container_name: hackbook-vuln-hub
+    restart: "no"
+    ports:
+      - "127.0.0.1:8090:8080"
+    environment:
+      DB_PATH: /data/app.db
+      DOCS_DIR: /app/docs
+      JWT_SECRET: secret # намеренно слабый: есть в wordlists/passwords/jwt-secrets.txt
+      ALLOWED_SSRF_HOSTS: example.com
+      PORT: "8080"
+    volumes:
+      - vulnhub-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    networks: [labnet]
+
+  # ── сетевая лаборатория: реальные сервисы без аутентификации ──────
+  redis-noauth:
+    image: redis:7-alpine
+    container_name: hackbook-redis-noauth
+    restart: "no"
+    command: ["redis-server", "--protected-mode", "no", "--save", ""]
+    ports:
+      - "127.0.0.1:6379:6379"
+    networks: [labnet]
+    profiles: ["network"]
+
+  openldap-anonymous:
+    image: bitnami/openldap:2.6
+    container_name: hackbook-openldap
+    restart: "no"
+    environment:
+      LDAP_ROOT: "dc=lab,dc=local"
+      LDAP_ADMIN_USERNAME: "admin"
+      LDAP_ADMIN_PASSWORD: "admin123"
+      LDAP_ALLOW_ANON_BINDING: "yes" # намеренно: anonymous bind
+      LDAP_CUSTOM_LDIF_DIR: "/ldifs"
+    ports:
+      - "127.0.0.1:1389:1389"
+      - "127.0.0.1:1636:1636"
+    volumes:
+      - ../db-init:/ldifs:ro
+    networks: [labnet]
+    profiles: ["network"]
+
+  ftp-anonymous:
+    image: fauria/vsftpd:latest
+    container_name: hackbook-ftp
+    restart: "no"
+    environment:
+      FTP_USER: "lab"
+      FTP_PASS: "lab"
+      PASV_MIN_PORT: "21100"
+      PASV_MAX_PORT: "21110"
+    ports:
+      - "127.0.0.1:2121:21"
+      - "127.0.0.1:21100-21110:21100-21110"
+    networks: [labnet]
+    profiles: ["network"]
+
+networks:
+  labnet:
+    driver: bridge
+    # internal: true   # раскомментируйте, чтобы полностью запретить egress
+    name: hackbook-labnet
+
+volumes:
+  sqli-data:
+  xss-data:
+  upload-data:
+  vulnhub-data:

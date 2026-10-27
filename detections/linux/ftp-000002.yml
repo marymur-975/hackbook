@@ -1,0 +1,36 @@
+# Извлечено из карточки: payloads/network/ftp-anonymous-access.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Анонимный вход на FTP-сервер
+id: a7b8c9d0-0002-4a7b-9c8d-000000000002
+status: experimental
+description: Успешный вход user=anonymous / USER anonymous в журнале FTP-демона. Анонимный FTP наружу
+  — канал утечки; внутрь — точка закрепления (запись в /incoming).
+references:
+- https://attack.mitre.org/techniques/T1078/
+logsource:
+  product: linux
+  service: ftp
+  definition: журнал vsftpd/proftpd с записями об аутентификации
+detection:
+  selection:
+    service: vsftpd
+    message|contains:
+    - user=anonymous
+    - USER anonymous
+    - anon-password
+    - Anonymous access granted
+  condition: selection
+fields:
+- source_ip
+- message
+falsepositives:
+- легитимные публичные FTP-зеркала (их мало; выносите по source_ip и каталогу)
+level: medium
+tags:
+- attack.initial_access
+- attack.t1078
+- cwe.306
+author: hackbook
+related:
+- 'payloads-card: payloads/network/ftp-anonymous-access.md'

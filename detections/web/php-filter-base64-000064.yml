@@ -1,0 +1,37 @@
+# Извлечено из карточки: payloads/web/lfi-rfi/php-filter-base64.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: php://filter — чтение исходников через base64-конвертер
+id: e5f6a7b8-0064-4e5f-9a7b-000000000064
+status: experimental
+description: Параметр содержит php://filter/convert.base64-encode/resource=... — чтение исходного кода
+  приложения в обход исполнения. Ответ при этом — нечитаемый base64-блок большого размера.
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://www.php.net/manual/ru/wrappers.php.php
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой
+detection:
+  selection:
+    cs-uri-query|contains:
+    - php://filter
+    - convert.base64-encode
+    - convert.iconv
+    - resource=index.php
+    - /resource=
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- практически отсутствуют: php://filter в пользовательских параметрах не встречается
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.22
+author: hackbook
+related:
+- 'payloads-card: payloads/web/lfi-rfi/php-filter-base64.md'

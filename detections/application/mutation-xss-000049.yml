@@ -1,0 +1,38 @@
+# Извлечено из карточки: payloads/web/xss/mutation-xss.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Mutation XSS — «безопасный» экранированный тег в контейнере-мутаторе
+id: e5f6a7b8-0049-4e5f-9a7b-000000000049
+status: experimental
+description: Payload проходит санитизацию как текст (&lt;img...&gt;), но браузер переразбирает его внутри
+  контейнеров-мутаторов (listing, noscript, math/mtext, style) и превращает в активный HTML.
+references:
+- https://attack.mitre.org/techniques/T1189/
+logsource:
+  category: application
+  definition: логи приложения с телами сохраняемого пользовательского контента
+detection:
+  selection:
+    request_body|contains:
+    - <listing>
+    - '&lt;img src=x'
+    - '&lt;script'
+    - <noscript><p
+    - <math><mtext
+    - <style>@import
+  condition: selection
+fields:
+- source_ip
+- request_path
+- event_action
+- request_body
+falsepositives:
+- обучающий контент и сниппеты кода (экранированный HTML как данные) — сверяйте с разделом приложения
+level: medium
+tags:
+- attack.initial_access
+- attack.t1189
+- cwe.79
+author: hackbook
+related:
+- 'payloads-card: payloads/web/xss/mutation-xss.md'

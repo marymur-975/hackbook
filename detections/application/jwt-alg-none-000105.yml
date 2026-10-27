@@ -1,0 +1,38 @@
+# Извлечено из карточки: payloads/web/auth-bypass/jwt-alg-none.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: JWT alg=none — токен без подписи принимается сервисом
+id: e5f6a7b8-0105-4e5f-9a7b-000000000105
+status: experimental
+description: Попытка верификации токена с алгоритмом none/None/NONE. Любое такое событие — атака (или
+  уязвимая библиотека); успех (outcome=success) означает полный обход аутентификации.
+references:
+- https://attack.mitre.org/techniques/T1606/
+- https://datatracker.ietf.org/doc/html/rfc8725
+logsource:
+  category: application
+  definition: 'логи верификации JWT: jwt_alg, jwt_kid, исход проверки'
+detection:
+  selection:
+    event_action: jwt_verify
+    jwt_alg:
+    - none
+    - None
+    - NONE
+  condition: selection
+fields:
+- source_ip
+- jwt_alg
+- token_sub
+- event_outcome
+falsepositives:
+- неаутентифицированные публичные JWT (редкий и спорный паттерн) — если есть, выносите в исключения конкретные
+  request_path
+level: critical
+tags:
+- attack.credential_access
+- attack.t1606
+- cwe.347
+author: hackbook
+related:
+- 'payloads-card: payloads/web/auth-bypass/jwt-alg-none.md'

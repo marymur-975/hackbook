@@ -1,0 +1,42 @@
+# Извлечено из карточки: payloads/web/headers/x-forwarded-for-spoofing.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: X-Forwarded-For спуфинг — внутренний адрес от внешнего клиента
+id: e5f6a7b8-0101-4e5f-9a7b-000000000101
+status: experimental
+description: Внешний клиент присылает X-Forwarded-For с loopback/внутренним адресом — обход IP-allowlist,
+  лимитов и геоблокировок. Особенно критично для админ-путей (/admin, /internal, /actuator).
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: proxy
+  definition: журнал шлюза с X-Forwarded-For и реальным source_ip
+detection:
+  selection:
+    x_forwarded_for|contains:
+    - 127.0.0.1
+    - ::1
+    - localhost
+    - 10.10.
+    - 192.168.
+    - 172.16.
+  filter_trusted_proxy:
+    source_ip|startswith:
+    - 10.10.30.
+    - 10.10.31.
+  condition: selection and not filter_trusted_proxy
+fields:
+- source_ip
+- path
+- x_forwarded_for
+falsepositives:
+- запросы через собственные reverse-proxy (их адреса — в filter_trusted_proxy; XFF от них легален, если
+  добавляется, а не переписывается)
+level: medium
+tags:
+- attack.defense_evasion
+- attack.t1190
+- cwe.290
+author: hackbook
+related:
+- 'payloads-card: payloads/web/headers/x-forwarded-for-spoofing.md'

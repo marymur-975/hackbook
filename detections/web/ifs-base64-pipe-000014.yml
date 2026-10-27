@@ -1,0 +1,44 @@
+# Извлечено из карточки: payloads/web/cmdi/filter-bypass-obfuscation.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Инъекция команд с обходом фильтров — IFS, склейка кавычек, base64-pipe
+id: e5f6a7b8-0014-4e5f-9a7b-000000000014
+status: experimental
+description: 'В query-строке видны приёмы обхода фильтров: ${IFS} вместо пробела, склейка кавычек внутри
+  слова (ca""t), пайп из base64/openssl в sh.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://gtfobins.github.io/
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой
+detection:
+  selection:
+    cs-uri-query|contains:
+    - ${IFS}
+    - $IFS
+    - '{cat,'
+    - ca""t
+    - ca''t
+    - '|base64 -d'
+    - '|base64 --decode'
+    - '|openssl enc'
+    - -d|sh
+    - -d | sh
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- документация и примеры кода в параметрах поиска; base64 в legit-параметрах обычно не заканчивается пайпом
+  в sh
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- attack.t1140
+- cwe.78
+author: hackbook
+related:
+- 'payloads-card: payloads/web/cmdi/filter-bypass-obfuscation.md'

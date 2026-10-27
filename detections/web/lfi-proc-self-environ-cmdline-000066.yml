@@ -1,0 +1,38 @@
+# Извлечено из карточки: payloads/web/lfi-rfi/proc-self-environ.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: LFI через /proc/self — environ, cmdline и файловые дескрипторы
+id: e5f6a7b8-0066-4e5f-9a7b-000000000066
+status: experimental
+description: Параметр ссылается на /proc/self/environ, /proc/self/cmdline или /proc/self/fd/N — чтение
+  окружения процесса (секреты) либо исполнение кода, внедрённого через заголовки.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой
+detection:
+  selection:
+    cs-uri-query|contains:
+    - /proc/self/environ
+    - /proc/self/cmdline
+    - /proc/self/fd
+    - /proc/1/
+    - /proc/self/status
+    - '%2fproc%2fself'
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- диагностические эндпоинты мониторинга (исключайте внутренние IP)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- attack.t1552
+- cwe.22
+author: hackbook
+related:
+- 'payloads-card: payloads/web/lfi-rfi/proc-self-environ.md'

@@ -1,0 +1,38 @@
+# Извлечено из карточки: payloads/web/upload/extension-blacklist-bypass.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Исполнение скрипта из каталога загрузок
+id: 3f2b8c1a-9d4e-4a2b-8f7c-1e5d6a7b8c90
+status: experimental
+description: Запрос к .php/.phtml/.phar внутри каталога пользовательских загрузок почти всегда означает
+  успешный upload-обход и webshell.
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-stem|contains:
+    - /uploads/
+    - /upload/
+    - /media/
+    - /files/
+    cs-uri-stem|endswith:
+    - .php
+    - .phtml
+    - .phar
+    - .php5
+    - .jspx
+    - .asp
+    - .aspx
+  filter_static:
+    sc-status: 404
+  condition: selection and not filter_static
+level: critical
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.434
+falsepositives:
+- легитимные скрипты в каталоге media (редко; исправьте архитектуру)
+author: hackbook
+related:
+- 'payloads-card: payloads/web/upload/extension-blacklist-bypass.md'

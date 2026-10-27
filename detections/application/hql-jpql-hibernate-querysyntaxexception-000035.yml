@@ -1,0 +1,41 @@
+# Извлечено из карточки: payloads/web/sqli/orm-hql-jpa-injection.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: HQL/JPQL-инъекция — ошибки Hibernate QuerySyntaxException
+id: e5f6a7b8-0035-4e5f-9a7b-000000000035
+status: experimental
+description: ORM-слой падает с QuerySyntaxException/unexpected token — пользовательские данные конкатенируются
+  в HQL/JPQL. Маркеры сущностей (FROM User u WHERE) в теле запроса усиливают сигнал.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  definition: логи Java-приложения с ошибками ORM и телом запроса
+detection:
+  orm_error:
+    error_message|contains:
+    - QuerySyntaxException
+    - org.hibernate.hql
+    - unexpected token [
+    - javax.persistence.PersistenceException
+  entity_marker:
+    request_body|contains:
+    - FROM User u WHERE
+    - FROM users u WHERE
+    - SELECT COUNT(*) FROM User
+  condition: orm_error or entity_marker
+fields:
+- source_ip
+- request_path
+- request_body
+- error_message
+falsepositives:
+- баги самих HQL-шаблонов приложения (ошибка без внешнего воздействия — сверяйте с релизами)
+level: medium
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/orm-hql-jpa-injection.md'

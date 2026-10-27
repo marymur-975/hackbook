@@ -1,0 +1,50 @@
+# Извлечено из карточки: payloads/web/http/open-redirect-chain.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Open redirect — внешний адрес в параметре перенаправления
+id: e5f6a7b8-0090-4e5f-9a7b-000000000090
+status: experimental
+description: Редирект-эндпоинт (/redirect, /go, /out) отдаёт 30x на URL из параметра, ведущий на внешний
+  домен. Используется для фишинга и как звено обхода валидации redirect_uri в OAuth/SSRF.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: webserver
+  definition: access-лог с query-строкой и кодом ответа
+detection:
+  selection_param:
+    cs-uri-query|contains:
+    - url=https://
+    - url=http://
+    - next=//
+    - to=https://
+    - redirect=http
+    - dest=http
+    - continue=http
+  redirect_status:
+    sc-status:
+    - 301
+    - 302
+    - 303
+    - 307
+    - 308
+  filter_internal:
+    cs-uri-query|contains:
+    - corp.lab
+    - app.example.com
+  condition: selection_param and redirect_status and not filter_internal
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+- sc-status
+falsepositives:
+- легитимные редирект-шлюзы с подписанными ссылками — исключайте их по cs-uri-stem
+level: medium
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.601
+author: hackbook
+related:
+- 'payloads-card: payloads/web/http/open-redirect-chain.md'

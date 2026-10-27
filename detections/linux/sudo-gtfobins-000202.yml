@@ -1,0 +1,60 @@
+# Извлечено из карточки: payloads/privilege-escalation/linux/sudo-misconfiguration.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: sudo-вызов интерактивной программы (потенциальная эскалация через GTFOBins)
+id: c3d4e5f6-0002-4c3d-9e4f-000000000202
+status: experimental
+description: Пользователь запускает под sudo программу, из которой возможен выход в оболочку или выполнение
+  произвольного кода.
+references:
+- https://attack.mitre.org/techniques/T1548/003/
+- https://gtfobins.github.io/
+logsource:
+  product: linux
+  service: sudo
+  definition: журнал sudo (auth.log / journalctl -t sudo)
+detection:
+  selection:
+    EventType: SUDO_COMMAND
+    Command|contains:
+    - /usr/bin/vim
+    - /usr/bin/vi
+    - /usr/bin/less
+    - /usr/bin/more
+    - /usr/bin/man
+    - /usr/bin/find
+    - /usr/bin/python
+    - /usr/bin/perl
+    - /usr/bin/ruby
+    - /usr/bin/lua
+    - /usr/bin/tar
+    - /usr/bin/zip
+    - /usr/bin/env
+    - /usr/bin/make
+    - /usr/bin/mysql
+    - /usr/bin/psql
+    - /usr/bin/ftp
+    - /usr/bin/gdb
+    - /usr/bin/awk
+    - /usr/bin/sed
+    - /usr/bin/systemctl
+    - /usr/bin/apt
+    - /usr/bin/nmap
+  filter_admin:
+    User:
+    - automation
+  condition: selection and not filter_admin
+fields:
+- User
+- Command
+- Pwd
+- Tty
+falsepositives:
+- легитимное администрирование через vim/less (сужайте до конкретных хостов и учёток)
+level: medium
+tags:
+- attack.privilege_escalation
+- attack.t1548.003
+author: hackbook
+related:
+- 'payloads-card: payloads/privilege-escalation/linux/sudo-misconfiguration.md'

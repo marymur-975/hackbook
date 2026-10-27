@@ -1,0 +1,40 @@
+# Извлечено из карточки: payloads/cloud/cicd-gitlab-runner-token-abuse.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: GitLab — регистрация чужого раннера и разведка API job-токеном
+id: f6a7b8c9-0017-4f6a-8b9c-000000000017
+status: experimental
+description: Новый раннер регистрируется украденным токеном (часто с внешнего IP), затем CI_JOB_TOKEN
+  используется для перечисления проектов/переменных через /api/v4.
+references:
+- https://attack.mitre.org/techniques/T1078/
+- https://docs.gitlab.com/ee/ci/jobs/ci_job_token.html
+logsource:
+  category: cicd
+  definition: GitLab audit events + журнал API (json logs) + события раннеров
+detection:
+  runner_reg:
+    event_type: runner_registration
+  job_token_recon:
+    auth_kind: ci_job_token
+    api_path|contains:
+    - /api/v4/projects
+    - /api/v4/groups
+    - /variables
+  condition: runner_reg or job_token_recon
+fields:
+- source_ip
+- project_path
+- runner_token_prefix
+- api_path
+falsepositives:
+- легитимная регистрация раннеров админами (сверяйте source_ip с реестром инфраструктуры); job_token_recon
+  ограничьте эндпоинтами, которые джобы реально используют
+level: high
+tags:
+- attack.initial_access
+- attack.t1078
+- cwe.798
+author: hackbook
+related:
+- 'payloads-card: payloads/cloud/cicd-gitlab-runner-token-abuse.md'

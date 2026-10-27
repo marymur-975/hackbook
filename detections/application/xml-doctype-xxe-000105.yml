@@ -1,0 +1,54 @@
+# Извлечено из карточки: payloads/web/detection/xxe-doctype-in-request.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Входящий XML с DOCTYPE или внешней сущностью (XXE-попытка)
+id: b2c3d4e5-0005-4b2c-8d3e-000000000105
+status: stable
+description: Тело запроса или загружаемый XML-документ содержит объявление DOCTYPE, ENTITY SYSTEM/PUBLIC
+  либо ссылки на file://, php://, jar://, netdoc://.
+references:
+- https://attack.mitre.org/techniques/T1190/
+- payloads/web/xxe/basic-external-entity.md
+logsource:
+  category: application
+  product: xml_parser
+  definition: логи WAF или приложения, содержащие тело запроса/ошибки парсера
+detection:
+  doctype:
+    request_body|contains:
+    - <!DOCTYPE
+    - <!ENTITY
+    - SYSTEM "
+    - PUBLIC "
+  external_scheme:
+    request_body|contains:
+    - file:///
+    - php://
+    - jar://
+    - netdoc://
+    - gopher://
+    - http://169.254.169.254
+  parser_error:
+    error_message|contains:
+    - external entity
+    - failed to load external entity
+    - DOCTYPE is not allowed
+    - URI malformed
+    - EntityDeclHandler
+  condition: doctype or external_scheme or parser_error
+fields:
+- source_ip
+- request_path
+- request_content_type
+- error_message
+falsepositives:
+- легитимные XML-импорты с DTD (редко; зафиксируйте список эндпоинтов)
+- внутренние SOAP-сервисы со схемами, использующими сущности
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.611
+author: hackbook
+related:
+- 'payloads-card: payloads/web/detection/xxe-doctype-in-request.md'

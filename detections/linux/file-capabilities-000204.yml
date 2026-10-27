@@ -1,0 +1,53 @@
+# Извлечено из карточки: payloads/privilege-escalation/linux/writable-passwd-and-nfs.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Использование file capabilities или запись в файлы учёток для эскалации
+id: c3d4e5f6-0004-4c3d-9e4f-000000000204
+status: experimental
+description: Изменение /etc/passwd, /etc/shadow, /etc/sudoers непривилегированным процессом, либо запуск
+  бинарника с критичными capabilities (setuid/setgid).
+references:
+- https://attack.mitre.org/techniques/T1548/
+- https://man7.org/linux/man-pages/man7/capabilities.7.html
+logsource:
+  product: linux
+  service: auditd
+  definition: 'правила аудита: -w /etc/passwd -p wa; -w /etc/shadow -p wa; -w /etc/sudoers -p wa'
+detection:
+  account_files:
+    EventType: PATH
+    Name:
+    - /etc/passwd
+    - /etc/shadow
+    - /etc/group
+    - /etc/sudoers
+    - /etc/gshadow
+    auid|gte: 1000
+  capabilities_exec:
+    EventType: EXECVE
+    Capabilities|contains:
+    - cap_setuid
+    - cap_setgid
+    - cap_sys_module
+    - cap_sys_ptrace
+    - cap_dac_override
+  pam_tamper:
+    EventType: PATH
+    Name|startswith: /etc/pam.d/
+    auid|gte: 1000
+  condition: account_files or capabilities_exec or pam_tamper
+fields:
+- Name
+- Image
+- CommandLine
+- User
+falsepositives:
+- работа пакетного менеджера и системных утилит (useradd, passwd) — фильтруйте по Image
+level: critical
+tags:
+- attack.privilege_escalation
+- attack.persistence
+- attack.t1548
+author: hackbook
+related:
+- 'payloads-card: payloads/privilege-escalation/linux/writable-passwd-and-nfs.md'

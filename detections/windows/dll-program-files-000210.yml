@@ -1,0 +1,56 @@
+# Извлечено из карточки: payloads/privilege-escalation/windows/dll-hijacking.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Загрузка DLL из пользовательского каталога процессом из Program Files
+id: c3d4e5f6-0010-4c3d-9e4f-000000000210
+status: experimental
+description: 'Признак DLL hijacking: привилегированный или установленный процесс загружает библиотеку
+  из каталога, доступного на запись пользователю.'
+references:
+- https://attack.mitre.org/techniques/T1574/001/
+- https://attack.mitre.org/techniques/T1574/007/
+logsource:
+  product: windows
+  service: sysmon
+  definition: Sysmon EventID 7 (Image Loaded), 11 (File Create)
+detection:
+  load_from_user_dirs:
+    EventID: 7
+    ImageLoaded|contains:
+    - \Users\Public\
+    - \AppData\Local\Temp\
+    - \ProgramData\
+    - \Users\Default\
+    - \Windows\Temp\
+    - \Downloads\
+  image_is_installed:
+    Image|contains:
+    - \Program Files\
+    - \Program Files (x86)\
+    - \Windows\System32\
+  unsigned_dll:
+    Signed: 'false'
+  new_dll_in_appdir:
+    EventID: 11
+    TargetFilename|contains:
+    - \Program Files\
+    TargetFilename|endswith: .dll
+  condition: (load_from_user_dirs and image_is_installed) or (load_from_user_dirs and unsigned_dll) or
+    new_dll_in_appdir
+fields:
+- Image
+- ImageLoaded
+- Signed
+- User
+falsepositives:
+- установщики и апдейтеры, легитимно пишущие в Program Files (фильтр по подписи Image)
+- приложения, использующие ProgramData для кэшей (уточните список DLL)
+level: high
+tags:
+- attack.persistence
+- attack.privilege_escalation
+- attack.defense_evasion
+- attack.t1574.001
+author: hackbook
+related:
+- 'payloads-card: payloads/privilege-escalation/windows/dll-hijacking.md'

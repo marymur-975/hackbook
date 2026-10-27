@@ -1,0 +1,16 @@
+{"EventID": 4625, "LogonType": 10, "TargetUserName": "admin", "IpAddress": "203.0.113.55", "SubStatus": "0xc000006a", "WorkstationName": "RDP", "Sequence": 0, "note": "failed RDP logon: bruteforce"}
+{"EventID": 4625, "LogonType": 10, "TargetUserName": "admin", "IpAddress": "203.0.113.55", "SubStatus": "0xc000006a", "WorkstationName": "RDP", "Sequence": 1, "note": "failed RDP logon: bruteforce"}
+{"EventID": 4625, "LogonType": 10, "TargetUserName": "admin", "IpAddress": "203.0.113.55", "SubStatus": "0xc000006a", "WorkstationName": "RDP", "Sequence": 2, "note": "failed RDP logon: bruteforce"}
+{"EventID": 4625, "LogonType": 10, "TargetUserName": "admin", "IpAddress": "203.0.113.55", "SubStatus": "0xc000006a", "WorkstationName": "RDP", "Sequence": 3, "note": "failed RDP logon: bruteforce"}
+{"EventID": 4625, "LogonType": 10, "TargetUserName": "admin", "IpAddress": "203.0.113.55", "SubStatus": "0xc000006a", "WorkstationName": "RDP", "Sequence": 4, "note": "failed RDP logon: bruteforce"}
+{"EventID": 4625, "LogonType": 10, "TargetUserName": "admin", "IpAddress": "203.0.113.55", "SubStatus": "0xc000006a", "WorkstationName": "RDP", "Sequence": 5, "note": "failed RDP logon: bruteforce"}
+{"EventID": 4625, "LogonType": 10, "TargetUserName": "admin", "IpAddress": "203.0.113.55", "SubStatus": "0xc000006a", "WorkstationName": "RDP", "Sequence": 6, "note": "failed RDP logon: bruteforce"}
+{"EventID": 4625, "LogonType": 10, "TargetUserName": "admin", "IpAddress": "203.0.113.55", "SubStatus": "0xc000006a", "WorkstationName": "RDP", "Sequence": 7, "note": "failed RDP logon: bruteforce"}
+{"EventID": 4625, "LogonType": 10, "TargetUserName": "admin", "IpAddress": "203.0.113.55", "SubStatus": "0xc000006a", "WorkstationName": "RDP", "Sequence": 8, "note": "failed RDP logon: bruteforce"}
+{"EventID": 4625, "LogonType": 10, "TargetUserName": "admin", "IpAddress": "203.0.113.55", "SubStatus": "0xc000006a", "WorkstationName": "RDP", "Sequence": 9, "note": "failed RDP logon: bruteforce"}
+{"EventID": 4625, "LogonType": 10, "TargetUserName": "admin", "IpAddress": "203.0.113.55", "SubStatus": "0xc000006a", "WorkstationName": "RDP", "Sequence": 10, "note": "failed RDP logon: bruteforce"}
+{"EventID": 4625, "LogonType": 10, "TargetUserName": "admin", "IpAddress": "203.0.113.55", "SubStatus": "0xc000006a", "WorkstationName": "RDP", "Sequence": 11, "note": "failed RDP logon: bruteforce"}
+{"EventID": 4624, "LogonType": 10, "TargetUserName": "support", "IpAddress": "10.10.20.55", "AuthenticationPackageName": "NTLM", "LogonProcessName": "NtLmSsp", "note": "RDP по NTLM вместо Kerberos"}
+{"EventID": 4624, "LogonType": 10, "TargetUserName": "petrova", "IpAddress": "10.10.20.15", "AuthenticationPackageName": "Kerberos", "LogonProcessName": "Kerberos", "note": "обычный RDP-вход"}
+{"EventID": 4778, "AccountName": "ivanov", "ClientName": "WS01", "ClientAddress": "10.10.20.31", "SessionName": "RDP-Tcp#2", "note": "reconnect к отключённой сессии"}
+{"EventID": 4688, "AccountName": "helpdesk", "LogonId": "0x3e9f1", "ParentProcessName": "C:\\Windows\\System32\\cmd.exe", "CommandLine": "tscon 3 /dest:rdp-tcp#0", "note": "подключение к чужой сессии"}

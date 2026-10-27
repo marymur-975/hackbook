@@ -1,0 +1,34 @@
+# Извлечено из карточки: payloads/cloud/cicd-github-pull-request-target.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: GitHub Actions — выполнение кода PR с доступом к секретам
+id: a1b2c3d4-0011-4a1b-9c1d-000000000011
+status: experimental
+description: 'Эвристическое правило для аудита конфигурации CI: сочетание триггера pull_request_target/workflow_run
+  с checkout кода head-ветки и последующим выполнением команд. Требует анализа workflow-файлов, а не рантайм-логов.'
+logsource:
+  category: ci_cd
+  product: github_actions
+detection:
+  selection_trigger:
+    trigger:
+    - pull_request_target
+    - workflow_run
+  selection_checkout:
+    step_uses|contains: actions/checkout
+    step_with_ref|contains:
+    - github.event.pull_request.head.sha
+    - github.head_ref
+    - github.event.workflow_run.head_sha
+  selection_secrets:
+    job_needs_secrets: true
+  condition: selection_trigger and selection_checkout and selection_secrets
+falsepositives:
+- доверенные внутренние репозитории с обязательным ревью (риск ниже, но не нулевой)
+level: high
+tags:
+- attack.execution
+- attack.t1053
+author: hackbook
+related:
+- 'payloads-card: payloads/cloud/cicd-github-pull-request-target.md'

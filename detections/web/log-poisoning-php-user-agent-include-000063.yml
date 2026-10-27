@@ -1,0 +1,45 @@
+# Извлечено из карточки: payloads/web/lfi-rfi/log-poisoning.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Log poisoning — PHP-код в User-Agent и include файлов журналов
+id: e5f6a7b8-0063-4e5f-9a7b-000000000063
+status: experimental
+description: 'Два признака одной атаки: исполняемый код (<?php) в User-Agent/Referer и параметр include,
+  указывающий на файлы журналов (/var/log/..., access.log, auth.log, mail.log) или /proc/self/fd.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://attack.mitre.org/techniques/T1505/003/
+logsource:
+  category: webserver
+  definition: access-лог с полями query и User-Agent
+detection:
+  ua_marker:
+    cs-user-agent|contains:
+    - <?php
+    - <?=
+    - '<jsp:'
+  log_include:
+    cs-uri-query|contains:
+    - /var/log/
+    - access.log
+    - auth.log
+    - mail.log
+    - vsftpd.log
+    - /proc/self/fd
+  condition: ua_marker or log_include
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+- cs-user-agent
+falsepositives:
+- мониторинги, легитимно читающие логи через админку (исключайте по cs-uri-stem)
+level: critical
+tags:
+- attack.persistence
+- attack.t1190
+- attack.t1505.003
+- cwe.94
+author: hackbook
+related:
+- 'payloads-card: payloads/web/lfi-rfi/log-poisoning.md'

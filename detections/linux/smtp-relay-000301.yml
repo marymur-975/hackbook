@@ -1,0 +1,50 @@
+# Извлечено из карточки: payloads/network/smtp-open-relay.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: 'SMTP relay-злоупотребление: неаутентифицированная пересылка внешним получателям'
+id: d4e5f6a7-0001-4d4e-8f5a-000000000301
+status: experimental
+description: В логах MTA появляются сообщения, принятые от внешнего клиента и адресованные внешнему получателю
+  без аутентификации, либо аномальный всплеск исходящей почты.
+references:
+- https://attack.mitre.org/techniques/T1114/002/
+- https://www.postfix.org/RESTRICTION_CLASS_README.html
+logsource:
+  product: linux
+  service: mail
+  definition: журнал MTA (Postfix/Sendmail) или Exchange SMTP-логи
+detection:
+  unauthenticated_relay:
+    process: postfix
+    message|contains|all:
+    - client=
+    - relay=
+    message|contains:
+    - unknown[
+  external_rcpt_burst:
+    process: postfix
+    message|contains: to=<
+  vrfy_probe:
+    message|contains:
+    - VRFY
+    - EXPN
+  auth_bruteforce:
+    message|contains:
+    - SASL authentication failed
+    - authentication failure
+  timeframe: 10m
+  condition: unauthenticated_relay or vrfy_probe or (auth_bruteforce | count() by client_ip > 10) or (external_rcpt_burst
+    | count() by client_ip > 200)
+fields:
+- client_ip
+- message
+- queue_id
+falsepositives:
+- легитимные relay-хосты и партнёрские маршруты (внесите в исключения по client_ip)
+level: high
+tags:
+- attack.initial_access
+- attack.t1114.002
+author: hackbook
+related:
+- 'payloads-card: payloads/network/smtp-open-relay.md'

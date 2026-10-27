@@ -1,0 +1,43 @@
+# Извлечено из карточки: payloads/network/smb-null-session.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: SMB null-сессия — анонимный сетевой вход и доступ к IPC$
+id: a7b8c9d0-0005-4a7b-9c8d-000000000005
+status: experimental
+description: Event 4624 (LogonType 3) для ANONYMOUS LOGON и/или записи smbd о NULL-сессии и анонимном
+  доступе к IPC$ — перечисление шар, пользователей и пайпов без учётных данных.
+references:
+- https://attack.mitre.org/techniques/T1087/002/
+- https://attack.mitre.org/techniques/T1135/
+logsource:
+  product: windows
+  service: security
+  definition: аудит logon-событий + журнал smbd (Samba) для не-Windows узлов
+detection:
+  selection_windows:
+    EventID: 4624
+    LogonType: 3
+    TargetUserName|contains: ANONYMOUS
+  selection_samba:
+    service: smbd
+    message|contains:
+    - NULL session
+    - anonymous
+  condition: selection_windows or selection_samba
+fields:
+- IpAddress
+- TargetUserName
+- source_ip
+- message
+falsepositives:
+- легаси-устройства (принтеры, сканеры), опрашивающие IPC$ — выносите по IpAddress; глобально лечится
+  RestrictAnonymous=1
+level: medium
+tags:
+- attack.discovery
+- attack.t1087.002
+- attack.t1135
+- cwe.306
+author: hackbook
+related:
+- 'payloads-card: payloads/network/smb-null-session.md'

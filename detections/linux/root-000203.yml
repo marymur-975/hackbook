@@ -1,0 +1,45 @@
+# Извлечено из карточки: payloads/privilege-escalation/linux/writable-cron-or-path.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Исполняемый файл задачи root находится в пользовательском каталоге
+id: c3d4e5f6-0003-4c3d-9e4f-000000000203
+status: experimental
+description: Процесс с euid=0, запущенный планировщиком (cron/systemd), исполняет бинарник или скрипт
+  из /tmp, /dev/shm или домашнего каталога — признак подмены кода задачи.
+references:
+- https://attack.mitre.org/techniques/T1053/003/
+- https://attack.mitre.org/techniques/T1574/007/
+logsource:
+  product: linux
+  service: auditd
+  definition: аудит execve; Sysmon for Linux EventID 1
+detection:
+  selection:
+    EventType: EXECVE
+    euid: 0
+    ParentImage|contains:
+    - /usr/sbin/cron
+    - /usr/sbin/crond
+    - /lib/systemd/systemd
+    Image|startswith:
+    - /tmp/
+    - /var/tmp/
+    - /dev/shm/
+    - /home/
+  condition: selection
+fields:
+- Image
+- CommandLine
+- ParentImage
+- User
+falsepositives:
+- легитимные задачи, использующие /tmp для работы (переписать на mktemp и полный путь)
+level: high
+tags:
+- attack.persistence
+- attack.privilege_escalation
+- attack.t1053.003
+- attack.t1574.007
+author: hackbook
+related:
+- 'payloads-card: payloads/privilege-escalation/linux/writable-cron-or-path.md'

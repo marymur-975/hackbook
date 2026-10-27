@@ -1,0 +1,34 @@
+# Извлечено из карточки: payloads/web/xss/trusted-types-bypass.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Обход Trusted Types — CSP-отчёты require-trusted-types-for
+id: e5f6a7b8-0054-4e5f-9a7b-000000000054
+status: experimental
+description: Браузер блокирует присваивание сырой строки в опасный sink (innerHTML и т.п.) и шлёт CSP-отчёт
+  с violated_directive require-trusted-types-for. Такие отчёты — индикатор XSS-попыток на защищённой странице.
+references:
+- https://web.dev/trusted-types/
+- https://attack.mitre.org/techniques/T1189/
+logsource:
+  category: application
+  definition: endpoint сбора CSP-отчётов (report-to) с полями violated_directive/blocked_uri
+detection:
+  selection:
+    event_action: csp_report
+    violated_directive|contains: trusted-types
+  condition: selection
+fields:
+- source_ip
+- violated_directive
+- blocked_uri
+falsepositives:
+- собственные легаси-скрипты сайта, не переведённые на Trusted Types (постоянный фоновый шум — заведите
+  allowlisted-полиси)
+level: medium
+tags:
+- attack.initial_access
+- attack.t1189
+- cwe.79
+author: hackbook
+related:
+- 'payloads-card: payloads/web/xss/trusted-types-bypass.md'

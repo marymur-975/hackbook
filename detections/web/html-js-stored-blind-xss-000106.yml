@@ -1,0 +1,57 @@
+# Извлечено из карточки: payloads/web/detection/stored-blind-xss-in-logs.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: HTML/JS-маркеры в пользовательских данных или логах (stored/blind XSS)
+id: b2c3d4e5-0006-4b2c-8d3e-000000000106
+status: experimental
+description: 'Появление исполняемой разметки в полях, которые должны содержать обычный текст: параметры
+  запросов, заголовки, имена пользователей и файлов, содержимое форм.'
+references:
+- https://attack.mitre.org/techniques/T1059/007/
+- payloads/web/xss/stored-in-profile.md
+logsource:
+  category: webserver
+  definition: access-лог с query-строкой и заголовками
+detection:
+  markup:
+    cs-uri-query|contains:
+    - <script
+    - <svg
+    - <img
+    - <iframe
+    - onerror=
+    - onload=
+    - ontoggle=
+    - onfocus=
+    - 'javascript:'
+    - data:text/html
+  ua_marker:
+    cs-user-agent|contains:
+    - <script
+    - <svg
+    - onerror=
+    - 'javascript:'
+  callback_platform:
+    cs-uri-query|contains:
+    - burpcollaborator
+    - interact.sh
+    - xss.ht
+    - oastify
+    - pipedream
+  condition: markup or ua_marker or callback_platform
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+- cs-user-agent
+falsepositives:
+- легитимные значения с угловыми скобками (math-формулы, фрагменты кода в поиске)
+- собственные сканеры безопасности — выносите их IP в исключения
+level: medium
+tags:
+- attack.initial_access
+- attack.t1059.007
+- cwe.79
+author: hackbook
+related:
+- 'payloads-card: payloads/web/detection/stored-blind-xss-in-logs.md'

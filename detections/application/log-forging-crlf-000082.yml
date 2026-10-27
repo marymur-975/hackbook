@@ -1,0 +1,39 @@
+# Извлечено из карточки: payloads/web/http/crlf-log-forging.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Log forging — CRLF внутри лог-записи приложения
+id: e5f6a7b8-0082-4e5f-9a7b-000000000082
+status: experimental
+description: Поле message лог-события содержит переводы строк (CRLF) или их URL-кодировку (%0d%0a) — пользовательские
+  данные попали в журнал неэкранированными и атакующий подделывает «успешные» записи (login SUCCESS user=admin).
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://owasp.org/www-community/attacks/Log_Injection
+logsource:
+  category: application
+  definition: 'структурированные логи приложения: каждое событие — одна запись с полем message'
+detection:
+  selection:
+    message|contains:
+    - "\r\n"
+    - '
+
+      '
+    - '%0d%0a'
+    - '%0D%0A'
+  condition: selection
+fields:
+- source_ip
+- event_action
+- message
+falsepositives:
+- легитимные многострочные сообщения (stack trace) — исключайте event_action с отладочными трейсами по
+  месту сбора
+level: medium
+tags:
+- attack.defense_evasion
+- attack.t1190
+- cwe.117
+author: hackbook
+related:
+- 'payloads-card: payloads/web/http/crlf-log-forging.md'

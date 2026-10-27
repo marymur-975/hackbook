@@ -1,0 +1,45 @@
+# Извлечено из карточки: payloads/web/cmdi/basic-chained-commands.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Веб-сервер порождает оболочку или интерпретатор (RCE)
+id: e5f6a7b8-0012-4e5f-9a7b-000000000012
+status: experimental
+description: 'Дочерний процесс веб-сервера/обработчика PHP — оболочка или интерпретатор. В норме apache2/nginx/php-fpm
+  не запускают sh, python или bash: это подтверждённое выполнение кода (инъекция команд, webshell, RCE).'
+references:
+- https://attack.mitre.org/techniques/T1059/
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  product: linux
+  service: auditd
+  definition: аудит execve на веб-сервере
+detection:
+  selection:
+    EventType: EXECVE
+    ParentImage|endswith:
+    - /apache2
+    - /httpd
+    - /nginx
+    - /php-fpm
+    - /java
+    - /tomcat
+    - /uwsgi
+    - /gunicorn
+  condition: selection
+fields:
+- Image
+- CommandLine
+- ParentImage
+- User
+falsepositives:
+- CGI/FastCGI-приложения, легитимно запускающие скрипты (фиксируйте белые списки ParentImage+Image по
+  серверу)
+level: critical
+tags:
+- attack.execution
+- attack.t1059
+- attack.t1190
+- cwe.78
+author: hackbook
+related:
+- 'payloads-card: payloads/web/cmdi/basic-chained-commands.md'

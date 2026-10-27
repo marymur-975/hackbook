@@ -1,0 +1,49 @@
+# Извлечено из карточки: payloads/web/http/oauth-redirect-uri-bypass.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: OAuth — обход валидации redirect_uri (traversal, поддомены, open redirect)
+id: e5f6a7b8-0089-4e5f-9a7b-000000000089
+status: experimental
+description: 'redirect_uri содержит признаки обхода точной валидации: path-traversal (.%2e/, ..%2f), встроенный
+  redirect-параметр (?url=http), смену хвоста домена. Успешный oauth_authorize с таким URI — утечка кода
+  авторизации.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://portswigger.net/web-security/oauth/authentication-bypass
+logsource:
+  category: application
+  definition: 'логи IdP/приложения: событие oauth_authorize с redirect_uri + access-лог'
+detection:
+  selection_query:
+    cs-uri-query|contains:
+    - redirect_uri=https
+    - .%2e%2f
+    - '%2e%2f'
+    - ..%2f
+    - redirect_uri=%2f%2f
+    - '%3furl%3d'
+  selection_app:
+    event_action: oauth_authorize
+    redirect_uri|contains:
+    - .%2e
+    - ..%2f
+    - '%3furl%3d'
+    - ?url=http
+    - //attacker
+  condition: selection_query or selection_app
+fields:
+- c-ip
+- cs-uri-query
+- source_ip
+- redirect_uri
+- event_outcome
+falsepositives:
+- легитимные deep-link редиректы внутри своего домена — сверяйте итоговый хост redirect_uri с белым списком
+level: critical
+tags:
+- attack.credential_access
+- attack.t1190
+- cwe.601
+author: hackbook
+related:
+- 'payloads-card: payloads/web/http/oauth-redirect-uri-bypass.md'

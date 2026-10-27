@@ -1,0 +1,41 @@
+# Извлечено из карточки: payloads/web/sqli/postgresql-error-based-cast.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: PostgreSQL error-based — CAST((SELECT version()) AS INT) в параметрах и ошибках
+id: e5f6a7b8-0038-4e5f-9a7b-000000000038
+status: experimental
+description: 'Приведение строки к числу, чтобы вывести данные в тексте ошибки: CAST(... AS INT), ::int.
+  В журнале PostgreSQL — «invalid input syntax for type integer: "<данные>"».'
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  service: database
+  definition: access-лог приложения и журнал ошибок PostgreSQL
+detection:
+  query_probe:
+    cs-uri-query|contains:
+    - CAST((SELECT
+    - AS INT)
+    - AS INTEGER)
+    - ::int
+  db_error:
+    error_message|contains:
+    - invalid input syntax for type integer
+    - invalid input syntax for integer
+  condition: query_probe or db_error
+fields:
+- c-ip
+- cs-uri-query
+- error_message
+- statement
+falsepositives:
+- ошибки легитимного приведения типов на грязных данных (сверяйте statement с кодом)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/postgresql-error-based-cast.md'

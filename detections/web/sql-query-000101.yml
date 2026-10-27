@@ -1,0 +1,57 @@
+# Извлечено из карточки: payloads/web/detection/webserver-sqli-signatures.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: SQL-инъекция в query-строке с подтверждением по статусу ответа
+id: b2c3d4e5-0001-4b2c-8d3e-000000000101
+status: test
+description: Сочетание синтаксических маркеров SQL-инъекции в query-строке и признака срабатывания (5xx
+  или аномально длинный/короткий ответ). Комбинация снижает число ложных срабатываний на поисковых строках.
+references:
+- https://attack.mitre.org/techniques/T1190/
+- payloads/web/sqli/mysql-union-select-enumeration.md
+logsource:
+  category: webserver
+  definition: access-лог с полной query-строкой и кодом ответа
+detection:
+  keywords:
+    cs-uri-query|contains:
+    - union select
+    - union all select
+    - information_schema
+    - sqlite_master
+    - sysobjects
+    - pg_sleep
+    - waitfor delay
+    - extractvalue
+    - updatexml
+    - xp_cmdshell
+    - ' or 1=1'
+    - ' and 1=1'
+    - ''' or ''1''=''1'
+    - benchmark(
+    - sleep(
+  confirmation:
+    sc-status|gte: 500
+  scanner_ua:
+    cs-user-agent|contains:
+    - sqlmap
+    - sqlninja
+    - nosqli
+  condition: keywords and (confirmation or scanner_ua)
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+- sc-status
+- cs-user-agent
+falsepositives:
+- поисковые запросы пользователей, содержащие слова select/union
+- CMS-параметры сортировки (ORDER BY) — выносите в исключения по cs-uri-stem
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/detection/webserver-sqli-signatures.md'

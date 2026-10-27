@@ -1,0 +1,47 @@
+# Извлечено из карточки: payloads/web/sqli/oracle-error-based.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Oracle error-based — CTXSYS/DBMS_UTILITY/UTL_INADDR и v$version
+id: e5f6a7b8-0034-4e5f-9a7b-000000000034
+status: experimental
+description: Специфичные для Oracle функции вывода данных через ошибку (CTXSYS.DRITHSX.SN, DBMS_UTILITY.SQLID_TO_SQLHASH,
+  UTL_INADDR.GET_HOST_NAME) и запросы к v$version/product_component_version в параметрах или тексте ошибки
+  ORA-*.
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  service: database
+  definition: access-лог приложения и журнал ошибок Oracle (alert log / listener log)
+detection:
+  query_probe:
+    cs-uri-query|contains:
+    - v$version
+    - CTXSYS.DRITHSX
+    - DBMS_UTILITY.SQLID_TO_SQLHASH
+    - UTL_INADDR.GET_HOST_NAME
+    - product_component_version
+    - FROM dual
+  db_error:
+    error_message|contains:
+    - ORA-06502
+    - ORA-01722
+    - CTXSYS
+    - DRITHSX
+    - UTL_INADDR
+  condition: query_probe or db_error
+fields:
+- c-ip
+- cs-uri-query
+- error_message
+- statement
+falsepositives:
+- приложения на Oracle EBS, легитимно вызывающие UTL_INADDR (белый список по db_user)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.89
+author: hackbook
+related:
+- 'payloads-card: payloads/web/sqli/oracle-error-based.md'

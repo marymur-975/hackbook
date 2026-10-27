@@ -1,0 +1,35 @@
+# Извлечено из карточки: payloads/web/nosql/mongodb-regex-blind.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Слепой NoSQL-перебор — $regex с префиксами в форме входа
+id: e5f6a7b8-0075-4e5f-9a7b-000000000075
+status: experimental
+description: 'Серия запросов с {"email": {"$regex": "^a..."}} — посимвольный перебор значений по regexp-ответам.
+  Признак: $regex в аутентификационных запросах и рост префикса от запроса к запросу.'
+references:
+- https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: application
+  definition: логи приложения с телом запроса (аутентификация и поиск)
+detection:
+  selection:
+    request_body|contains:
+    - $regex
+    - $regularExpression
+    - $options
+  condition: selection
+fields:
+- source_ip
+- request_path
+- event_action
+- request_body
+falsepositives:
+- поисковые API, легитимно передающие regex от клиента (ограничивайте правило эндпоинтами входа)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.943
+author: hackbook
+related:
+- 'payloads-card: payloads/web/nosql/mongodb-regex-blind.md'

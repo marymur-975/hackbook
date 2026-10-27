@@ -1,0 +1,50 @@
+# Извлечено из карточки: payloads/web/http/web-cache-deception.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Web cache deception — аутентифицированный динамический ответ закэширован как статика
+id: e5f6a7b8-0095-4e5f-9a7b-000000000095
+status: experimental
+description: Запрос к персональному пути (/account/...) с «статическим» хвостом (nonexistent.css) возвращает
+  200 и попадает в кэш (HIT) вместе с сессией пользователя. Жертву провоцируют перейти по ссылке, атакующий
+  забирает кэш с её данными.
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://portswigger.net/web-security/web-cache-deception
+logsource:
+  category: proxy
+  definition: 'журнал кэширующего прокси: cache_status, путь, признак сессии'
+detection:
+  cache_hit:
+    cache_status: HIT
+  static_ext:
+    path|endswith:
+    - .css
+    - .js
+    - .png
+    - .jpg
+    - .ico
+    - .woff
+    - .gif
+  filter_anonymous:
+    session_user: ''
+  filter_static_dir:
+    path|contains:
+    - /static/
+    - /assets/
+    - /media/
+  condition: cache_hit and static_ext and not filter_anonymous and not filter_static_dir
+fields:
+- source_ip
+- path
+- cache_status
+- session_user
+falsepositives:
+- реально статические файлы вне /static/ (favicon.ico в корне) — добавляйте их в filter_static_dir
+level: high
+tags:
+- attack.collection
+- attack.t1190
+- cwe.525
+author: hackbook
+related:
+- 'payloads-card: payloads/web/http/web-cache-deception.md'

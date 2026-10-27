@@ -1,0 +1,49 @@
+# Извлечено из карточки: payloads/cloud/kubernetes-rbac-overpermissive.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: Опасные RBAC-binding'и — cluster-admin и wildcard-права
+id: f6a7b8c9-0006-4f6a-8b9c-000000000006
+status: experimental
+description: Создание clusterrolebinding/rolebinding с cluster-admin, субъектом system:unauthenticated/default
+  SA или wildcard-правами ("*") — закрепление избыточных прав, типичный след компрометации или «временного»
+  фикса.
+references:
+- https://attack.mitre.org/techniques/T1098/
+- https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+logsource:
+  product: kubernetes
+  service: audit
+  definition: Kubernetes Audit Log с requestObject для rbac.authorization.k8s.io
+detection:
+  binding_op:
+    verb:
+    - create
+    - update
+    - patch
+    objectRef_resource:
+    - clusterrolebindings
+    - rolebindings
+    - clusterroles
+  dangerous_ref:
+    requestObject|contains:
+    - cluster-admin
+    - '"*"'
+    - system:unauthenticated
+    - '"name":"default"'
+  condition: binding_op and dangerous_ref
+fields:
+- user_username
+- objectRef_resource
+- objectRef_name
+- requestObject
+falsepositives:
+- установка кластерных аддонов (ingress, CNI) — сверяйте с деплой-пайплайном и исключайте известные service-аккаунты
+  установки
+level: high
+tags:
+- attack.persistence
+- attack.t1098
+- cwe.732
+author: hackbook
+related:
+- 'payloads-card: payloads/cloud/kubernetes-rbac-overpermissive.md'

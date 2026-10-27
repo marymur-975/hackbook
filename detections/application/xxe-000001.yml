@@ -1,0 +1,49 @@
+# Извлечено из карточки: payloads/web/xxe/basic-external-entity.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: XXE — чтение локальных файлов через внешнюю сущность
+id: e5f6a7b8-0001-4e5f-9a7b-000000000001
+status: experimental
+description: Тело XML-запроса содержит DOCTYPE/ENTITY и обращение к локальной схеме (file://, php://filter,
+  jar://, netdoc://). Запросы, отклонённые безопасной веткой парсера, исключаются фильтром.
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing
+logsource:
+  category: application
+  product: xml_parser
+  definition: логи приложения/WAF с телом запроса и ошибками парсера
+detection:
+  xml_request:
+    request_content_type|contains: xml
+  doctype:
+    request_body|contains:
+    - <!DOCTYPE
+    - <!ENTITY
+  local_scheme:
+    request_body|contains:
+    - file:///
+    - php://filter
+    - netdoc://
+    - jar://
+  filter_blocked:
+    error_message|contains:
+    - DOCTYPE is not allowed
+    - DOCTYPE forbidden
+    - External entities are not allowed
+  condition: xml_request and doctype and local_scheme and not filter_blocked
+fields:
+- source_ip
+- request_path
+- request_body
+- error_message
+falsepositives:
+- легитимные XML-импорты с DTD (встречаются редко; зафиксируйте список эндпоинтов)
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- cwe.611
+author: hackbook
+related:
+- 'payloads-card: payloads/web/xxe/basic-external-entity.md'

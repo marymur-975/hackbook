@@ -1,0 +1,44 @@
+# Извлечено из карточки: payloads/web/ssrf/localhost-obfuscation.md
+# Команда: python tools/detections-extract.py
+# Не редактируйте здесь — правьте секцию `Detection rules` в карточке.
+title: SSRF с обфускацией localhost — десятичные, hex, восьмеричные и IPv6-формы
+id: e5f6a7b8-0071-4e5f-9a7b-000000000071
+status: experimental
+description: 'Адрес loopback, записанный нестандартно: 2130706433, 0x7f000001, 0177.0.0.1, 127.1, [::1],
+  ①. Используется для обхода blacklist-проверок «не пускать на 127.0.0.1».'
+references:
+- https://attack.mitre.org/techniques/T1190/
+- https://owasp.org/www-community/vulnerabilities/Server_Side_Request_Forgery
+logsource:
+  category: webserver
+  definition: access-лог с параметром url
+detection:
+  selection:
+    cs-uri-query|contains:
+    - '2130706433'
+    - '0x7f000001'
+    - 0x7f.0x00000001
+    - 0177.0.0.1
+    - '127.1'
+    - '[::1]'
+    - 127.127.127.127
+    - 0.0.0.0
+    - localhost%00
+    - 127.0.0.1.nip.io
+  condition: selection
+fields:
+- c-ip
+- cs-uri-stem
+- cs-uri-query
+falsepositives:
+- параметры version=127.1 и подобные короткие числа — паттерн '127.1' уточняйте по контексту url-параметров
+  своего приложения
+level: high
+tags:
+- attack.initial_access
+- attack.t1190
+- attack.t1027
+- cwe.918
+author: hackbook
+related:
+- 'payloads-card: payloads/web/ssrf/localhost-obfuscation.md'
