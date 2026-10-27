@@ -21,15 +21,10 @@ jobs:
 
       - name: Install dependencies
         run: pip install mkdocs mkdocs-material pymdown-extensions
-<<<<<<< HEAD
 
-      - name: Generate site tree (создает book/docs)
-        run: python tools/mkdocs-site.py --clean
-
-=======
       - name: Generate site tree
         run: python tools/mkdocs-site.py --clean
->>>>>>> 7da5ee3a23d485aaf44b3fc5770e4eb95a70a83f
+
       - name: Build site
         run: mkdocs build --config-file book/mkdocs.yml --site-dir build/site
 
