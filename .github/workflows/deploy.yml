@@ -20,6 +20,8 @@ jobs:
           python-version: "3.11"
       - name: Install dependencies
         run: pip install mkdocs mkdocs-material pymdown-extensions
+      - name: Generate site tree
+        run: python tools/mkdocs-site.py --clean
       - name: Build site
         run: mkdocs build --config-file book/mkdocs.yml --site-dir build/site
       - name: Upload artifact
