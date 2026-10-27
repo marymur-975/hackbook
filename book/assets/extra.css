@@ -46,7 +46,7 @@
   word-break: break-word;
   white-space: normal;
   hyphens: auto;
-  min-width: 120px; /* Чтобы совсем не сжимались в точку */
+  min-width: 120px;
 }
 
 /* Принудительно держим заголовок "Сложность" в одну строку */
@@ -102,6 +102,7 @@ body {
 .md-typeset pre > code {
   border-left: 3px solid #00ffcc;
   box-shadow: inset 5px 0 15px -5px rgba(0, 255, 204, 0.2);
+  color: #e6edf3 !important; /* <--- ГАРАНТИРУЕТ ВИДИМОСТЬ ТЕКСТА БЕЗ ПОДСВЕТКИ */
 }
 
 /* 4. Красивый неоновый скроллбар */
