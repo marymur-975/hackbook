@@ -1,0 +1,167 @@
+# Метаданные словарей hackbook.
+#
+# Файл проверяется `tools/wordlist-validator.py` в CI:
+#   * каждый `path` обязан существовать;
+#   * `size` должен совпадать с числом строк в файле;
+#   * `use_cases` — из списка KNOWN_USE_CASES в валидаторе;
+#   * `last_updated` — ISO-8601;
+#   * `source` и `license` желательны (иначе warning).
+#
+# Крупные списки (rockyou, SecLists целиком) в репозиторий НЕ кладутся:
+# используйте `wordlists/fetch-external.sh` — он скачает их по контрольным суммам.
+
+version: 1
+updated: "2026-10-23"
+policy:
+  max_lines_per_list: 5000000
+  max_bytes_per_list: 209715200
+  encoding: utf-8
+  line_endings: lf
+  allow_duplicates: false
+  allow_secrets: false        # валидатор ищет утечки ключей/токенов (--secrets)
+
+wordlists:
+  - name: "common-usernames"
+    path: "usernames/common.txt"
+    size: 204
+    format: "txt"
+    language: "mixed"
+    use_cases: ["username-enumeration", "bruteforce", "password-spray"]
+    source: "compiled: сервисные и типовые учётки, русские имена/фамилии, UNIX-аккаунты"
+    license: "CC0-1.0"
+    last_updated: "2026-10-23"
+    notes: "Базовый список для перечисления пользователей и spray-атак."
+
+  - name: "admin-usernames"
+    path: "usernames/admin.txt"
+    size: 87
+    format: "txt"
+    language: "en"
+    use_cases: ["bruteforce", "username-enumeration"]
+    source: "compiled: административные и сервисные учётки панелей"
+    license: "CC0-1.0"
+    last_updated: "2026-10-23"
+    notes: "Для проверки админ-панелей, СУБД, CI/CD, сетевых устройств."
+
+  - name: "top-passwords-500"
+    path: "passwords/top-500.txt"
+    size: 487
+    format: "txt"
+    language: "mixed"
+    use_cases: ["password-spray", "bruteforce"]
+    source: "compiled: верхняя часть публичных списков частотности паролей"
+    license: "CC0-1.0"
+    last_updated: "2026-10-23"
+    notes: >-
+      Не содержит реальных пользовательских данных — только общеизвестные
+      пароли-шаблоны. Для объёмных списков используйте fetch-external.sh.
+
+  - name: "jwt-secrets"
+    path: "passwords/jwt-secrets.txt"
+    size: 114
+    format: "txt"
+    language: "en"
+    use_cases: ["bruteforce", "reference"]
+    source: "compiled: секреты из документации, демо-примеров и дефолтов фреймворков"
+    license: "CC0-1.0"
+    last_updated: "2026-10-23"
+    notes: "Для офлайн-подбора подписи HS256 (hashcat -m 16500, jwt_tool -C -d)."
+
+  - name: "service-accounts"
+    path: "passwords/service-accounts.txt"
+    size: 175
+    format: "txt"
+    language: "en"
+    use_cases: ["username-enumeration", "password-spray", "bruteforce"]
+    source: "compiled: имена сервисных учёток Windows/Linux-инфраструктуры"
+    license: "CC0-1.0"
+    last_updated: "2026-10-23"
+    notes: "Используется и как список имён (kerberoasting, spray), и как основа для правил именования."
+
+  - name: "common-directories"
+    path: "directories/common.txt"
+    size: 281
+    format: "txt"
+    language: "en"
+    use_cases: ["directory-bruteforce", "fuzzing"]
+    source: "compiled: типовые пути веб-приложений, панелей, CI/CD, артефактов VCS"
+    license: "CC0-1.0"
+    last_updated: "2026-10-23"
+    notes: "Для ffuf/feroxbuster/dirsearch. Расширяется под конкретный стек (Laravel, Spring, Django)."
+
+  - name: "sensitive-files"
+    path: "directories/sensitive-files.txt"
+    size: 141
+    format: "txt"
+    language: "en"
+    use_cases: ["directory-bruteforce", "fuzzing"]
+    source: "compiled: конфиги, секреты, дампы БД, артефакты CI, ключи"
+    license: "CC0-1.0"
+    last_updated: "2026-10-23"
+    notes: >-
+      Целевой список «что искать в первую очередь»: .env, *.tfstate, id_rsa,
+      дампы БД, appsettings.json, логи.
+
+  - name: "fuzz-parameters"
+    path: "fuzzing/parameters.txt"
+    size: 311
+    format: "txt"
+    language: "en"
+    use_cases: ["parameter-discovery", "fuzzing"]
+    source: "compiled: имена GET/POST-параметров, часто встречающиеся в приложениях"
+    license: "CC0-1.0"
+    last_updated: "2026-10-23"
+    notes: "Для arjun/ffuf -u ...?FUZZ= и поиска скрытых параметров."
+
+  - name: "ssrf-targets"
+    path: "fuzzing/ssrf-targets.txt"
+    size: 46
+    format: "txt"
+    language: "en"
+    use_cases: ["fuzzing", "reference"]
+    source: "compiled: представления loopback/link-local, метаданные облаков, внутренние сервисы"
+    license: "CC0-1.0"
+    last_updated: "2026-10-23"
+    notes: >-
+      Использовать только в лабораториях. Содержит адреса metadata-сервисов
+      AWS/GCP/Azure/Alibaba и типовые внутренние порты.
+
+  - name: "snmp-communities"
+    path: "fuzzing/snmp-communities.txt"
+    size: 86
+    format: "txt"
+    language: "en"
+    use_cases: ["bruteforce", "fuzzing"]
+    source: "compiled: значения community по умолчанию у вендоров сетевого оборудования"
+    license: "CC0-1.0"
+    last_updated: "2026-10-23"
+    notes: "Для onesixtyone/snmp-brute. Проверяйте UDP/161 во всех сегментах."
+
+  - name: "subdomains"
+    path: "fuzzing/subdomains.txt"
+    size: 311
+    format: "txt"
+    language: "en"
+    use_cases: ["subdomain", "fuzzing"]
+    source: "compiled: типовые поддомены и префиксы сервисов"
+    license: "CC0-1.0"
+    last_updated: "2026-10-23"
+    notes: "Для ffuf -u https://FUZZ.example.com и перебора виртуальных хостов."
+
+# ── внешние списки (скачиваются по запросу, в git не хранятся) ────────
+external:
+  - name: "rockyou"
+    path: "passwords/rockyou.txt"
+    fetch: "wordlists/fetch-external.sh rockyou"
+    size: 14344391
+    use_cases: ["bruteforce", "reference"]
+    source: "утечка RockYou (2009), публично доступна в Kali/SecLists"
+    license: "public dataset — только для обучения и исследований"
+    notes: "В репозиторий не кладётся: большой объём и данные реальных пользователей."
+
+  - name: "seclists-passwords-10m"
+    path: "passwords/10-million-password-list-top-1000000.txt"
+    fetch: "wordlists/fetch-external.sh seclists"
+    use_cases: ["bruteforce"]
+    source: "https://github.com/danielmiessler/SecLists"
+    license: "MIT"

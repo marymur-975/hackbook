@@ -1,0 +1,158 @@
+# Манифест внешних словарей hackbook.
+#
+# Крупные наборы (утечки паролей, SecLists, fuzzdb) НЕ хранятся в git:
+# они объёмны, а часть содержит данные реальных пользователей. Вместо этого
+# здесь описано, откуда их взять, как проверить целостность и как использовать.
+#
+# Команды:
+#   python tools/wordlist-manifest.py --list              # что описано и что загружено
+#   python tools/wordlist-manifest.py --fetch <id>        # скачать набор
+#   python tools/wordlist-manifest.py --fetch all         # скачать всё (осторожно!)
+#   python tools/wordlist-manifest.py --check             # сверить sha256 загруженного
+#   python tools/wordlist-manifest.py --pin <id>          # закрепить sha256 после загрузки
+#
+# Политика:
+#   * загрузка только по HTTPS;
+#   * файлы пишутся в wordlists/external/ (каталог в .gitignore);
+#   * sha256 закрепляется командой --pin после первой загрузки и вашей проверки
+#     содержимого — дальше --check ловит подмену или повреждение;
+#   * пустое значение sha256 = набор ещё не закреплён (--check выдаст WARN).
+
+version: 1
+updated: "2026-10-23"
+policy:
+  https_only: true
+  target_dir: "external/"
+  verify_sha256: true
+  max_bytes_per_set: 1073741824     # 1 ГиБ на набор
+  license_review_required: true     # прежде чем распространять производные — читайте лицензию
+
+# Как добавлять набор:
+#   1. Найдите официальный источник (репозиторий проекта, а не зеркало).
+#   2. Прочитайте лицензию: часть утечек распространяется «только для
+#      исследований» — это нужно отразить в `license` и в `usage`.
+#   3. Добавьте запись в `sets` с прямым URL на raw-файл.
+#   4. --fetch <id>, проверьте содержимое, затем --pin <id>.
+#   5. Если набор нужен для задания книги — укажите `use_cases` и добавьте
+#      пример команды в wordlists/README.md.
+
+sets:
+  - id: "seclists-passwords-top1m"
+    path: "external/SecLists/Passwords/Common-Credentials/10-million-password-list-top-1000000.txt"
+    url: "https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/10-million-password-list-top-1000000.txt"
+    homepage: "https://github.com/danielmiessler/SecLists"
+    license: "MIT"
+    size_hint_bytes: 8569983
+    sha256: ""
+    fetched_at: ""
+    use_cases: ["bruteforce", "password-spray"]
+    notes: "Топ-1M паролей из открытых утечек. Для spray-атак берите первые 100–1000 строк."
+
+  - id: "seclists-passwords-10m"
+    path: "external/SecLists/Passwords/Leaked-Databases/rockyou-75.txt"
+    url: "https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Leaked-Databases/rockyou-75.txt"
+    homepage: "https://github.com/danielmiessler/SecLists"
+    license: "public dataset — только для обучения и исследований"
+    sha256: ""
+    fetched_at: ""
+    use_cases: ["bruteforce", "reference"]
+    notes: "Усечённый вариант rockyou. Полный набор — через wordlists/fetch-external.sh rockyou."
+
+  - id: "seclists-usernames-top"
+    path: "external/SecLists/Usernames/Names/names.txt"
+    url: "https://raw.githubusercontent.com/danielmiessler/SecLists/master/Usernames/Names/names.txt"
+    homepage: "https://github.com/danielmiessler/SecLists"
+    license: "MIT"
+    sha256: ""
+    fetched_at: ""
+    use_cases: ["username-enumeration", "bruteforce", "wordlist-building"]
+    notes: "Имена (англ.) — вход для tools/wordlist-builder.py при генерации целевых словарей."
+
+  - id: "seclists-directories-medium"
+    path: "external/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt"
+    url: "https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/directory-list-2.3-medium.txt"
+    homepage: "https://github.com/danielmiessler/SecLists"
+    license: "CC-BY-SA-3.0 (DirBuster)"
+    size_hint_bytes: 61808951
+    sha256: ""
+    fetched_at: ""
+    use_cases: ["directory-bruteforce"]
+    notes: "Средний набор каталогов DirBuster. Для быстрого прогона берите -small."
+
+  - id: "seclists-directories-small"
+    path: "external/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt"
+    url: "https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/directory-list-2.3-small.txt"
+    homepage: "https://github.com/danielmiessler/SecLists"
+    license: "CC-BY-SA-3.0 (DirBuster)"
+    sha256: ""
+    fetched_at: ""
+    use_cases: ["directory-bruteforce"]
+    notes: "Малый набор каталогов — подходит для лабораторий и быстрых проверок."
+
+  - id: "seclists-parameters-top"
+    path: "external/SecLists/Discovery/Web-Content/api/parameters.txt"
+    url: "https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/Web-Content/api/parameters.txt"
+    homepage: "https://github.com/danielmiessler/SecLists"
+    license: "MIT"
+    sha256: ""
+    fetched_at: ""
+    use_cases: ["parameter-discovery", "fuzzing"]
+    notes: "Параметры API. Комбинируйте с wordlists/fuzzing/parameters-frameworks.txt."
+
+  - id: "seclists-rapid7-fdns"
+    path: "external/SecLists/Discovery/DNS/subdomains-top1million-5000.txt"
+    url: "https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/DNS/subdomains-top1million-5000.txt"
+    homepage: "https://github.com/danielmiessler/SecLists"
+    license: "MIT"
+    sha256: ""
+    fetched_at: ""
+    use_cases: ["subdomain", "fuzzing"]
+    notes: "Поддомены для ffuf -u https://FUZZ.example.com (vhost-перебор)."
+
+  - id: "fuzzdb-discovery"
+    path: "external/fuzzdb/discovery/predictable-filepaths/filename-bruteforce.txt"
+    url: "https://raw.githubusercontent.com/fuzzdb-project/fuzzdb/master/discovery/predictable-filepaths/filename-bruteforce.txt"
+    homepage: "https://github.com/fuzzdb-project/fuzzdb"
+    license: "BSD-3-Clause (см. LICENSE в репозитории)"
+    sha256: ""
+    fetched_at: ""
+    use_cases: ["directory-bruteforce"]
+    notes: "Предсказуемые пути файлов. Проверяйте лицензию перед распространением производных."
+
+  - id: "fuzzdb-attack-patterns"
+    path: "external/fuzzdb/attack/sql-injection/detect/MSSQL.txt"
+    url: "https://raw.githubusercontent.com/fuzzdb-project/fuzzdb/master/attack/sql-injection/detect/MSSQL.txt"
+    homepage: "https://github.com/fuzzdb-project/fuzzdb"
+    license: "BSD-3-Clause (см. LICENSE в репозитории)"
+    sha256: ""
+    fetched_at: ""
+    use_cases: ["fuzzing", "detection"]
+    notes: >-
+      Сигнатуры SQLi для MSSQL — материал для проверки детект-правил
+      (detections/) и WAF. Используйте вместе с
+      wordlists/fuzzing/detection-signatures.txt.
+
+  - id: "jwt-secrets-wordlist"
+    path: "external/jwt-secrets.txt"
+    url: "https://raw.githubusercontent.com/wallarm/jwt-secrets/master/jwt.secrets.list"
+    homepage: "https://github.com/wallarm/jwt-secrets"
+    license: "MIT"
+    sha256: "d9aaae732134c7603189e7f4745ab806efaa12863c9da1c6523fe7d1424306c0"
+    fetched_at: "2026-10-23T14:13:34"
+    use_cases: ["bruteforce", "reference"]
+    notes: >-
+      Секреты JWT, встречавшиеся в публичных исследованиях. Дополняет
+      wordlists/passwords/jwt-secrets.txt; для задания используйте локальный список
+      (лабораторный секрет `secret` присутствует в обоих).
+
+  - id: "rockyou-gz"
+    path: "external/rockyou.txt.gz"
+    url: "https://gitlab.com/kalilinux/packages/wordlists/-/raw/kali/master/rockyou.txt.gz"
+    homepage: "https://www.kali.org/"
+    license: "public dataset — только для обучения и исследований"
+    sha256: ""
+    fetched_at: ""
+    use_cases: ["bruteforce", "reference"]
+    notes: >-
+      Полная утечка RockYou (2009). В git не кладётся никогда: содержит пароли
+      реальных пользователей. Альтернатива: wordlists/fetch-external.sh rockyou.
