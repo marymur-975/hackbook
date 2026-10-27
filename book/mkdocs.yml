@@ -12,10 +12,10 @@ site_description: >-
   Учебник, база payload'ов, словари и лаборатории по практической кибербезопасности.
   Теория, воспроизводимые карточки атак, детектирование и исправление.
 site_author: hackbook contributors
-# site_url: https://hackbook.github.io/hackbook/
-# repo_url: https://github.com/hackbook/hackbook
-# repo_name: hackbook/hackbook
-# edit_uri: edit/main/book/src/
+site_url: https://marymur-975.github.io/hackbook/
+repo_url: https://github.com/marymur-975/hackbook
+repo_name: marymur-975/hackbook
+edit_uri: edit/main/book/src/
 
 # docs_dir: docs
 site_dir: build/site
@@ -122,8 +122,8 @@ plugins:
       lang:
         - ru
         - en
-  # Директивы {{ include "..." }} раскрываются на этапе генерации дерева docs/
-  # (tools/mkdocs-site.py), поэтому плагины подключения файлов не требуются.
+  Директивы {{ include "..." }} раскрываются на этапе генерации дерева docs/
+  (tools/mkdocs-site.py), поэтому плагины подключения файлов не требуются.
   # раскомментируйте после `pip install mkdocs-minify-plugin`:
   # - minify:
   #     minify_html: true
