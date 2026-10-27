@@ -1,0 +1,29 @@
+# Зависимости для сборки сайта книги (MkDocs) и инструментов hackbook.
+#
+# Обязательное для инструментов проекта: НИЧЕГО (всё на stdlib Python 3.10+).
+# Этот файл нужен только для HTML-сайта и «красивого» PDF.
+#
+#   pip install -r requirements.txt          # сайт + PDF через WeasyPrint
+#   pip install -r requirements.txt --no-deps mkdocs mkdocs-material   # минимум для сайта
+
+# ── сайт ────────────────────────────────────────────────────────────
+mkdocs>=1.6,<2.0
+mkdocs-material>=9.5,<10.0
+pymdown-extensions>=10.7
+
+# ── PDF/EPUB ────────────────────────────────────────────────────────
+# WeasyPrint — основной движок PDF (нужны системные библиотеки:
+# libpango-1.0-0, libpangocairo-1.0-0, libgdk-pixbuf2.0-0, shared-mime-info).
+# Если WeasyPrint недоступен, tools/pdf-builder.py автоматически использует
+# fpdf2 (чистый Python), поэтому сборка не падает.
+weasyprint>=62.0 ; platform_system != "Windows"
+fpdf2>=2.7
+
+# ── качество контента ───────────────────────────────────────────────
+# PyYAML ускоряет и ужесточает парсинг метаданных; при отсутствии
+# используется встроенный парсер подмножества YAML (tools/lib/mdparse.py).
+PyYAML>=6.0
+
+# ── линтеры (только для разработки, в CI — отдельным job'ом) ─────────
+# ruff>=0.5
+# markdownlint-cli2>=0.13

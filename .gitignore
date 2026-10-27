@@ -1,0 +1,75 @@
+# ── Python ──────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ── Node (если появится фронтенд графа) ─────────────────────────────
+node_modules/
+dist/
+.next/
+.parcel-cache/
+
+# ── сборка книги и сайта ────────────────────────────────────────────
+book/build/
+site/
+book/docs/
+# ^ book/docs/ генерируется tools/mkdocs-site.py из book/src/ и не коммитится.
+#   Исключение — если вы форкаете проект без Python: раскомментируйте строку
+#   ниже и коммитьте сгенерированное дерево.
+# !book/docs/
+
+# ── артефакты проверок и отчёты ─────────────────────────────────────
+artifacts/
+reports/
+*.report.json
+validation-*.json
+
+# ── словари: большие внешние наборы не хранятся в git ───────────────
+wordlists/passwords/rockyou.txt
+wordlists/passwords/*-top-*.txt
+wordlists/passwords/10-million-password-list*.txt
+wordlists/usernames/seclists-*.txt
+wordlists/directories/directory-list-*.txt
+wordlists/fuzzing/subdomains-top1million-*.txt
+!wordlists/passwords/top-500.txt
+
+# ── лаборатории: данные контейнеров и локальные переопределения ─────
+labs/**/data/
+labs/**/*.db
+labs/**/*.sqlite
+labs/**/.env
+labs/setup/docker-compose.override.yml
+*.log
+
+# ── секреты и локальная конфигурация ────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_rsa*
+credentials.json
+secrets.yaml
+secrets.yml
+
+# ── IDE / ОС ────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── временные файлы ─────────────────────────────────────────────────
+tmp/
+.tmp/
+*.bak
+*.orig
