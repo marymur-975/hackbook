@@ -17,7 +17,7 @@ site_author: hackbook contributors
 # repo_name: hackbook/hackbook
 # edit_uri: edit/main/book/src/
 
-docs_dir: docs
+# docs_dir: docs
 site_dir: build/site
 
 theme:
